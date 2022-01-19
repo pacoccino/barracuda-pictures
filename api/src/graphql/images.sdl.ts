@@ -10,7 +10,8 @@ export const schema = gql`
 
   type Query {
     images: [Image!]! @requireAuth
-  }
+    image(id: Int!): Image @requireAuth
+ }
 
   input CreateImageInput {
     path: String!
