@@ -1,4 +1,5 @@
 {
+  "name": "barracuda-pictures",
   "private": true,
   "workspaces": {
     "packages": [
@@ -22,7 +23,7 @@
     "seed": "yarn rw exec seed"
   },
   "scripts": {
-    "indexer": "yarn rw exec FileIndexer/test",
-    "static": "yarn rw exec FileServer/test"
+    "indexer": "yarn rw exec FileIndexer",
+    "static": "yarn rw exec FileServer"
   }
 }
