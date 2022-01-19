@@ -9,9 +9,6 @@ export default async () => {
   const files = await listDir(path)
   console.log("importing files", files)
   Promise.all(
-    //
-    // Change to match your data model and seeding needs
-    //
     files.map(async (path: Prisma.ImageCreateInput['path']) => {
       const record = await db.image.create({ data: { path } })
       console.log(record)
