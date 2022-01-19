@@ -10,7 +10,13 @@ export default async () => {
   console.log("importing files", files)
   Promise.all(
     files.map(async (path: Prisma.ImageCreateInput['path']) => {
-      const record = await db.image.create({ data: { path } })
+      const record = await db.image.create({ data: {
+        path,
+          dateTaken: new Date(),
+          dateEdited: new Date(),
+          metadataJson: '',
+        }
+      })
       console.log(record)
     })
   )

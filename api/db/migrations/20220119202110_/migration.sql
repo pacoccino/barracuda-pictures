@@ -22,11 +22,11 @@ CREATE TABLE "Tag" (
 );
 
 -- CreateTable
-CREATE TABLE "TagOnImages" (
+CREATE TABLE "TagImage" (
     "tagId" INTEGER NOT NULL,
     "imageId" INTEGER NOT NULL,
 
     PRIMARY KEY ("tagId", "imageId"),
-    CONSTRAINT "TagOnImages_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "TagOnImages_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "TagImage_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "TagImage_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
