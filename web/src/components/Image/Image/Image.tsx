@@ -1,4 +1,10 @@
-import { Box, Image as ImageChakra } from '@chakra-ui/react'
+import {
+  Badge,
+  Box,
+  Image as ImageChakra,
+  Wrap,
+  WrapItem,
+} from '@chakra-ui/react'
 import { getImageUrl } from 'src/lib/static'
 import { useMemo } from 'react'
 
@@ -33,6 +39,18 @@ const Image = ({ image }) => {
             <tr>
               <th>Date edited</th>
               <td>{image.dateEdited}</td>
+            </tr>
+            <tr>
+              <th>Tags</th>
+              <td>
+                {image.tags.map((imageToTag) => (
+                  <Wrap>
+                    <WrapItem>
+                      <Badge>{imageToTag.tag.name}</Badge>
+                    </WrapItem>
+                  </Wrap>
+                ))}
+              </td>
             </tr>
             <tr>
               <th>Metadata json</th>

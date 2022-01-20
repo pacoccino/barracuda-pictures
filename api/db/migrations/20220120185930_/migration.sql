@@ -22,11 +22,15 @@ CREATE TABLE "Tag" (
 );
 
 -- CreateTable
-CREATE TABLE "TagImage" (
-    "tagId" INTEGER NOT NULL,
-    "imageId" INTEGER NOT NULL,
-
-    PRIMARY KEY ("tagId", "imageId"),
-    CONSTRAINT "TagImage_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "TagImage_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+CREATE TABLE "_ImageToTag" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+    FOREIGN KEY ("A") REFERENCES "Image" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("B") REFERENCES "Tag" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ImageToTag_AB_unique" ON "_ImageToTag"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ImageToTag_B_index" ON "_ImageToTag"("B");

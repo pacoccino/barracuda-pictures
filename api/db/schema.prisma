@@ -14,7 +14,7 @@ model Image {
   dateTaken    DateTime
   dateEdited   DateTime
   metadataJson String
-  tags  TagImage[]
+  tags  Tag[]
 }
 
 model TagGroup {
@@ -28,14 +28,5 @@ model Tag {
   name        String
   groupId     Int
   tagGroup    TagGroup      @relation(fields: [groupId], references: [id])
-  images      TagImage[]
-}
-
-model TagImage {
-  tagId   Int
-  tag     Tag   @relation(fields: [tagId], references: [id])
-  imageId Int
-  image   Image @relation(fields: [imageId], references: [id])
-
-  @@id([tagId, imageId])
+  images      Image[]
 }

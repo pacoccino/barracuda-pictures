@@ -11,6 +11,16 @@ export const QUERY = gql`
       dateTaken
       dateEdited
       metadataJson
+      tags {
+        tag {
+          id
+          name
+          tagGroup {
+            id
+            name
+          }
+        }
+      }
     }
   }
 `
