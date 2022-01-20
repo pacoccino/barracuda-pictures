@@ -1,8 +1,6 @@
 import type { FindImages } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import { Link, routes } from '@redwoodjs/router'
-
 import Images from 'src/components/Image/Images'
 
 export const QUERY = gql`
