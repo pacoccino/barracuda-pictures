@@ -25,7 +25,7 @@ export default async () => {
         const record_tag = await db.tag.create({
           data: {
             ...data_tag,
-            groupId: record_tagGroup.id,
+            tagGroupId: record_tagGroup.id,
           },
         })
         console.log(record_tag)
