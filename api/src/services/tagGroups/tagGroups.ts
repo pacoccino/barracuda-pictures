@@ -24,6 +24,13 @@ export const createTagGroup = async ({ name }) => {
   })
 }
 
+export const updateTagGroup = async ({ id, input }) => {
+  return db.tagGroup.update({
+    where: { id },
+    data: { name: input.name },
+  })
+}
+
 export const deleteTagGroup = async ({ id }) => {
   try {
     await db.tagGroup.deleteMany({

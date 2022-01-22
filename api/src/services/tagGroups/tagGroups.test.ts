@@ -1,4 +1,4 @@
-import { tagGroups } from './tagGroups'
+import { tagGroup, tagGroups, createTagGroup } from './tagGroups'
 import type { StandardScenario } from './tagGroups.scenarios'
 
 describe('tagGroups', () => {
@@ -6,5 +6,15 @@ describe('tagGroups', () => {
     const result = await tagGroups()
 
     expect(result.length).toEqual(Object.keys(scenario.tagGroup).length)
+  })
+
+  scenario('create tagGroup', async () => {
+    const input = { name: 'bob' }
+
+    const tg = await createTagGroup(input)
+
+    const result = await tagGroup({ id: tg.id })
+
+    expect(result).toEqual(tg)
   })
 })

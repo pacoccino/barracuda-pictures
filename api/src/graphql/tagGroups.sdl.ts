@@ -11,6 +11,8 @@ export const schema = gql`
 
   type Mutation {
     createTagGroup(name: String!): TagGroup! @requireAuth
+    updateTagGroup(id: Int!, input: UpdateTagGroupInput!): TagGroup!
+      @requireAuth
     deleteTagGroup(id: Int!): Boolean! @requireAuth
   }
 

@@ -13,6 +13,7 @@ export const schema = gql`
 
   type Mutation {
     createTag(name: String!, tagGroupId: Int!): Tag! @requireAuth
+    updateTag(id: Int!, input: UpdateTagInput!): Tag! @requireAuth
     deleteTag(id: Int!): Boolean! @requireAuth
   }
 
@@ -23,6 +24,5 @@ export const schema = gql`
 
   input UpdateTagInput {
     name: String
-    tagGroupId: Int
   }
 `
