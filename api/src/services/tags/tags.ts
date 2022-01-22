@@ -16,6 +16,6 @@ export const tag = ({ id }: Prisma.TagWhereUniqueInput) => {
 export const Tag = {
   tagGroup: (_obj, { root }: ResolverArgs<ReturnType<typeof tag>>) =>
     db.tag.findUnique({ where: { id: root.id } }).tagGroup(),
-  images: (_obj, { root }: ResolverArgs<ReturnType<typeof tag>>) =>
-    db.tag.findUnique({ where: { id: root.id } }).images(),
+  tagsOnImages: (_obj, { root }: ResolverArgs<ReturnType<typeof tag>>) =>
+    db.tag.findUnique({ where: { id: root.id } }).tagsOnImages(),
 }

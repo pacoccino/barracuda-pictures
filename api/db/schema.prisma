@@ -9,12 +9,12 @@ generator client {
 }
 
 model Image {
-  id           Int           @id @default(autoincrement())
-  path         String
-  dateTaken    DateTime
-  dateEdited   DateTime
-  metadataJson String
-  tags  Tag[]
+  id            Int           @id @default(autoincrement())
+  path          String
+  dateTaken     DateTime
+  dateEdited    DateTime
+  metadataJson  String
+  tagsOnImages  TagsOnImage[]
 }
 
 model TagGroup {
@@ -24,9 +24,19 @@ model TagGroup {
 }
 
 model Tag {
-  id          Int           @id @default(autoincrement())
-  name        String
-  groupId     Int
-  tagGroup    TagGroup      @relation(fields: [groupId], references: [id])
-  images      Image[]
+  id            Int           @id @default(autoincrement())
+  name          String
+  groupId       Int
+  tagGroup      TagGroup      @relation(fields: [groupId], references: [id])
+  tagsOnImages  TagsOnImage[]
+}
+
+model TagsOnImage {
+  id        Int      @id @default(autoincrement())
+  tagId     Int
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  imageId   Int
+  image     Image    @relation(fields: [imageId], references: [id])
+
+  @@unique([tagId, imageId])
 }

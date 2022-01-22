@@ -7,8 +7,10 @@ import {
 } from '@chakra-ui/react'
 import { getImageUrl } from 'src/lib/static'
 import { useMemo } from 'react'
+import { CellSuccessProps } from '@redwoodjs/web'
+import { FindImageWithTagsById } from 'types/graphql'
 
-const Image = ({ image }) => {
+const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
   const imageUrl = useMemo(() => getImageUrl(image), [])
 
   return (
@@ -43,10 +45,10 @@ const Image = ({ image }) => {
             <tr>
               <th>Tags</th>
               <td>
-                {image.tags.map((imageToTag) => (
-                  <Wrap>
+                {image.tagsOnImages.map((tagsOnImage) => (
+                  <Wrap key={tagsOnImage.id}>
                     <WrapItem>
-                      <Badge>{imageToTag.tag.name}</Badge>
+                      <Badge>{tagsOnImage.tag.name}</Badge>
                     </WrapItem>
                   </Wrap>
                 ))}

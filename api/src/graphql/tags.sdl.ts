@@ -4,7 +4,7 @@ export const schema = gql`
     name: String!
     groupId: Int!
     tagGroup: TagGroup!
-    images: [TagImage]!
+    tagsOnImages: [TagsOnImage]!
   }
 
   type Query {

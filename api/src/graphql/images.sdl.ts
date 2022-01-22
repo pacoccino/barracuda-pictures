@@ -5,13 +5,13 @@ export const schema = gql`
     dateTaken: DateTime!
     dateEdited: DateTime!
     metadataJson: String!
-    tags: [TagImage]!
+    tagsOnImages: [TagsOnImage]!
   }
 
   type Query {
     images: [Image!]! @requireAuth
     image(id: Int!): Image @requireAuth
- }
+  }
 
   input CreateImageInput {
     path: String!

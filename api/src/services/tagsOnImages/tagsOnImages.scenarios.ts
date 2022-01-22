@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client'
 
-export const standard = defineScenario<Prisma.TagImageCreateArgs>({
-  tagImage: {
+export const standard = defineScenario<Prisma.TagsOnImageCreateArgs>({
+  tagsOnImage: {
     one: {
       data: {
         tag: {
@@ -10,8 +10,8 @@ export const standard = defineScenario<Prisma.TagImageCreateArgs>({
         image: {
           create: {
             path: 'String',
-            dateTaken: '2022-01-19T20:21:32Z',
-            dateEdited: '2022-01-19T20:21:32Z',
+            dateTaken: '2022-01-22T10:44:13Z',
+            dateEdited: '2022-01-22T10:44:13Z',
             metadataJson: 'String',
           },
         },
@@ -25,8 +25,8 @@ export const standard = defineScenario<Prisma.TagImageCreateArgs>({
         image: {
           create: {
             path: 'String',
-            dateTaken: '2022-01-19T20:21:32Z',
-            dateEdited: '2022-01-19T20:21:32Z',
+            dateTaken: '2022-01-22T10:44:13Z',
+            dateEdited: '2022-01-22T10:44:13Z',
             metadataJson: 'String',
           },
         },

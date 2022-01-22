@@ -1,17 +1,18 @@
-import type { FindImageById } from 'types/graphql'
+import type { FindImageWithTagsById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Image from 'src/components/Image/Image'
 
 export const QUERY = gql`
-  query FindImageById($id: Int!) {
+  query FindImageWithTagsById($id: Int!) {
     image: image(id: $id) {
       id
       path
       dateTaken
       dateEdited
       metadataJson
-      tags {
+      tagsOnImages {
+        id
         tag {
           id
           name
@@ -33,6 +34,6 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ image }: CellSuccessProps<FindImageById>) => {
+export const Success = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
   return <Image image={image} />
 }
