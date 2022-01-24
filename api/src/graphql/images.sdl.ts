@@ -1,6 +1,6 @@
 export const schema = gql`
   type Image {
-    id: Int!
+    id: String!
     path: String!
     dateTaken: DateTime!
     dateEdited: DateTime!
@@ -10,7 +10,7 @@ export const schema = gql`
 
   type Query {
     images: [Image!]! @requireAuth
-    image(id: Int!): Image @requireAuth
+    image(id: String!): Image @requireAuth
   }
 
   input CreateImageInput {

@@ -4,7 +4,7 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import Image from 'src/components/Image/Image'
 
 export const QUERY = gql`
-  query FindImageWithTagsById($id: Int!) {
+  query FindImageWithTagsById($id: String!) {
     image: image(id: $id) {
       id
       path

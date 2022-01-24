@@ -24,7 +24,10 @@
   },
   "scripts": {
     "start": "yarn rw dev",
+    "dockers": "docker-compose up -d",
+    "cleandb": "docker-compose down -v && rm -rf ./api/db/migrations && yarn rw migrate dev --name init",
     "indexer": "yarn rw exec FileIndexer",
-    "static": "yarn rw exec FileServer"
+    "static": "yarn rw exec FileServer",
+    "studio": "yarn rw prisma studio"
   }
 }

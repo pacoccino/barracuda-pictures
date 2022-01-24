@@ -5,7 +5,7 @@ const Routes = () => {
   return (
     <Router>
       <Set wrap={DashboardLayout}>
-        <Route path="/photos/{id:Int}" page={PhotoPage} name="photo" />
+        <Route path="/photos/{id:String}" page={PhotoPage} name="photo" />
         <Route path="/photos" page={PhotosPage} name="photos" />
         <Route path="/admin" page={AdminPage} name="admin" />
         <Route path="/" page={HomePage} name="home" />

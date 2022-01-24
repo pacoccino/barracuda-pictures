@@ -1,9 +1,9 @@
 export const schema = gql`
   type TagsOnImage {
-    id: Int!
-    tagId: Int!
+    id: String!
+    tagId: String!
     tag: Tag!
-    imageId: Int!
+    imageId: String!
     image: Image!
   }
 
@@ -12,17 +12,17 @@ export const schema = gql`
   }
 
   type Mutation {
-    addTagsOnImage(imageId: Int!, tagId: Int!): TagsOnImage! @requireAuth
-    deleteTagsOnImage(imageId: Int!, tagId: Int!): Boolean! @requireAuth
+    addTagsOnImage(imageId: String!, tagId: String!): TagsOnImage! @requireAuth
+    deleteTagsOnImage(imageId: String!, tagId: String!): Boolean! @requireAuth
   }
 
   input CreateTagsOnImageInput {
-    tagId: Int!
-    imageId: Int!
+    tagId: String!
+    imageId: String!
   }
 
   input UpdateTagsOnImageInput {
-    tagId: Int
-    imageId: Int
+    tagId: String
+    imageId: String
   }
 `

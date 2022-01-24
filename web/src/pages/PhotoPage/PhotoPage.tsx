@@ -4,7 +4,7 @@ import { HStack } from '@chakra-ui/react'
 import { Link, routes } from '@redwoodjs/router'
 
 type PhotoPageProps = {
-  id: Int
+  id: String
 }
 
 const PhotoPage = ({ id }: PhotoPageProps) => {
