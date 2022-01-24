@@ -1,7 +1,7 @@
 import type { FindTags } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import Tags from 'src/components/Tag/Tags'
+import TagList from 'src/components/Tag/TagList/TagList'
 
 export const QUERY = gql`
   query FindTags {
@@ -27,5 +27,5 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ tagGroups }: CellSuccessProps<FindTags>) => {
-  return <Tags tagGroups={tagGroups} />
+  return <TagList tagGroups={tagGroups} />
 }

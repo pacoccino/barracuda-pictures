@@ -20,7 +20,7 @@ export const Tag = {
     db.tag.findUnique({ where: { id: root.id } }).tagsOnImages(),
 }
 
-export const createTag = async ({ name, tagGroupId }) => {
+export const createTag = async ({ input: { name, tagGroupId } }) => {
   return db.tag.create({
     data: { name, tagGroupId },
   })

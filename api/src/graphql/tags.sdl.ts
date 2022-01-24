@@ -12,7 +12,7 @@ export const schema = gql`
   }
 
   type Mutation {
-    createTag(name: String!, tagGroupId: String!): Tag! @requireAuth
+    createTag(input: CreateTagInput!): Tag! @requireAuth
     updateTag(id: String!, input: UpdateTagInput!): Tag! @requireAuth
     deleteTag(id: String!): Boolean! @requireAuth
   }

@@ -11,7 +11,7 @@ describe('tagGroups', () => {
   scenario('create tagGroup', async () => {
     const input = { name: 'bob' }
 
-    const tg = await createTagGroup(input)
+    const tg = await createTagGroup({ input })
 
     const result = await tagGroup({ id: tg.id })
 

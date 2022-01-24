@@ -1,17 +1,18 @@
-import { Badge, Box, VStack, Wrap, WrapItem } from '@chakra-ui/react'
+import { Box, VStack, Wrap, WrapItem } from '@chakra-ui/react'
+import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 
-const TagsList = ({ tagGroups }) => {
+const TagList = ({ tagGroups }) => {
   return (
     <Box>
       <h2>Tags</h2>
       <VStack>
         {tagGroups.map((tagGroup) => (
           <Box key={tagGroup.id}>
-            <h3>{tagGroup.name}</h3>
+            <TagGroupItem tagGroup={tagGroup} />
             <Wrap m={2} spacing={0.5}>
               {tagGroup.tags.map((tag) => (
                 <WrapItem key={tag.id}>
-                  <Badge>{tag.name}</Badge>
+                  <TagItem tag={tag} />
                 </WrapItem>
               ))}
             </Wrap>
@@ -22,4 +23,4 @@ const TagsList = ({ tagGroups }) => {
   )
 }
 
-export default TagsList
+export default TagList

@@ -1,17 +1,21 @@
 import {
-  Badge,
   Box,
+  Button,
+  HStack,
   Image as ImageChakra,
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
 import { getImageUrl } from 'src/lib/static'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
+import TagsModalCell from 'src/components/Tag/TagsModalCell/TagsModalCell'
+import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 
 const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
   const imageUrl = useMemo(() => getImageUrl(image), [])
+  const [editTagOpen, setEditTagOpen] = useState(false)
 
   return (
     <>
@@ -45,13 +49,22 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
             <tr>
               <th>Tags</th>
               <td>
-                {image.tagsOnImages.map((tagsOnImage) => (
-                  <Wrap key={tagsOnImage.id}>
-                    <WrapItem>
-                      <Badge>{tagsOnImage.tag.name}</Badge>
-                    </WrapItem>
-                  </Wrap>
-                ))}
+                <HStack>
+                  <Box>
+                    {image.tagsOnImages.map((tagsOnImage) => (
+                      <Wrap key={tagsOnImage.id}>
+                        <WrapItem>
+                          <TagItemWithGroup
+                            tag={tagsOnImage.tag}
+                          ></TagItemWithGroup>
+                        </WrapItem>
+                      </Wrap>
+                    ))}
+                  </Box>
+                  <Box>
+                    <Button onClick={() => setEditTagOpen(true)}>Edit</Button>
+                  </Box>
+                </HStack>
               </td>
             </tr>
             <tr>
@@ -61,6 +74,11 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
           </tbody>
         </table>
       </div>
+      <TagsModalCell
+        imageId={image.id}
+        isOpen={editTagOpen}
+        onClose={() => setEditTagOpen(false)}
+      />
     </>
   )
 }

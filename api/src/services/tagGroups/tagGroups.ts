@@ -18,7 +18,7 @@ export const TagGroup = {
     db.tagGroup.findUnique({ where: { id: root.id } }).tags(),
 }
 
-export const createTagGroup = async ({ name }) => {
+export const createTagGroup = async ({ input: { name } }) => {
   return db.tagGroup.create({
     data: { name },
   })

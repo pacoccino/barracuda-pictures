@@ -20,7 +20,7 @@ export const TagsOnImage = {
     db.tagsOnImage.findUnique({ where: { id: root.id } }).image(),
 }
 
-export const addTagsOnImage = async ({ imageId, tagId }) => {
+export const createTagsOnImage = async ({ imageId, tagId }) => {
   return db.tagsOnImage.upsert({
     where: { tagId_imageId: { imageId, tagId } },
     create: { imageId, tagId },
