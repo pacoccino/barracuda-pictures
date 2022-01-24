@@ -23,6 +23,7 @@
     "seed": "yarn rw exec seed"
   },
   "scripts": {
+    "start": "yarn rw dev",
     "indexer": "yarn rw exec FileIndexer",
     "static": "yarn rw exec FileServer"
   }
