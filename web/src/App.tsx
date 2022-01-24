@@ -7,13 +7,16 @@ import Routes from 'src/Routes'
 
 import './scaffold.css'
 import './index.css'
+import { FilterContextProvider } from 'src/contexts/filter'
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <ChakraProvider>
       <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
         <RedwoodApolloProvider>
-          <Routes />
+          <FilterContextProvider>
+            <Routes />
+          </FilterContextProvider>
         </RedwoodApolloProvider>
       </RedwoodProvider>
     </ChakraProvider>

@@ -1,12 +1,12 @@
 import type { Tag } from 'types/graphql'
 
 import { Box, VStack } from '@chakra-ui/react'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { TagListGrouped, TagListFlat } from 'src/components/Tag/TagList/TagList'
+import { useFilterContext } from 'src/contexts/filter'
 
 const FilterPanel = ({ tagGroups }) => {
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-  console.log(selectedTags)
+  const { selectedTags, setSelectedTags } = useFilterContext()
 
   const addTagToFilter = useCallback(
     (tag: Tag) => {

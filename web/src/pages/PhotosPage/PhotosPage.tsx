@@ -2,8 +2,10 @@ import { MetaTags } from '@redwoodjs/web'
 import ImagesCell from 'src/components/Image/ImagesCell'
 import FilterPanelCell from 'src/components/Filter/FilterPanelCell'
 import { HStack, Box } from '@chakra-ui/react'
+import { useFilterContext } from 'src/contexts/filter'
 
-const HomePage = () => {
+const PhotosPage = () => {
+  const { selectedTags } = useFilterContext()
   return (
     <>
       <MetaTags title="Home" description="Home page" />
@@ -15,11 +17,11 @@ const HomePage = () => {
           <FilterPanelCell />
         </Box>
         <Box>
-          <ImagesCell />
+          <ImagesCell tagIds={selectedTags.map((t) => t.id)} />
         </Box>
       </HStack>
     </>
   )
 }
 
-export default HomePage
+export default PhotosPage

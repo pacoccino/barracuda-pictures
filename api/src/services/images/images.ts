@@ -18,25 +18,16 @@ export const Image = {
     db.image.findUnique({ where: { id: root.id } }).tagsOnImages(),
 }
 
-type AddTagInput = {
-  id: number
-  tagId: number
-}
-/*
-export const addTag = ({ id, tagId }: AddTagInput) => {
-  return db.image.update({
-    where: { id },
-    data: {
-      tags: {
-        connectOrCreate: {
-          where: { id: tagId },
-          create: {
-            id: tagId,
-            name: 'fdz',
-          },
+export const imagesWithFilter = ({ filter }) => {
+  return db.image.findMany({
+    where: {
+      tagsOnImages: {
+        some: {
+          OR: filter.tagIds.map((tagId) => ({
+            tagId,
+          })),
         },
       },
     },
   })
 }
-*/

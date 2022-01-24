@@ -4,8 +4,8 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import Images from 'src/components/Image/Images'
 
 export const QUERY = gql`
-  query FindImages {
-    images {
+  query FindImages($tagIds: [String]!) {
+    imagesWithFilter(filter: { tagIds: $tagIds }) {
       id
       path
       dateTaken
@@ -25,6 +25,6 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ images }: CellSuccessProps<FindImages>) => {
-  return <Images images={images} />
+export const Success = ({ imagesWithFilter }: CellSuccessProps<FindImages>) => {
+  return <Images images={imagesWithFilter} />
 }

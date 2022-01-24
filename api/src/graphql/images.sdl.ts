@@ -10,7 +10,12 @@ export const schema = gql`
 
   type Query {
     images: [Image!]! @requireAuth
+    imagesWithFilter(filter: ImageFilters!): [Image]! @requireAuth
     image(id: String!): Image @requireAuth
+  }
+
+  input ImageFilters {
+    tagIds: [String]
   }
 
   input CreateImageInput {
