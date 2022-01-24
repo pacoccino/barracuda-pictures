@@ -1,10 +1,28 @@
 import { Tag, TagLabel, TagRightIcon } from '@chakra-ui/react'
 import { As } from '@chakra-ui/system/dist/declarations/src/system.types'
 
-type TagItemWithGroupProps = {
+type TagItemProps = {
+  tag: { id: string; name: string }
+  handleAction?: () => void
+}
+
+type TagItemWithGroupProps = TagItemProps & {
   tag: { id: string; name: string; tagGroup: { id: string; name: string } }
   handleAction?: () => void
   actionIcon?: As
+}
+
+const TagItem = ({ tag, handleAction }: TagItemProps) => {
+  return (
+    <Tag
+      borderRadius="full"
+      variant="solid"
+      colorScheme="green"
+      onClick={handleAction}
+    >
+      <TagLabel>{tag.name}</TagLabel>
+    </Tag>
+  )
 }
 
 const TagItemWithGroup = ({
@@ -32,14 +50,6 @@ const TagGroupItem = ({ tagGroup }) => {
   return (
     <Tag borderRadius="full" variant="solid" colorScheme="red">
       <TagLabel>{tagGroup.name}</TagLabel>
-    </Tag>
-  )
-}
-
-const TagItem = ({ tag }) => {
-  return (
-    <Tag borderRadius="full" variant="solid" colorScheme="green">
-      <TagLabel>{tag.name}</TagLabel>
     </Tag>
   )
 }

@@ -61,7 +61,7 @@ const TagsModal = ({
           <Box>
             {availableTagGroups.map((tagGroup) => (
               <Box key={tagGroup.id}>
-                <Wrap m={2} spacing={0.5}>
+                <Wrap m={2}>
                   {tagGroup.tags.map((tag) => (
                     <WrapItem key={tag.id}>
                       <TagItemWithGroup

@@ -1,6 +1,6 @@
 import { MetaTags } from '@redwoodjs/web'
 import ImagesCell from 'src/components/Image/ImagesCell'
-import TagsCell from 'src/components/Tag/TagsCell'
+import FilterPanelCell from 'src/components/Filter/FilterPanelCell'
 import { HStack, Box } from '@chakra-ui/react'
 
 const HomePage = () => {
@@ -12,7 +12,7 @@ const HomePage = () => {
 
       <HStack>
         <Box w={200}>
-          <TagsCell />
+          <FilterPanelCell />
         </Box>
         <Box>
           <ImagesCell />

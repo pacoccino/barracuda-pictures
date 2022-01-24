@@ -1,16 +1,20 @@
-import type { FindTags } from 'types/graphql'
+import type { FindFilters } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import TagList from 'src/components/Tag/TagList/TagList'
+import FilterPanel from 'src/components/Filter/FilterPanel'
 
 export const QUERY = gql`
-  query FindTags {
+  query FindFilters {
     tagGroups {
       id
       name
       tags {
         id
         name
+        tagGroup {
+          id
+          name
+        }
       }
     }
   }
@@ -26,6 +30,6 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ tagGroups }: CellSuccessProps<FindTags>) => {
-  return <TagList tagGroups={tagGroups} />
+export const Success = ({ tagGroups }: CellSuccessProps<FindFilters>) => {
+  return <FilterPanel tagGroups={tagGroups} />
 }

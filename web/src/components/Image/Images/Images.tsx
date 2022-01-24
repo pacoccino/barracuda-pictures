@@ -17,8 +17,8 @@ const ImagesList = ({ images }) => {
                 src={getImageUrl(image)}
                 alt={image.path}
                 fit="cover"
-                h={120}
-                w={120}
+                h={150}
+                w={150}
               />
             </Link>
           </WrapItem>
