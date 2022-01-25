@@ -5,6 +5,7 @@
   "dependencies": {
     "@redwoodjs/api": "0.41.0",
     "@redwoodjs/graphql-server": "0.41.0",
+    "aws-sdk": "^2.1062.0",
     "exif": "^0.6.0",
     "moment": "^2.29.1",
     "node-static": "^0.7.11"
