@@ -5,7 +5,7 @@ import { HStack, Box } from '@chakra-ui/react'
 import { useFilterContext } from 'src/contexts/filter'
 
 const PhotosPage = () => {
-  const { selectedTags } = useFilterContext()
+  const { filter } = useFilterContext()
   return (
     <>
       <MetaTags title="Home" description="Home page" />
@@ -17,7 +17,7 @@ const PhotosPage = () => {
           <FilterPanelCell />
         </Box>
         <Box>
-          <ImagesCell tagIds={selectedTags.map((t) => t.id)} />
+          <ImagesCell filter={filter} />
         </Box>
       </HStack>
     </>

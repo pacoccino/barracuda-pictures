@@ -4,8 +4,8 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import Images from 'src/components/Image/Images'
 
 export const QUERY = gql`
-  query FindImages($tagIds: [String]!) {
-    imagesWithFilter(filter: { tagIds: $tagIds }) {
+  query FindImages($filter: ImageFilters!) {
+    imagesWithFilter(filter: $filter) {
       id
       path
       dateTaken

@@ -19,15 +19,17 @@ export const Image = {
 }
 
 export const imagesWithFilter = ({ filter }) => {
-  return db.image.findMany({
-    where: {
-      tagsOnImages: {
-        some: {
-          OR: filter.tagIds.map((tagId) => ({
-            tagId,
-          })),
-        },
+  const query: Prisma.ImageFindManyArgs = {
+    where: {},
+  }
+  if (filter.tagIds.length > 0) {
+    query.where.tagsOnImages = {
+      some: {
+        OR: filter.tagIds.map((tagId) => ({
+          tagId,
+        })),
       },
-    },
-  })
+    }
+  }
+  return db.image.findMany(query)
 }

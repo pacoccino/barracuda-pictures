@@ -25,11 +25,17 @@ const FilterPanel = ({ tagGroups }) => {
   return (
     <VStack>
       <Box>
-        <h2>Active filters</h2>
-        <TagListFlat
-          tags={selectedTags}
-          onClick={(tag) => removeTagToFilter(tag)}
-        />
+        {selectedTags.length > 0 ? (
+          <Box>
+            <h2>Active filters</h2>
+            <TagListFlat
+              tags={selectedTags}
+              onClick={(tag) => removeTagToFilter(tag)}
+            />
+          </Box>
+        ) : (
+          <h2>No active filters</h2>
+        )}
         <h2>Tags</h2>
         <TagListGrouped
           tagGroups={tagGroups}
