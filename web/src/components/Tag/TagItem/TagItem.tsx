@@ -1,57 +1,54 @@
-import { Tag, TagLabel, TagRightIcon } from '@chakra-ui/react'
-import { As } from '@chakra-ui/system/dist/declarations/src/system.types'
+import { Tag } from 'src/design-system'
+import { TagStatus, TagProps } from 'src/design-system/components/Tag'
 
 type TagItemProps = {
   tag: { id: string; name: string }
+  actionLabel?: string
   handleAction?: () => void
+  status?: TagStatus
 }
 
 type TagItemWithGroupProps = TagItemProps & {
   tag: { id: string; name: string; tagGroup: { id: string; name: string } }
-  handleAction?: () => void
-  actionIcon?: As
 }
 
-const TagItem = ({ tag, handleAction }: TagItemProps) => {
+const TagItem = ({
+  tag,
+  actionLabel,
+  handleAction,
+  ...tagArgs
+}: TagProps & TagItemProps) => {
   return (
     <Tag
-      borderRadius="full"
-      variant="solid"
-      colorScheme="green"
+      name={tag.name}
+      color="green"
       onClick={handleAction}
-    >
-      <TagLabel>{tag.name}</TagLabel>
-    </Tag>
+      actionLabel={actionLabel}
+      {...tagArgs}
+    />
   )
 }
 
 const TagItemWithGroup = ({
   tag,
   handleAction,
-  actionIcon,
-}: TagItemWithGroupProps) => {
+  actionLabel,
+  ...tagArgs
+}: TagProps & TagItemWithGroupProps) => {
   return (
     <Tag
-      borderRadius="full"
-      variant="solid"
-      colorScheme="green"
+      name={tag.name}
+      color="green"
       onClick={handleAction}
-    >
-      <Tag borderRadius="full" variant="solid" colorScheme="red" mr={2}>
-        <TagLabel>{tag.tagGroup.name}</TagLabel>
-      </Tag>
-      <TagLabel>{tag.name}</TagLabel>
-      {actionIcon && <TagRightIcon boxSize="12px" as={actionIcon} />}
-    </Tag>
+      category={{ name: tag.tagGroup.name, color: 'red' }}
+      actionLabel={actionLabel}
+      {...tagArgs}
+    />
   )
 }
 
 const TagGroupItem = ({ tagGroup }) => {
-  return (
-    <Tag borderRadius="full" variant="solid" colorScheme="red">
-      <TagLabel>{tagGroup.name}</TagLabel>
-    </Tag>
-  )
+  return <Tag name={tagGroup.name} color="red" />
 }
 
 export { TagItem, TagGroupItem, TagItemWithGroup }

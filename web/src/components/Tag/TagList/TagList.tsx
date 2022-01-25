@@ -5,9 +5,11 @@ import {
   TagItemWithGroup,
 } from 'src/components/Tag/TagItem/TagItem'
 import type { Tag, TagGroup } from 'types/graphql'
+import { TagProps, TagStatus } from 'src/design-system/components/Tag'
 
 type TagListProps = {
   onClick?: (Tag) => void
+  selectedTags?: Tag[]
 }
 
 type TagListGroupedProps = TagListProps & {
@@ -17,7 +19,12 @@ type TagListFlatProps = TagListProps & {
   tags: Tag[]
 }
 
-const TagListGrouped = ({ tagGroups, onClick }: TagListGroupedProps) => {
+const TagListGrouped = ({
+  tagGroups,
+  onClick,
+  selectedTags,
+  ...tagArgs
+}: TagProps & TagListGroupedProps) => {
   return (
     <VStack>
       {tagGroups.map((tagGroup) => (
@@ -26,7 +33,16 @@ const TagListGrouped = ({ tagGroups, onClick }: TagListGroupedProps) => {
           <Wrap m={2}>
             {tagGroup.tags.map((tag) => (
               <WrapItem key={tag.id}>
-                <TagItem tag={tag} handleAction={() => onClick(tag)} />
+                <TagItem
+                  tag={tag}
+                  handleAction={() => onClick(tag)}
+                  status={
+                    selectedTags && selectedTags.find((t) => t.id === tag.id)
+                      ? TagStatus.positive
+                      : TagStatus.disabled
+                  }
+                  {...tagArgs}
+                />
               </WrapItem>
             ))}
           </Wrap>
@@ -36,12 +52,20 @@ const TagListGrouped = ({ tagGroups, onClick }: TagListGroupedProps) => {
   )
 }
 
-const TagListFlat = ({ tags, onClick }: TagListFlatProps) => {
+const TagListFlat = ({
+  tags,
+  onClick,
+  ...tagArgs
+}: TagProps & TagListFlatProps) => {
   return (
     <Wrap m={2}>
       {tags.map((tag) => (
         <WrapItem key={tag.id}>
-          <TagItemWithGroup tag={tag} handleAction={() => onClick(tag)} />
+          <TagItemWithGroup
+            tag={tag}
+            handleAction={() => onClick(tag)}
+            {...tagArgs}
+          />
         </WrapItem>
       ))}
     </Wrap>
