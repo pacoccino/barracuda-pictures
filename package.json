@@ -25,9 +25,11 @@
   "scripts": {
     "start": "yarn rw dev",
     "dockers": "docker-compose up -d",
-    "cleandb": "docker-compose down -v && rm -rf ./api/db/migrations && yarn rw migrate dev --name init",
+    "stop-and-clean": "docker-compose down -v",
+    "reset-migrations": "docker-compose down -v && rm -rf ./api/db/migrations && yarn rw migrate dev --name init",
     "scan": "yarn rw exec scan",
     "static": "yarn rw exec static-server",
+    "migrate": "yarn rw prisma migrate dev",
     "studio": "yarn rw prisma studio"
   }
 }
