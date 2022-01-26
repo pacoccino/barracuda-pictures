@@ -54,7 +54,7 @@ export const Tag = ({
         }
       }
       onClick={onClick}
-      cursor={onClick ? 'pointer' : undefined}
+      cursor={onClick ? 'pointer' : 'initial'}
       color="white"
       {...args}
     >

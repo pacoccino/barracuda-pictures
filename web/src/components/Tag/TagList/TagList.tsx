@@ -63,7 +63,7 @@ const TagListFlat = ({
         <WrapItem key={tag.id}>
           <TagItemWithGroup
             tag={tag}
-            handleAction={() => onClick(tag)}
+            handleAction={onClick && (() => onClick(tag))}
             {...tagArgs}
           />
         </WrapItem>

@@ -5,12 +5,12 @@ const Routes = () => {
   return (
     <Router>
       <Set wrap={DashboardLayout}>
-        <Route path="/photos/{id:String}" page={PhotoPage} name="photo" />
         <Route path="/photos" page={PhotosPage} name="photos" />
         <Route path="/admin" page={AdminPage} name="admin" />
         <Route path="/" page={HomePage} name="home" />
+        <Route notfound page={NotFoundPage} />
       </Set>
-      <Route notfound page={NotFoundPage} />
+      <Route path="/photos/{id:String}" page={PhotoPage} name="photo" />
     </Router>
   )
 }
