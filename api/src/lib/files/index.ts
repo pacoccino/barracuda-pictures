@@ -30,6 +30,15 @@ type RecursiveFileIterator = {
   next: () => Promise<string | null>
 }
 
+/*
+const a = await listDirRecursiveIter(path)
+
+let b = await a.next()
+while (b) {
+  console.log(b)
+  b = await a.next()
+}
+*/
 export async function listDirRecursiveIter(
   rootPath: string
 ): Promise<RecursiveFileIterator> {

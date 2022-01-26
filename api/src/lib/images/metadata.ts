@@ -2,16 +2,18 @@ import moment from 'moment'
 import { ExifImage } from 'exif'
 
 type ImageMetadata = {
-  image: object
-  exif: object
-  gps: object
+  image: any
+  exif: any
+  gps: any
 }
 
 type ParsedImageMetadata = {
   CreateDate?: Date
 }
 
-export async function getMetadata(path: string): Promise<ImageMetadata> {
+export async function getMetadata(
+  path: Buffer | string
+): Promise<ImageMetadata> {
   return new Promise((resolve, reject) => {
     try {
       // eslint-disable-next-line no-new

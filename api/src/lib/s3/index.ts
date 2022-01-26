@@ -16,14 +16,62 @@ const promiseSimple = (resolve, reject) => (err, res) => {
     resolve(res)
   }
 }
-export async function listS3(prefix) {
-  return new Promise((resolve, reject) => {
-    const bucketParams = {
+
+const promisify =
+  (fn) =>
+  (params): ReturnType<typeof fn> => {
+    return new Promise((resolve, reject) => {
+      fn.bind(s3)(params, (err, res) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(res)
+        }
+      })
+    })
+  }
+
+export const S3Lib = {
+  async list(Prefix?: string): Promise<string[]> {
+    const params = {
       Bucket: process.env['S3_BUCKET_NAME'],
-      Prefix: prefix,
+      Prefix,
     }
-    s3.listObjects(bucketParams, promiseSimple(resolve, reject))
-  })
+    const res = await promisify(s3.listObjects)(params)
+    return res.Contents.map((c) => c.Key)
+  },
+
+  async get(Key: string): Promise<Buffer> {
+    const params = {
+      Bucket: process.env['S3_BUCKET_NAME'],
+      Key,
+    }
+    const res = await promisify(s3.getObject)(params)
+    return res.Body
+  },
+  async delete(Key: string): Promise<void> {
+    const params = {
+      Bucket: process.env['S3_BUCKET_NAME'],
+      Key,
+    }
+    await promisify(s3.deleteObject)(params)
+  },
+  async put(Key: string, Object: string): Promise<void> {
+    const params = {
+      Bucket: process.env['S3_BUCKET_NAME'],
+      Key,
+      Object,
+    }
+    await promisify(s3.putObject)(params)
+  },
+  async update(Key: string, Object: string): Promise<void> {
+    const params = {
+      Bucket: process.env['S3_BUCKET_NAME'],
+      Key,
+      Object,
+    }
+    await promisify(s3.putObject)(params)
+  },
 }
 
 /*

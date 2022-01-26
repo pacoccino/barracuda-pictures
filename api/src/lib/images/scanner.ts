@@ -1,33 +1,24 @@
 import type { Prisma } from '@prisma/client'
 
-import { listDirRecursive } from 'src/lib/files'
 import { db } from 'src/lib/db'
 
 import { getMetadata, parseMetadata } from 'src/lib/images/metadata'
-
-/*
-const a = await listDirRecursiveIter(path)
-
-let b = await a.next()
-while (b) {
-  console.log(b)
-  b = await a.next()
-}
-*/
+import { S3Lib } from 'src/lib/s3'
 
 export async function scanFiles() {
-  const path = process.env['FILESYSTEM_FOLDER']
+  console.log('Scanner script started')
 
-  const files = await listDirRecursive(path)
+  const files = await S3Lib.list()
 
   console.log('emptying db')
   await db.image.deleteMany({})
 
-  console.log('importing files', files)
+  console.log('importing files from s3', files.length)
 
   await Promise.all(
     files.map(async (imagePath: Prisma.ImageCreateInput['path']) => {
-      const metadata = await getMetadata(`${path}/${imagePath}`)
+      const imageBuffer = await S3Lib.get(imagePath)
+      const metadata = await getMetadata(imageBuffer)
       const parsedMetadata = parseMetadata(metadata)
 
       const record = await db.image.create({
@@ -38,7 +29,7 @@ export async function scanFiles() {
           metadataJson: JSON.stringify(metadata) || '',
         },
       })
-      console.log(record.path)
+      console.log('added image', record.path)
     })
   )
 
