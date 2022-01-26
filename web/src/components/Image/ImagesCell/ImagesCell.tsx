@@ -5,7 +5,7 @@ import Images from 'src/components/Image/Images'
 
 export const QUERY = gql`
   query FindImages($filter: ImageFilters!) {
-    imagesWithFilter(filter: $filter) {
+    images(filter: $filter, sorting: { dateTaken: desc }) {
       id
       path
       dateTaken
@@ -23,6 +23,6 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ imagesWithFilter }: CellSuccessProps<FindImages>) => {
-  return <Images images={imagesWithFilter} />
+export const Success = ({ images }: CellSuccessProps<FindImages>) => {
+  return <Images images={images} />
 }
