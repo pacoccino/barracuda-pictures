@@ -7,18 +7,17 @@ import { useFilterContext } from 'src/contexts/filter'
 const PhotosPage = () => {
   const { filter } = useFilterContext()
   return (
-    <>
-      <MetaTags title="Home" description="Home page" />
-
-      <Flex>
-        <Box w={250}>
-          <FilterPanelCell />
-        </Box>
-        <Box flex="1">
+    <Flex h="100%">
+      <MetaTags title="Photos" description="Photos page" />
+      <Box w={250}>
+        <FilterPanelCell />
+      </Box>
+      <Box flex="1" position="relative">
+        <Box position="absolute" top={0} bottom={0} overflowY="auto">
           <ImagesCell filter={filter} />
         </Box>
-      </Flex>
-    </>
+      </Box>
+    </Flex>
   )
 }
 

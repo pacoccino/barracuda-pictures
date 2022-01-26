@@ -58,7 +58,7 @@ const TagListFlat = ({
   ...tagArgs
 }: TagProps & TagListFlatProps) => {
   return (
-    <Wrap m={2}>
+    <Wrap>
       {tags.map((tag) => (
         <WrapItem key={tag.id}>
           <TagItemWithGroup

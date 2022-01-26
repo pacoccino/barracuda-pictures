@@ -1,7 +1,6 @@
-import { Tooltip, Tag as CTag, TagLabel, TagRightIcon } from '@chakra-ui/react'
+import { Flex, Tooltip, Box, Text, Icon } from '@chakra-ui/react'
 import type { TagProps as CTagProps } from '@chakra-ui/react'
 import { As } from '@chakra-ui/system/dist/declarations/src/system.types'
-import { Icon } from '@chakra-ui/icons'
 
 export enum TagStatus {
   'positive' = 'positive',
@@ -41,14 +40,13 @@ export const Tag = ({
   ...args
 }: TagProps) => (
   <TagTooltip label={actionLabel}>
-    <CTag
-      borderRadius="full"
-      variant="solid"
-      borderWidth={2}
+    <Flex
+      borderRadius={4}
       borderColor={color + '.500'}
-      colorScheme={color}
-      size="xs"
+      bg={color + '.500'}
       px={1}
+      py={0}
+      h={5}
       _hover={onClick && { borderColor: color + '.200' }}
       _active={
         onClick && {
@@ -57,6 +55,7 @@ export const Tag = ({
       }
       onClick={onClick}
       cursor={onClick ? 'pointer' : undefined}
+      color="white"
       {...args}
     >
       {status && (
@@ -69,20 +68,14 @@ export const Tag = ({
       )}
 
       {category && (
-        <CTag
-          variant="solid"
-          colorScheme={category.color}
-          mr={2}
-          px={1}
-          size="xs"
-        >
-          <TagLabel fontSize="xs">{category.name}</TagLabel>
-        </CTag>
+        <Box bg={category.color + '.500'} mr={2} px={1} size="xs">
+          <Text fontSize="xs">{category.name}</Text>
+        </Box>
       )}
 
-      <TagLabel fontSize={'xs'}>{name}</TagLabel>
+      <Text fontSize={'xs'}>{name}</Text>
 
-      {actionIcon && <TagRightIcon boxSize="12px" as={actionIcon} />}
-    </CTag>
+      {actionIcon && <Icon boxSize="12px" as={actionIcon} />}
+    </Flex>
   </TagTooltip>
 )
