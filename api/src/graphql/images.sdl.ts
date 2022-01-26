@@ -3,7 +3,7 @@ export const schema = gql`
     id: String!
     path: String!
     dateTaken: DateTime!
-    metadataJson: String!
+    metadata: JSONObject!
     tagsOnImages: [TagsOnImage]!
   }
 
@@ -20,12 +20,12 @@ export const schema = gql`
   input CreateImageInput {
     path: String!
     dateTaken: DateTime!
-    metadataJson: String!
+    metadata: JSONObject
   }
 
   input UpdateImageInput {
     path: String
     dateTaken: DateTime
-    metadataJson: String
+    metadata: JSONObject
   }
 `

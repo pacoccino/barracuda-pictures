@@ -11,8 +11,8 @@ generator client {
 model Image {
   id            String        @id @default(uuid())
   path          String
-  dateTaken     DateTime
-  metadataJson  String
+  dateTaken     DateTime      @default(now())
+  metadata      Json          @default("{}")
   tagsOnImages  TagsOnImage[]
 }
 

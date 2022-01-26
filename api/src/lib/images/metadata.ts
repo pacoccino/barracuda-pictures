@@ -2,14 +2,13 @@ import moment from 'moment'
 import { ExifImage } from 'exif'
 
 type ImageMetadata = {
-  image: any
-  exif: any
-  gps: any
+  image?: any
+  exif?: any
+  gps?: any
 }
 
 type ParsedImageMetadata = {
-  json: string
-  dateTaken: Date
+  dateTaken?: Date
   camera?: string
 }
 
@@ -21,10 +20,10 @@ export async function getMetadata(
       // eslint-disable-next-line no-new
       new ExifImage({ image: path }, (error, exifData) => {
         if (error && error.code === 'NO_EXIF_SEGMENT') {
-          resolve(null)
+          resolve({})
         } else if (error) {
           reject(error)
-        } else resolve(exifData)
+        } else resolve(JSON.parse(JSON.stringify(exifData)))
       })
     } catch (error) {
       reject(error)
@@ -32,13 +31,8 @@ export async function getMetadata(
   })
 }
 
-export function parseMetadata(
-  metadata: ImageMetadata | null
-): ParsedImageMetadata {
-  const parsed: ParsedImageMetadata = {
-    json: metadata ? JSON.stringify(metadata) : '',
-    dateTaken: new Date(),
-  }
+export function parseMetadata(metadata: ImageMetadata): ParsedImageMetadata {
+  const parsed: ParsedImageMetadata = {}
 
   if (!metadata) return parsed
 

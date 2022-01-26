@@ -9,7 +9,6 @@ export const QUERY = gql`
       id
       path
       dateTaken
-      metadataJson
     }
   }
 `

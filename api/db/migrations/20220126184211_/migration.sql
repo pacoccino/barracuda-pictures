@@ -2,8 +2,8 @@
 CREATE TABLE "Image" (
     "id" TEXT NOT NULL,
     "path" TEXT NOT NULL,
-    "dateTaken" TIMESTAMP(3) NOT NULL,
-    "metadataJson" TEXT NOT NULL,
+    "dateTaken" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "metadata" JSONB NOT NULL DEFAULT '{}',
 
     CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
 );

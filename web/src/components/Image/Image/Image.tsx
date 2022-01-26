@@ -65,7 +65,7 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
             </tr>
             <tr>
               <th>Metadata json</th>
-              <td>{image.metadataJson}</td>
+              <td>{JSON.stringify(image.metadata)}</td>
             </tr>
           </tbody>
         </table>

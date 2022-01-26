@@ -9,7 +9,7 @@ export const QUERY = gql`
       id
       path
       dateTaken
-      metadataJson
+      metadata
       tagsOnImages {
         id
         tag {
