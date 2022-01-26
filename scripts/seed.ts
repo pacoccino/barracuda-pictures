@@ -7,6 +7,7 @@ import { db } from 'api/src/lib/db'
 
 export default async () => {
   try {
+    /*
     await db.tag.deleteMany({})
     await db.tagGroup.deleteMany({})
 
@@ -49,6 +50,7 @@ export default async () => {
         console.log(record_tag)
       })
     )
+   */
   } catch (error) {
     console.error(error)
   }

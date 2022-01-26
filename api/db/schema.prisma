@@ -13,6 +13,8 @@ model Image {
   path          String
   dateTaken     DateTime      @default(now())
   metadata      Json          @default("{}")
+  takenAtLat    Float?
+  takenAtLng    Float?
   tagsOnImages  TagsOnImage[]
 }
 

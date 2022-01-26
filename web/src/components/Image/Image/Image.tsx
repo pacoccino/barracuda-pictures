@@ -43,6 +43,23 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
               <td>{image.dateTaken}</td>
             </tr>
             <tr>
+              <th>Location</th>
+              <td>
+                {image.takenAtLat && image.takenAtLat ? (
+                  <Box>
+                    <p>
+                      <b>Lat:</b> {image.takenAtLat}
+                    </p>
+                    <p>
+                      <b>Lng:</b> {image.takenAtLng}
+                    </p>
+                  </Box>
+                ) : (
+                  'Unknonwn'
+                )}
+              </td>
+            </tr>
+            <tr>
               <th>Tags</th>
               <td>
                 <HStack>
