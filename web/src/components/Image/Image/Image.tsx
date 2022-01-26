@@ -43,10 +43,6 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
               <td>{image.dateTaken}</td>
             </tr>
             <tr>
-              <th>Date edited</th>
-              <td>{image.dateEdited}</td>
-            </tr>
-            <tr>
               <th>Tags</th>
               <td>
                 <HStack>

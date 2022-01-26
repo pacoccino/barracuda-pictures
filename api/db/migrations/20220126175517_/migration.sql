@@ -3,7 +3,6 @@ CREATE TABLE "Image" (
     "id" TEXT NOT NULL,
     "path" TEXT NOT NULL,
     "dateTaken" TIMESTAMP(3) NOT NULL,
-    "dateEdited" TIMESTAMP(3) NOT NULL,
     "metadataJson" TEXT NOT NULL,
 
     CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
@@ -34,6 +33,12 @@ CREATE TABLE "TagsOnImage" (
 
     CONSTRAINT "TagsOnImage_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TagGroup_name_key" ON "TagGroup"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Tag_name_tagGroupId_key" ON "Tag"("name", "tagGroupId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TagsOnImage_tagId_imageId_key" ON "TagsOnImage"("tagId", "imageId");

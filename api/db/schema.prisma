@@ -12,14 +12,13 @@ model Image {
   id            String        @id @default(uuid())
   path          String
   dateTaken     DateTime
-  dateEdited    DateTime
   metadataJson  String
   tagsOnImages  TagsOnImage[]
 }
 
 model TagGroup {
   id            String        @id @default(uuid())
-  name          String
+  name          String        @unique
   tags          Tag[]
 }
 
@@ -29,6 +28,8 @@ model Tag {
   tagGroupId    String
   tagGroup      TagGroup      @relation(fields: [tagGroupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   tagsOnImages  TagsOnImage[]
+
+  @@unique([name, tagGroupId])
 }
 
 model TagsOnImage {

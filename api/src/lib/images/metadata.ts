@@ -8,7 +8,9 @@ type ImageMetadata = {
 }
 
 type ParsedImageMetadata = {
-  CreateDate?: Date
+  json: string
+  dateTaken: Date
+  camera?: string
 }
 
 export async function getMetadata(
@@ -33,13 +35,23 @@ export async function getMetadata(
 export function parseMetadata(
   metadata: ImageMetadata | null
 ): ParsedImageMetadata {
-  if (!metadata) return null
+  const parsed: ParsedImageMetadata = {
+    json: metadata ? JSON.stringify(metadata) : '',
+    dateTaken: new Date(),
+  }
 
-  const parsed: ParsedImageMetadata = {}
+  if (!metadata) return parsed
+
   if (metadata.exif?.CreateDate) {
-    parsed.CreateDate = moment
+    parsed.dateTaken = moment
       .utc(metadata.exif.CreateDate, 'YYYY-MM-DD hh:mm:ss')
       .toDate()
+  }
+
+  if (metadata.image?.Model || metadata.image?.Make) {
+    parsed.camera = `${metadata.image?.Make}${
+      metadata.image?.Model && metadata.image?.Make ? ' - ' : ''
+    }${metadata.image?.Model}`
   }
 
   return parsed
