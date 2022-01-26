@@ -47,6 +47,8 @@ export const Tag = ({
       borderWidth={2}
       borderColor={color + '.500'}
       colorScheme={color}
+      size="xs"
+      px={1}
       _hover={onClick && { borderColor: color + '.200' }}
       _active={
         onClick && {
@@ -58,24 +60,28 @@ export const Tag = ({
       {...args}
     >
       {status && (
-        <Icon viewBox="0 0 200 200" color={STATUS_TO_COLOR[status]}>
+        <Icon viewBox="0 0 200 200" color={STATUS_TO_COLOR[status]} mr={1}>
           <path
             fill="currentColor"
             d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
           />
         </Icon>
       )}
+
       {category && (
         <CTag
-          borderRadius="full"
           variant="solid"
           colorScheme={category.color}
           mr={2}
+          px={1}
+          size="xs"
         >
-          <TagLabel>{category.name}</TagLabel>
+          <TagLabel fontSize="xs">{category.name}</TagLabel>
         </CTag>
       )}
-      <TagLabel>{name}</TagLabel>
+
+      <TagLabel fontSize={'xs'}>{name}</TagLabel>
+
       {actionIcon && <TagRightIcon boxSize="12px" as={actionIcon} />}
     </CTag>
   </TagTooltip>
