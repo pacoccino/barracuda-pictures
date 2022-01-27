@@ -26,7 +26,7 @@ const TagTooltip = ({ label, children }) => (
 
 const STATUS_TO_COLOR = {
   positive: 'blue.300',
-  disabled: 'grey.100',
+  disabled: 'gray.100',
   negative: 'red.600',
 }
 export const Tag = ({

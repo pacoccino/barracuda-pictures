@@ -1,20 +1,29 @@
 import { Link, routes, useMatch } from '@redwoodjs/router'
-import { Box, Button, Flex, Heading, HStack } from '@chakra-ui/react'
+import {
+  Box,
+  IconButton,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+} from '@chakra-ui/react'
+import { SettingsIcon } from '@chakra-ui/icons'
 
 type DashboardLayoutProps = {
   children?: React.ReactNode
 }
-
+/*
 const CustomNavLink = ({ to, name }) => {
   const matchInfo = useMatch(to)
   return (
     <Link to={to}>
-      <Button size="xs" bg={matchInfo.match ? 'blue.400' : undefined}>
+      <Button size="xs" bg={matchInfo.match ? 'blue.200' : undefined}>
         {name}
       </Button>
     </Link>
   )
 }
+ */
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <Flex direction="column" height="100vh">
@@ -24,16 +33,22 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         align="center"
         as="header"
         h={34}
-        bg="blue.600"
+        bg="gray.700"
         w="100%"
       >
-        <Heading as="h4" size="md" textTransform="uppercase" color="white">
-          Barracuda photos
-        </Heading>
+        <Link to={routes.photos()}>
+          <Heading as="h4" size="md" textTransform="uppercase" color="white">
+            Barracuda photos
+          </Heading>
+        </Link>
         <HStack as="nav">
-          <CustomNavLink to={routes.home()} name="Home" />
-          <CustomNavLink to={routes.photos()} name="Photos" />
-          <CustomNavLink to={routes.admin()} name="Admin" />
+          <Link to={routes.admin()}>
+            <IconButton
+              aria-label="Settings"
+              icon={<SettingsIcon />}
+              size="xs"
+            />
+          </Link>
         </HStack>
       </HStack>
       <Box as="main" flex="1">
