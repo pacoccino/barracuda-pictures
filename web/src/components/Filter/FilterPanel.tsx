@@ -9,7 +9,7 @@ import {
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
-import { useCallback } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
 import {
@@ -21,6 +21,14 @@ import {
 const FilterPanel = ({ tagGroups }) => {
   const { selectedTags, setSelectedTags, clearFilter } = useFilterContext()
 
+  const selectedTagIds = useMemo(
+    () => selectedTags.map((t) => t.id),
+    [selectedTags]
+  )
+  const isTagSelected = useCallback(
+    (tag) => selectedTagIds.indexOf(tag.id) !== -1,
+    [selectedTagIds]
+  )
   const addTagToFilter = useCallback(
     (tag: Tag) => {
       if (selectedTags.findIndex((t) => t.id === tag.id) === -1)
@@ -50,14 +58,21 @@ const FilterPanel = ({ tagGroups }) => {
                   <WrapItem key={tag.id}>
                     <TagItem
                       tag={tag}
-                      handleAction={() => addTagToFilter(tag)}
+                      handleAction={
+                        isTagSelected(tag)
+                          ? () => removeTagToFilter(tag)
+                          : () => addTagToFilter(tag)
+                      }
                       status={
-                        selectedTags &&
-                        selectedTags.find((t) => t.id === tag.id)
+                        isTagSelected(tag)
                           ? TagStatus.positive
                           : TagStatus.disabled
                       }
-                      actionLabel="Add to filter"
+                      actionLabel={
+                        isTagSelected(tag)
+                          ? 'Remove from filter'
+                          : 'Add to filter'
+                      }
                     />
                   </WrapItem>
                 ))}
