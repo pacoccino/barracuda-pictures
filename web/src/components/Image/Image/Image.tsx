@@ -13,6 +13,8 @@ import {
   Td,
   TableCaption,
   Icon,
+  WrapItem,
+  Wrap,
 } from '@chakra-ui/react'
 import { getImageUrl } from 'src/lib/static'
 import { useMemo, useState } from 'react'
@@ -22,6 +24,7 @@ import TagsModalCell from 'src/components/Tag/TagsModalCell/TagsModalCell'
 import { TagListFlat } from 'src/components/Tag/TagList/TagList'
 import { CloseIcon } from '@chakra-ui/icons'
 import { Link, routes } from '@redwoodjs/router'
+import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 
 const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
   const imageUrl = useMemo(() => getImageUrl(image), [])
@@ -95,7 +98,15 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
               <Th>Tags</Th>
               <Td>
                 <VStack>
-                  <TagListFlat tags={image.tagsOnImages.map((ti) => ti.tag)} />
+                  <Wrap>
+                    {image.tagsOnImages
+                      .map((ti) => ti.tag)
+                      .map((tag) => (
+                        <WrapItem key={tag.id}>
+                          <TagItemWithGroup tag={tag} />
+                        </WrapItem>
+                      ))}
+                  </Wrap>
                   <Button
                     size="sm"
                     colorScheme="blue"

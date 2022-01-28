@@ -3,17 +3,20 @@ import type { Tag } from 'types/graphql'
 import {
   Box,
   Button,
-  Center,
   Flex,
   Heading,
-  HStack,
-  Text,
   VStack,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react'
 import { useCallback } from 'react'
-import { TagListGrouped, TagListFlat } from 'src/components/Tag/TagList/TagList'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
+import {
+  TagGroupItem,
+  TagItem,
+  TagItemWithGroup,
+} from 'src/components/Tag/TagItem/TagItem'
 
 const FilterPanel = ({ tagGroups }) => {
   const { selectedTags, setSelectedTags, clearFilter } = useFilterContext()
@@ -38,12 +41,30 @@ const FilterPanel = ({ tagGroups }) => {
         Tags
       </Heading>
       <Box flex="1">
-        <TagListGrouped
-          tagGroups={tagGroups}
-          selectedTags={selectedTags}
-          actionLabel="Add to filter"
-          onClick={(tag) => addTagToFilter(tag)}
-        />
+        <VStack>
+          {tagGroups.map((tagGroup) => (
+            <Box key={tagGroup.id}>
+              <TagGroupItem tagGroup={tagGroup} />
+              <Wrap m={2}>
+                {tagGroup.tags.map((tag) => (
+                  <WrapItem key={tag.id}>
+                    <TagItem
+                      tag={tag}
+                      handleAction={() => addTagToFilter(tag)}
+                      status={
+                        selectedTags &&
+                        selectedTags.find((t) => t.id === tag.id)
+                          ? TagStatus.positive
+                          : TagStatus.disabled
+                      }
+                      actionLabel="Add to filter"
+                    />
+                  </WrapItem>
+                ))}
+              </Wrap>
+            </Box>
+          ))}
+        </VStack>
       </Box>
       <Flex w="100%">
         <Heading as="h3" size="sm" mb={2} flex="1">
@@ -59,11 +80,17 @@ const FilterPanel = ({ tagGroups }) => {
         </Button>
       </Flex>
       {selectedTags.length > 0 && (
-        <TagListFlat
-          actionLabel="Remove from filter"
-          tags={selectedTags}
-          onClick={(tag) => removeTagToFilter(tag)}
-        />
+        <Wrap>
+          {selectedTags.map((tag) => (
+            <WrapItem key={tag.id}>
+              <TagItemWithGroup
+                tag={tag}
+                actionLabel="Remove from filter"
+                handleAction={() => removeTagToFilter(tag)}
+              />
+            </WrapItem>
+          ))}
+        </Wrap>
       )}
     </VStack>
   )
