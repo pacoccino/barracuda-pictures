@@ -56,6 +56,7 @@ export const Tag = ({
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'initial'}
       color="white"
+      align="center"
       {...args}
     >
       {status && (
@@ -75,7 +76,7 @@ export const Tag = ({
 
       <Text fontSize={'xs'}>{name}</Text>
 
-      {actionIcon && <Icon boxSize="12px" as={actionIcon} />}
+      {actionIcon && <Icon boxSize="10px" ml={1} as={actionIcon} />}
     </Flex>
   </TagTooltip>
 )

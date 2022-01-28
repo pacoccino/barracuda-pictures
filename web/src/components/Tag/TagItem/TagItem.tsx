@@ -12,43 +12,26 @@ type TagItemWithGroupProps = TagItemProps & {
   tag: { id: string; name: string; tagGroup: { id: string; name: string } }
 }
 
-const TagItem = ({
-  tag,
-  actionLabel,
-  handleAction,
-  ...tagArgs
-}: TagProps & TagItemProps) => {
-  return (
-    <Tag
-      name={tag.name}
-      color="green"
-      onClick={handleAction}
-      actionLabel={actionLabel}
-      {...tagArgs}
-    />
-  )
+const TagItem = ({ tag, ...tagArgs }: TagProps & TagItemProps) => {
+  return <Tag name={tag.name} color="green" {...tagArgs} />
 }
 
 const TagItemWithGroup = ({
   tag,
-  handleAction,
-  actionLabel,
   ...tagArgs
 }: TagProps & TagItemWithGroupProps) => {
   return (
     <Tag
       name={tag.name}
       color="green"
-      onClick={handleAction}
       category={{ name: tag.tagGroup.name, color: 'red' }}
-      actionLabel={actionLabel}
       {...tagArgs}
     />
   )
 }
 
-const TagGroupItem = ({ tagGroup }) => {
-  return <Tag name={tagGroup.name} color="red" />
+const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
+  return <Tag name={tagGroup.name} color="red" {...tagArgs} />
 }
 
 export { TagItem, TagGroupItem, TagItemWithGroup }

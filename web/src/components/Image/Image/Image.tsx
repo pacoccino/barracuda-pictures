@@ -20,8 +20,7 @@ import { getImageUrl } from 'src/lib/static'
 import { useMemo, useState } from 'react'
 import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
-import TagsModalCell from 'src/components/Tag/TagsModalCell/TagsModalCell'
-import { TagListFlat } from 'src/components/Tag/TagList/TagList'
+import ImageTagsModalCell from 'src/components/Tag/ImageTagsModalCell/ImageTagsModalCell'
 import { CloseIcon } from '@chakra-ui/icons'
 import { Link, routes } from '@redwoodjs/router'
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
@@ -115,7 +114,7 @@ const Image = ({ image }: CellSuccessProps<FindImageWithTagsById>) => {
                     Edit
                   </Button>
                 </VStack>
-                <TagsModalCell
+                <ImageTagsModalCell
                   imageId={image.id}
                   isOpen={editTagOpen}
                   onClose={() => setEditTagOpen(false)}

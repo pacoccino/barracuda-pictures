@@ -9,7 +9,7 @@ import {
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
-import { useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
 import {
@@ -17,9 +17,11 @@ import {
   TagItem,
   TagItemWithGroup,
 } from 'src/components/Tag/TagItem/TagItem'
+import EditTagsModalCell from 'src/components/Tag/EditTagsModalCell/EditTagsModalCell'
 
 const FilterPanel = ({ tagGroups }) => {
   const { selectedTags, setSelectedTags, clearFilter } = useFilterContext()
+  const [editTagOpen, setEditTagOpen] = useState(false)
 
   const selectedTagIds = useMemo(
     () => selectedTags.map((t) => t.id),
@@ -45,9 +47,22 @@ const FilterPanel = ({ tagGroups }) => {
 
   return (
     <VStack py={4} px={2} align="start" bg="gray.100" h="100%">
-      <Heading as="h3" size="sm" mb={2}>
-        Tags
-      </Heading>
+      <Flex w="100%">
+        <Heading as="h3" size="sm" mb={2} flex="1">
+          Tags
+        </Heading>
+        <Button
+          onClick={() => setEditTagOpen(true)}
+          size="xs"
+          colorScheme="blue"
+        >
+          Edit tags
+        </Button>
+        <EditTagsModalCell
+          isOpen={editTagOpen}
+          onClose={() => setEditTagOpen(false)}
+        />
+      </Flex>
       <Box flex="1">
         <VStack>
           {tagGroups.map((tagGroup) => (
@@ -58,7 +73,7 @@ const FilterPanel = ({ tagGroups }) => {
                   <WrapItem key={tag.id}>
                     <TagItem
                       tag={tag}
-                      handleAction={
+                      onClick={
                         isTagSelected(tag)
                           ? () => removeTagToFilter(tag)
                           : () => addTagToFilter(tag)
@@ -101,7 +116,7 @@ const FilterPanel = ({ tagGroups }) => {
               <TagItemWithGroup
                 tag={tag}
                 actionLabel="Remove from filter"
-                handleAction={() => removeTagToFilter(tag)}
+                onClick={() => removeTagToFilter(tag)}
               />
             </WrapItem>
           ))}
