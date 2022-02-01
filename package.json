@@ -24,6 +24,7 @@
   },
   "scripts": {
     "start": "yarn rw dev",
+    "test": "yarn rw test api",
     "dockers": "docker-compose up -d",
     "stop-and-clean": "docker-compose down -v",
     "reset-migrations": "docker-compose down -v && rm -rf ./api/db/migrations && yarn rw migrate dev --name init",

@@ -1,5 +1,6 @@
 import type { Prisma } from '@prisma/client'
 import type { ResolverArgs } from '@redwoodjs/graphql-server'
+import type { QueryimagesArgs } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 
@@ -14,7 +15,12 @@ export const Image = {
     db.image.findUnique({ where: { id: root.id } }).tagsOnImages(),
 }
 
-export const images = ({ filter, limit, skip, sorting }) => {
+export const images = ({
+  filter,
+  limit = 10,
+  skip = 0,
+  sorting,
+}: QueryimagesArgs) => {
   const query: Prisma.ImageFindManyArgs = {
     take: limit,
     skip: skip,
@@ -27,13 +33,20 @@ export const images = ({ filter, limit, skip, sorting }) => {
   if (filter) {
     query.where = {}
 
-    if (filter.tagIds && filter.tagIds.length > 0) {
-      query.where.tagsOnImages = {
-        some: {
-          OR: filter.tagIds.map((tagId) => ({
-            tagId,
+    if (filter.tagsGrouped && filter.tagsGrouped.length > 0) {
+      query.where = {
+        AND: filter.tagsGrouped.map((tagGrouped) => ({
+          [tagGrouped.andor || 'OR']: tagGrouped.tagIds.map((tagId) => ({
+            tagsOnImages: {
+              some: {
+                tag: {
+                  id: tagId,
+                  tagGroupId: tagGrouped.tagGroupId,
+                },
+              },
+            },
           })),
-        },
+        })),
       }
     }
   }
