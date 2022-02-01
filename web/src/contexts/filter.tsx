@@ -1,4 +1,9 @@
-import type { Tag, TagGroup, FilterByTagList } from 'types/graphql'
+import type {
+  Tag,
+  TagGroup,
+  FilterByTagList,
+  TagListCondition,
+} from 'types/graphql'
 import { useContext, useMemo, useState, useCallback } from 'react'
 
 interface FilterContextType {
@@ -27,6 +32,17 @@ export const FilterContextProvider = ({ children }) => {
     () => tagLists.reduce((acc, tagList) => acc.concat(tagList.tagIds), []),
     [tagLists]
   )
+  const tagListConditions = useMemo(
+    () =>
+      tagLists.reduce(
+        (acc, tagList) => ({
+          ...acc,
+          [tagList.tagGroupId]: tagList.condition,
+        }),
+        {}
+      ),
+    [tagLists]
+  )
 
   const filter = useMemo(() => {
     return {
@@ -34,6 +50,30 @@ export const FilterContextProvider = ({ children }) => {
     }
   }, [tagLists])
 
+  const setTagListCondition = useCallback(
+    (tagGroup: TagGroup, condition: TagListCondition) => {
+      const tagListIndex = tagLists.findIndex(
+        (tl) => tl.tagGroupId === tagGroup.id
+      )
+      if (tagListIndex !== -1) {
+        const newTagLists = tagLists.slice()
+        newTagLists[tagListIndex] = {
+          ...newTagLists[tagListIndex],
+          condition,
+        }
+        setTagLists(newTagLists)
+      } else {
+        setTagLists(
+          tagLists.concat({
+            tagGroupId: tagGroup.id,
+            tagIds: [],
+            condition,
+          })
+        )
+      }
+    },
+    [tagLists]
+  )
   const addTagToFilter = useCallback(
     (tag: Tag, tagGroup: TagGroup) => {
       const tagListIndex = tagLists.findIndex(
@@ -54,6 +94,7 @@ export const FilterContextProvider = ({ children }) => {
           tagLists.concat({
             tagGroupId: tagGroup.id,
             tagIds: [tag.id],
+            condition: 'OR',
           })
         )
       }
@@ -85,6 +126,8 @@ export const FilterContextProvider = ({ children }) => {
     <FilterContext.Provider
       value={{
         selectedTagIds,
+        tagListConditions,
+        setTagListCondition,
         addTagToFilter,
         removeTagToFilter,
         filter,

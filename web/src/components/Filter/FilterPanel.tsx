@@ -5,6 +5,7 @@ import {
   Button,
   Flex,
   Heading,
+  Switch,
   VStack,
   Wrap,
   WrapItem,
@@ -20,8 +21,14 @@ import {
 import EditTagsModalCell from 'src/components/Tag/EditTagsModalCell/EditTagsModalCell'
 
 const FilterPanel = ({ tagGroups }) => {
-  const { selectedTagIds, addTagToFilter, removeTagToFilter, clearFilter } =
-    useFilterContext()
+  const {
+    selectedTagIds,
+    setTagListCondition,
+    tagListConditions,
+    addTagToFilter,
+    removeTagToFilter,
+    clearFilter,
+  } = useFilterContext()
   const [editTagOpen, setEditTagOpen] = useState(false)
 
   const tags = useMemo(
@@ -61,7 +68,23 @@ const FilterPanel = ({ tagGroups }) => {
         <VStack>
           {tagGroups.map((tagGroup) => (
             <Box key={tagGroup.id}>
-              <TagGroupItem tagGroup={tagGroup} />
+              <Flex>
+                <Box flex="1">
+                  <TagGroupItem tagGroup={tagGroup} />
+                </Box>
+                <Box>
+                  <Switch
+                    isChecked={tagListConditions[tagGroup.id] === 'AND'}
+                    onChange={() =>
+                      setTagListCondition(
+                        tagGroup,
+                        tagListConditions[tagGroup.id] === 'AND' ? 'OR' : 'AND'
+                      )
+                    }
+                  />
+                  {tagListConditions[tagGroup.id] || 'OR'}
+                </Box>
+              </Flex>
               <Wrap m={2}>
                 {tagGroup.tags.map((tag) => (
                   <WrapItem key={tag.id}>

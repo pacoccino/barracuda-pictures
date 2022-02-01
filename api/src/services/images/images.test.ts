@@ -24,6 +24,7 @@ describe('images', () => {
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
             },
           ],
         },
@@ -45,10 +46,12 @@ describe('images', () => {
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
             },
             {
               tagGroupId: scenario.tagGroup.two.id,
               tagIds: [scenario.tag.g2t1.id],
+              condition: 'OR',
             },
           ],
         },
@@ -67,10 +70,12 @@ describe('images', () => {
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
             },
             {
               tagGroupId: scenario.tagGroup.two.id,
               tagIds: [scenario.tag.g2t1.id, scenario.tag.g2t2.id],
+              condition: 'OR',
             },
           ],
         },
@@ -92,11 +97,12 @@ describe('images', () => {
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
             },
             {
               tagGroupId: scenario.tagGroup.two.id,
               tagIds: [scenario.tag.g2t2.id, scenario.tag.g2t3.id],
-              andor: 'AND',
+              condition: 'AND',
             },
           ],
         },

@@ -26,10 +26,10 @@ export const schema = gql`
   input FilterByTagList {
     tagGroupId: String!
     tagIds: [String]!
-    andor: AndOr
+    condition: TagListCondition!
   }
 
-  enum AndOr {
+  enum TagListCondition {
     AND
     OR
   }

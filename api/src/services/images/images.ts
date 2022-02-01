@@ -36,7 +36,7 @@ export const images = ({
     if (filter.tagLists && filter.tagLists.length > 0) {
       query.where = {
         AND: filter.tagLists.map((tagGrouped) => ({
-          [tagGrouped.andor || 'OR']: tagGrouped.tagIds.map((tagId) => ({
+          [tagGrouped.condition]: tagGrouped.tagIds.map((tagId) => ({
             tagsOnImages: {
               some: {
                 tag: {
