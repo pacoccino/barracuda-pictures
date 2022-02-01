@@ -1,45 +1,92 @@
-import type { Tag } from 'types/graphql'
+import type { Tag, TagGroup, FilterByTagList } from 'types/graphql'
 import { useContext, useMemo, useState, useCallback } from 'react'
 
 interface FilterContextType {
-  selectedTags: Tag[]
-  setSelectedTags: (tag) => void
+  addTagToFilter: (Tag, TagGroup) => void
+  removeTagToFilter: (Tag, TagGroup) => void
   clearFilter: () => void
   filter: {
-    tagIds: string[]
+    tagLists: FilterByTagList[]
   }
+  selectedTagIds: string[]
 }
 export const FilterContext = React.createContext<FilterContextType>({
-  selectedTags: [],
-  setSelectedTags: () => {
-    throw new Error('not_ready_getCurrency')
-  },
-  clearFilter: () => {
-    throw new Error('not_ready_getCurrency')
-  },
+  addTagToFilter: () => 0,
+  removeTagToFilter: () => 0,
+  clearFilter: () => 0,
   filter: {
-    tagIds: [],
+    tagLists: [],
   },
+  selectedTagIds: [],
 })
 
 export const FilterContextProvider = ({ children }) => {
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+  const [tagLists, setTagLists] = useState<FilterByTagList[]>([])
+
+  const selectedTagIds = useMemo(
+    () => tagLists.reduce((acc, tagList) => acc.concat(tagList.tagIds), []),
+    [tagLists]
+  )
 
   const filter = useMemo(() => {
     return {
-      tagIds: selectedTags.map((t) => t.id),
+      tagLists,
     }
-  }, [selectedTags])
+  }, [tagLists])
+
+  const addTagToFilter = useCallback(
+    (tag: Tag, tagGroup: TagGroup) => {
+      const tagListIndex = tagLists.findIndex(
+        (tl) => tl.tagGroupId === tagGroup.id
+      )
+      if (
+        tagListIndex !== -1 &&
+        tagLists[tagListIndex].tagIds.indexOf(tag.id) === -1
+      ) {
+        const newTagLists = tagLists.slice()
+        newTagLists[tagListIndex] = {
+          ...tagLists[tagListIndex],
+          tagIds: tagLists[tagListIndex].tagIds.concat(tag.id),
+        }
+        setTagLists(newTagLists)
+      } else {
+        setTagLists(
+          tagLists.concat({
+            tagGroupId: tagGroup.id,
+            tagIds: [tag.id],
+          })
+        )
+      }
+    },
+    [tagLists]
+  )
+  const removeTagToFilter = useCallback(
+    (tag: Tag, tagGroup: TagGroup) => {
+      const tagListIndex = tagLists.findIndex(
+        (tl) => tl.tagGroupId === tagGroup.id
+      )
+      if (tagListIndex !== -1) {
+        const newTagLists = tagLists.slice()
+        newTagLists[tagListIndex] = {
+          ...tagLists[tagListIndex],
+          tagIds: tagLists[tagListIndex].tagIds.filter((id) => id !== tag.id),
+        }
+        setTagLists(newTagLists)
+      }
+    },
+    [tagLists]
+  )
 
   const clearFilter = useCallback(() => {
-    setSelectedTags([])
+    setTagLists([])
   }, [])
 
   return (
     <FilterContext.Provider
       value={{
-        selectedTags,
-        setSelectedTags,
+        selectedTagIds,
+        addTagToFilter,
+        removeTagToFilter,
         filter,
         clearFilter,
       }}

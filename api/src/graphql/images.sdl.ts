@@ -19,25 +19,28 @@ export const schema = gql`
     image(id: String!): Image @requireAuth
   }
 
+  input ImageFilters {
+    tagLists: [FilterByTagList!]
+  }
+
+  input FilterByTagList {
+    tagGroupId: String!
+    tagIds: [String]!
+    andor: AndOr
+  }
+
   enum AndOr {
     AND
     OR
   }
 
-  input TagGrouped {
-    tagGroupId: String!
-    tagIds: [String]!
-    andor: AndOr
+  input ImageSorting {
+    dateTaken: ORDER
   }
-  input ImageFilters {
-    tagsGrouped: [TagGrouped!]
-  }
+
   enum ORDER {
     asc
     desc
-  }
-  input ImageSorting {
-    dateTaken: ORDER
   }
 
   input CreateImageInput {

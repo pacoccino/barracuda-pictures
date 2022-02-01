@@ -20,29 +20,23 @@ import {
 import EditTagsModalCell from 'src/components/Tag/EditTagsModalCell/EditTagsModalCell'
 
 const FilterPanel = ({ tagGroups }) => {
-  const { selectedTags, setSelectedTags, clearFilter } = useFilterContext()
+  const { selectedTagIds, addTagToFilter, removeTagToFilter, clearFilter } =
+    useFilterContext()
   const [editTagOpen, setEditTagOpen] = useState(false)
 
-  const selectedTagIds = useMemo(
-    () => selectedTags.map((t) => t.id),
-    [selectedTags]
+  const tags = useMemo(
+    () => tagGroups.reduce((acc, tagGroup) => acc.concat(tagGroup.tags), []),
+    [tagGroups]
   )
+
+  const selectedTags = useMemo(
+    () => tags.filter((tag) => selectedTagIds.indexOf(tag.id) !== -1),
+    [selectedTagIds, tagGroups]
+  )
+
   const isTagSelected = useCallback(
     (tag) => selectedTagIds.indexOf(tag.id) !== -1,
     [selectedTagIds]
-  )
-  const addTagToFilter = useCallback(
-    (tag: Tag) => {
-      if (selectedTags.findIndex((t) => t.id === tag.id) === -1)
-        setSelectedTags(selectedTags.concat(tag))
-    },
-    [selectedTags]
-  )
-  const removeTagToFilter = useCallback(
-    (tag: Tag) => {
-      setSelectedTags(selectedTags.filter((t) => t.id !== tag.id))
-    },
-    [selectedTags]
   )
 
   return (
@@ -75,8 +69,8 @@ const FilterPanel = ({ tagGroups }) => {
                       tag={tag}
                       onClick={
                         isTagSelected(tag)
-                          ? () => removeTagToFilter(tag)
-                          : () => addTagToFilter(tag)
+                          ? () => removeTagToFilter(tag, tagGroup)
+                          : () => addTagToFilter(tag, tagGroup)
                       }
                       status={
                         isTagSelected(tag)
@@ -116,7 +110,7 @@ const FilterPanel = ({ tagGroups }) => {
               <TagItemWithGroup
                 tag={tag}
                 actionLabel="Remove from filter"
-                onClick={() => removeTagToFilter(tag)}
+                onClick={() => removeTagToFilter(tag, tag.tagGroup)}
               />
             </WrapItem>
           ))}

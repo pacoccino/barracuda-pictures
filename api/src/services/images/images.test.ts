@@ -20,7 +20,7 @@ describe('images', () => {
     async (scenario: StandardScenario) => {
       const result = await images({
         filter: {
-          tagsGrouped: [
+          tagLists: [
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
@@ -41,7 +41,7 @@ describe('images', () => {
     async (scenario: StandardScenario) => {
       const result = await images({
         filter: {
-          tagsGrouped: [
+          tagLists: [
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
@@ -63,7 +63,7 @@ describe('images', () => {
     async (scenario: StandardScenario) => {
       const result = await images({
         filter: {
-          tagsGrouped: [
+          tagLists: [
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
@@ -88,7 +88,7 @@ describe('images', () => {
     async (scenario: StandardScenario) => {
       const result = await images({
         filter: {
-          tagsGrouped: [
+          tagLists: [
             {
               tagGroupId: scenario.tagGroup.one.id,
               tagIds: [scenario.tag.g1t1.id],
