@@ -17,18 +17,31 @@ export const Image = {
 
 export const images = ({
   filter,
-  limit = 10,
-  skip = 0,
+  take = 10,
+  skip,
   sorting,
+  cursor,
 }: QueryimagesArgs) => {
   const query: Prisma.ImageFindManyArgs = {
-    take: limit,
-    skip: skip,
+    take,
+    orderBy: [],
   }
-  if (sorting) {
-    query.orderBy = {}
-    query.orderBy.dateTaken = sorting.dateTaken
+  if (skip !== undefined) {
+    query.skip = skip
   }
+
+  if (cursor) {
+    query.cursor = {
+      id: cursor,
+    }
+  }
+
+  query.orderBy.push({
+    dateTaken: sorting?.dateTaken || 'desc',
+  })
+  query.orderBy.push({
+    id: 'desc',
+  })
 
   if (filter) {
     query.where = {}

@@ -136,9 +136,9 @@ describe('images', () => {
     expect(result[result.length - 1]).toEqual(scenario.image.p1)
   })
 
-  scenario('limits', async (scenario: StandardScenario) => {
+  scenario('takes', async (scenario: StandardScenario) => {
     const result = await images({
-      limit: 2,
+      take: 2,
       sorting: {
         dateTaken: 'asc',
       },
@@ -150,7 +150,7 @@ describe('images', () => {
   })
   scenario('skips', async (scenario: StandardScenario) => {
     const result = await images({
-      limit: 2,
+      take: 2,
       skip: 2,
       sorting: {
         dateTaken: 'asc',

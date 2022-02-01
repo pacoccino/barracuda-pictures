@@ -5,7 +5,7 @@ import Images from 'src/components/Image/Images'
 
 export const QUERY = gql`
   query FindImages($filter: ImageFilters!) {
-    images(filter: $filter, sorting: { dateTaken: desc }, limit: 100) {
+    images(filter: $filter, sorting: { dateTaken: desc }, take: 100) {
       id
       path
       dateTaken
