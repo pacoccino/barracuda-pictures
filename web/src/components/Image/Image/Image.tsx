@@ -24,7 +24,6 @@ import ImageTagsModalCell from 'src/components/Tag/ImageTagsModalCell/ImageTagsM
 import { CloseIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
-import images from 'src/components/Image/Images/Images'
 
 const Image = ({
   image,

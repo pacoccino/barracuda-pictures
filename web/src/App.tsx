@@ -8,6 +8,9 @@ import Routes from 'src/Routes'
 
 import './scaffold.css'
 import './index.css'
+
+import './lib/locale'
+
 import { FilterContextProvider } from 'src/contexts/filter'
 
 const App = () => (
