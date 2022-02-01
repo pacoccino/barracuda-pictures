@@ -5,6 +5,6 @@ describe('tagsOnImages', () => {
   scenario('returns all tagsOnImages', async (scenario: StandardScenario) => {
     const result = await tagsOnImages()
 
-    expect(result.length).toEqual(Object.keys(scenario.tagsOnImage).length)
+    expect(result.length).toEqual(4)
   })
 })

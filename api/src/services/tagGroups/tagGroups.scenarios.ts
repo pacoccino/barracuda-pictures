@@ -2,8 +2,8 @@ import type { Prisma } from '@prisma/client'
 
 export const standard = defineScenario<Prisma.TagGroupCreateArgs>({
   tagGroup: {
-    one: { data: { name: 'String' } },
-    two: { data: { name: 'String' } },
+    one: { data: { name: 'TG1' } },
+    two: { data: { name: 'TG2' } },
   },
 })
 
