@@ -42,8 +42,6 @@ export async function getMetadata(
 export function parseMetadata(metadata: ImageMetadata): ParsedImageMetadata {
   const parsed: ParsedImageMetadata = {}
 
-  if (!metadata) return parsed
-
   // dateTaken
   if (metadata.exif?.CreateDate) {
     parsed.dateTaken = moment

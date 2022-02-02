@@ -41,13 +41,22 @@ export const S3Lib = {
     return res.Contents.map((c) => c.Key)
   },
 
-  async get(Key: string): Promise<Buffer> {
+  async get(Key: string, Range?: string): Promise<Buffer> {
+    const params = {
+      Bucket: process.env['S3_BUCKET_NAME'],
+      Key,
+      Range,
+    }
+    const res = await promisify(s3.getObject)(params)
+    return res.Body
+  },
+  async head(Key: string): Promise<S3.Types.HeadObjectOutput> {
     const params = {
       Bucket: process.env['S3_BUCKET_NAME'],
       Key,
     }
-    const res = await promisify(s3.getObject)(params)
-    return res.Body
+    const res = await promisify(s3.headObject)(params)
+    return res
   },
   async delete(Key: string): Promise<void> {
     const params = {

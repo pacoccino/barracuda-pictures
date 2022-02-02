@@ -8,11 +8,17 @@ import { getMetadata, parseMetadata } from 'src/lib/images/metadata'
 import { S3Lib } from 'src/lib/files/s3'
 
 const PARALLEL_SCANS = 5
+const BYTES_RANGE = 50000
 const ACCEPTED_EXTENSIONS = ['jpg', 'png', 'webp', 'tif']
 
 async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   console.log('- scanning image', imagePath)
-  const imageBuffer = await S3Lib.get(imagePath)
+
+  const head = await S3Lib.head(imagePath)
+  if (head.ContentLength === 0) {
+    throw new Error('Zero byte file')
+  }
+  const imageBuffer = await S3Lib.get(imagePath, `bytes=0-${BYTES_RANGE}`)
 
   const fileType = await ft.fromBuffer(imageBuffer)
   if (!fileType || ACCEPTED_EXTENSIONS.indexOf(fileType.ext) === -1) {
@@ -102,14 +108,30 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   return true
 }
 
+function reflect(fn) {
+  return async (task) => {
+    try {
+      const success = await fn(task)
+      return {
+        task,
+        success,
+      }
+    } catch (error) {
+      return {
+        task,
+        error,
+      }
+    }
+  }
+}
 async function iterateOverFiles(files, fn) {
-  const results = await async.mapLimit(files, PARALLEL_SCANS, async.reflect(fn))
+  const results = await async.mapLimit(files, PARALLEL_SCANS, reflect(fn))
   const errors = results.reduce(
-    (acc, curr) => (curr.error ? acc.concat(curr.error) : acc),
+    (acc, curr) => (curr.error ? acc.concat(curr) : acc),
     []
   )
   const successes = results.reduce(
-    (acc, curr) => (curr.value ? acc.concat(curr.value) : acc),
+    (acc, curr) => (curr.success ? acc.concat(curr) : acc),
     []
   )
   return {
