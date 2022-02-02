@@ -1,7 +1,7 @@
 import type { FindImageWithTagsById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import Image from 'src/components/Image/Image'
+import Image from './Image'
 
 export const QUERY = gql`
   query FindImageWithTagsById($id: String!, $filter: ImageFilters!) {

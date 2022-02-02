@@ -2,7 +2,7 @@ import type { ImageAndTags } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import { useMutation } from '@redwoodjs/web'
-import EditTagsModal from 'src/components/Tag/EditTagsModal/EditTagsModal'
+import EditTagsModal from './EditTagsModal'
 
 export const QUERY = gql`
   query EditTags {

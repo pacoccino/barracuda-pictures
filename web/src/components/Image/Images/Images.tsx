@@ -3,9 +3,18 @@ import { Link, routes } from '@redwoodjs/router'
 import { Wrap, WrapItem } from '@chakra-ui/react'
 import { getImageUrl } from 'src/lib/static'
 import { Box, Heading, Image } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
-const Images = ({ images }) => {
+import debounce from 'lodash.debounce'
+import { FindImages } from 'types/graphql'
+
+type ImagesProps = {
+  images: FindImages['images']
+  loadMore: () => void
+}
+
+const Images = ({ images, loadMore }: ImagesProps) => {
+  // Split by Month _ Year
   const imageGroups = useMemo(() => {
     const groups = []
     let currentYear = -1
@@ -26,8 +35,29 @@ const Images = ({ images }) => {
     return groups
   }, [images])
 
+  // Infinite scroll load
+  const scrollRef = useRef(null)
+  useEffect(() => {
+    const div = scrollRef.current
+    const handleScroll = debounce(() => {
+      if (div.scrollTop + div.offsetHeight >= div.scrollHeight) {
+        loadMore()
+      }
+    }, 100)
+    div.addEventListener('scroll', handleScroll)
+    return () => {
+      div.removeEventListener('scroll', handleScroll)
+    }
+  }, [loadMore])
+
   return (
-    <Box>
+    <Box
+      ref={scrollRef}
+      position="absolute"
+      top={0}
+      bottom={0}
+      overflowY="auto"
+    >
       {imageGroups.map((group) => (
         <Box key={group.title}>
           <Heading as="h4">{group.title}</Heading>

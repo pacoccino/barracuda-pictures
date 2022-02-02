@@ -21,7 +21,7 @@ import {
   TagItem,
   TagItemWithGroup,
 } from 'src/components/Tag/TagItem/TagItem'
-import EditTagsModalCell from 'src/components/Tag/EditTagsModalCell/EditTagsModalCell'
+import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { TagStatus } from 'src/design-system/components/Tag'
 
 const ImageTagsModal = ({

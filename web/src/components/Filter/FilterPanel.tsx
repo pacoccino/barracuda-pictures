@@ -18,7 +18,7 @@ import {
   TagItem,
   TagItemWithGroup,
 } from 'src/components/Tag/TagItem/TagItem'
-import EditTagsModalCell from 'src/components/Tag/EditTagsModalCell/EditTagsModalCell'
+import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 
 const FilterPanel = ({ tagGroups }) => {
   const {

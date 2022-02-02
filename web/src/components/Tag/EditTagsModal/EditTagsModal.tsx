@@ -21,7 +21,7 @@ import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { useState } from 'react'
 import EditTagsModalCell, {
   QUERY,
-} from 'src/components/Tag/EditTagsModalCell/EditTagsModalCell'
+} from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { TagGroup } from 'types/graphql'
 
 const CreateTagGroupModal = ({ isOpen, onClose, createTagGroupMutation }) => {

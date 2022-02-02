@@ -1,5 +1,5 @@
 import { MetaTags } from '@redwoodjs/web'
-import ImageCell from 'src/components/Image/ImageCell'
+import ImageCell from 'src/components/Image/Image/ImageCell'
 import { useFilterContext } from 'src/contexts/filter'
 
 type PhotoPageProps = {
