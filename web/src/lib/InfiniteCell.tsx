@@ -41,6 +41,8 @@ export function createInfiniteCell({
           skip: cursor ? 1 : 0,
           ...props,
         },
+        fetchPolicy: 'cache-and-network',
+        notifyOnNetworkStatusChange: true,
         onCompleted: (data) => {
           const newItems = data[listKey]
           if (newItems.length > 0) {
