@@ -2,6 +2,7 @@ import type { FindImageWithTagsById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Image from './Image'
+import { Flex, Spinner } from '@chakra-ui/react'
 
 export const QUERY = gql`
   query FindImageWithTagsById($id: String!, $filter: ImageFilters!) {
@@ -45,7 +46,11 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => (
+  <Flex h="100vh" justify="center" align="center" bg="black">
+    <Spinner size="xl" color="gray.500" />
+  </Flex>
+)
 
 export const Empty = () => <div>Image not found</div>
 
