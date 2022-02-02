@@ -148,11 +148,19 @@ const Image = ({
                 {image.takenAtLat && image.takenAtLat ? (
                   <Box>
                     <p>
-                      <b>Lat:</b> {image.takenAtLat}
+                      <b>Lat:</b> {image.takenAtLat} <b>Lng:</b>{' '}
+                      {image.takenAtLng}
                     </p>
-                    <p>
-                      <b>Lng:</b> {image.takenAtLng}
-                    </p>
+
+                    {process.env.GMAPS_API_KEY && (
+                      <iframe
+                        width="450"
+                        height="250"
+                        frameBorder="0"
+                        src={`https://www.google.com/maps/embed/v1/place?key=${process.env.GMAPS_API_KEY}&q=${image.takenAtLat}+${image.takenAtLng}`}
+                        allowFullScreen
+                      />
+                    )}
                   </Box>
                 ) : (
                   'Unknonwn'
