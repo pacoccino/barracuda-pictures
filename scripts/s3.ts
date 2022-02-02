@@ -1,4 +1,4 @@
-import { S3Lib } from 'api/src/lib/s3'
+import { S3Lib } from 'api/src/lib/files/s3'
 
 export default async () => {
   const res1 = await S3Lib.list('fs/a')

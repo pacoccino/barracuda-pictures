@@ -1,5 +1,6 @@
 import moment from 'moment'
 import { ExifImage } from 'exif'
+import type FileTypeResult from 'file-type'
 
 type ImageMetadata = {
   image?: any
@@ -15,20 +16,25 @@ type ParsedImageMetadata = {
 }
 
 export async function getMetadata(
-  path: Buffer | string
+  path: Buffer | string,
+  fileType: FileTypeResult
 ): Promise<ImageMetadata> {
   return new Promise((resolve, reject) => {
-    try {
-      // eslint-disable-next-line no-new
-      new ExifImage({ image: path }, (error, exifData) => {
-        if (error && error.code === 'NO_EXIF_SEGMENT') {
-          resolve({})
-        } else if (error) {
-          reject(error)
-        } else resolve(JSON.parse(JSON.stringify(exifData)))
-      })
-    } catch (error) {
-      reject(error)
+    if (fileType.ext === 'jpg') {
+      try {
+        // eslint-disable-next-line no-new
+        new ExifImage({ image: path }, (error, exifData) => {
+          if (error && error.code === 'NO_EXIF_SEGMENT') {
+            resolve({})
+          } else if (error) {
+            reject(error)
+          } else resolve(JSON.parse(JSON.stringify(exifData)))
+        })
+      } catch (error) {
+        reject(error)
+      }
+    } else {
+      resolve({})
     }
   })
 }
@@ -38,11 +44,14 @@ export function parseMetadata(metadata: ImageMetadata): ParsedImageMetadata {
 
   if (!metadata) return parsed
 
+  // dateTaken
   if (metadata.exif?.CreateDate) {
     parsed.dateTaken = moment
       .utc(metadata.exif.CreateDate, 'YYYY-MM-DD hh:mm:ss')
       .toDate()
   }
+
+  // GPS
 
   if (hasSome(metadata.image, ['Model', 'Make'])) {
     parsed.camera = `${metadata.image?.Make}${
