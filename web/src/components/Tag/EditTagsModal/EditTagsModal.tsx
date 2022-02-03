@@ -17,9 +17,13 @@ import {
   MenuList,
   MenuItem,
 } from 'src/design-system'
-import { EditIcon, DeleteIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { AddIcon, EditIcon, DeleteIcon, HamburgerIcon } from '@chakra-ui/icons'
 
-import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
+import {
+  TagGroupItem,
+  TagGroupNew,
+  TagNew,
+} from 'src/components/Tag/TagItem/TagItem'
 import { useState } from 'react'
 import type { Tag, TagGroup } from 'types/graphql'
 
@@ -49,13 +53,15 @@ const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
         <ModalCloseButton />
         <ModalBody>
           <Flex w="100%">
-            <Heading textStyle="h3" mb={2} flex="1">
+            <Heading textStyle="h3" mb={2} size="md" flex="1">
               Tags
             </Heading>
             <Button
               onClick={() => setCreateTagGroupModalOpen(true)}
+              leftIcon={<AddIcon />}
               size="xs"
               colorScheme="blue"
+              variant="solid"
             >
               Create Tag Group
             </Button>
@@ -64,68 +70,83 @@ const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
           <Box>
             {tagGroups.map((tagGroup) => (
               <Box key={tagGroup.id}>
-                <Box>
-                  <TagGroupItem tagGroup={tagGroup} />
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<HamburgerIcon />}
-                      variant="outline"
-                    />
-                    <MenuList>
-                      <MenuItem
-                        icon={<EditIcon />}
-                        onClick={() => setTagGroupForEdit(tagGroup)}
-                      >
-                        Edit tag group ...
-                      </MenuItem>
-                      <MenuItem
-                        icon={<DeleteIcon />}
-                        onClick={() => setTagGroupForDelete(tagGroup)}
-                      >
-                        Delete tag group ...
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Box>
-                <Wrap m={2}>
-                  {tagGroup.tags.map((tag) => (
-                    <WrapItem key={tag.id}>
-                      <TagItem tag={tag}></TagItem>
+                <Flex align="start">
+                  <TagGroupNew
+                    tagGroup={tagGroup}
+                    rightAction={
                       <Menu>
                         <MenuButton
                           as={IconButton}
                           aria-label="Options"
                           icon={<HamburgerIcon />}
-                          variant="outline"
+                          variant="tagAction"
+                          size="xs"
+                          p={0}
                         />
                         <MenuList>
                           <MenuItem
                             icon={<EditIcon />}
-                            onClick={() => setTagForEdit(tag)}
+                            onClick={() => setTagGroupForEdit(tagGroup)}
                           >
-                            Edit tag ...
+                            Edit tag group ...
                           </MenuItem>
                           <MenuItem
                             icon={<DeleteIcon />}
-                            onClick={() => setTagForDelete(tag)}
+                            onClick={() => setTagGroupForDelete(tagGroup)}
                           >
-                            Delete tag ...
+                            Delete tag group ...
                           </MenuItem>
                         </MenuList>
                       </Menu>
+                    }
+                  />
+
+                  <Button
+                    size="xs"
+                    colorScheme="blue"
+                    variant="solid"
+                    leftIcon={<AddIcon />}
+                    onClick={() => setTagGroupForCreateTag(tagGroup)}
+                    ml={2}
+                  >
+                    Add tag
+                  </Button>
+                </Flex>
+
+                <Wrap m={2}>
+                  {tagGroup.tags.map((tag) => (
+                    <WrapItem key={tag.id}>
+                      <TagNew
+                        tag={tag}
+                        rightAction={
+                          <Menu>
+                            <MenuButton
+                              as={IconButton}
+                              aria-label="Options"
+                              icon={<HamburgerIcon />}
+                              variant="tagAction"
+                              size="xs"
+                              p={0}
+                            />
+                            <MenuList>
+                              <MenuItem
+                                icon={<EditIcon />}
+                                onClick={() => setTagForEdit(tag)}
+                              >
+                                Edit tag ...
+                              </MenuItem>
+                              <MenuItem
+                                icon={<DeleteIcon />}
+                                onClick={() => setTagForDelete(tag)}
+                              >
+                                Delete tag ...
+                              </MenuItem>
+                            </MenuList>
+                          </Menu>
+                        }
+                      />
                     </WrapItem>
                   ))}
-                  <WrapItem>
-                    <Button
-                      size="xs"
-                      colorScheme="blue"
-                      onClick={() => setTagGroupForCreateTag(tagGroup)}
-                    >
-                      Add new tag
-                    </Button>
-                  </WrapItem>
                 </Wrap>
               </Box>
             ))}

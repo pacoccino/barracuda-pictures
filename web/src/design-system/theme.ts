@@ -87,6 +87,11 @@ const Button = {
     link: {
       color: '#637381',
     },
+    tagAction: {
+      borderRadius: '0',
+      padding: 0,
+      color: 'white',
+    },
   },
   defaultProps: {
     size: 'md',

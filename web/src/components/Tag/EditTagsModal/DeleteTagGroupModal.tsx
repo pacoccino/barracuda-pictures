@@ -46,9 +46,8 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
       body={
         <Box>
           <TagGroupItem tagGroup={tagGroup} />
-          <Text>
-            Are you sure? This will remove all the tags that belongs to it and
-            from all images which contains it
+          <Text mt={4}>
+            Are you sure? This will remove all the tags that belongs to it
           </Text>
         </Box>
       }

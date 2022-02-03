@@ -3,6 +3,7 @@ import { Button, Input, useToast, BodyModal } from 'src/design-system'
 import { useState } from 'react'
 import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
+import { Flex } from '@chakra-ui/react'
 
 const CREATE_TAG_GROUP = gql`
   mutation CreateTagGroup($name: String!) {
@@ -56,12 +57,19 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
             placeholder="Tag group name"
             onChange={(e) => setTagGroupName(e.target.value)}
           />
-          <Button
-            onClick={() => handleCreateTagGroup(tagGroupName)}
-            disabled={loading}
-          >
-            Create
-          </Button>
+          <Flex justify="end" my={4}>
+            <Button onClick={onClose} mr={2}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleCreateTagGroup(tagGroupName)}
+              isLoading={loading}
+              variant="solid"
+              colorScheme="blue"
+            >
+              Create
+            </Button>
+          </Flex>
         </>
       }
     />

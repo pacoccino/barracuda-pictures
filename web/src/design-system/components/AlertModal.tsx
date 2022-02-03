@@ -42,7 +42,8 @@ export const AlertModal = ({
               colorScheme={acceptColor}
               onClick={onAccept}
               ml={3}
-              disabled={loading}
+              isLoading={loading}
+              variant="solid"
             >
               {acceptLabel}
             </Button>

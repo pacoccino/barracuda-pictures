@@ -1,8 +1,17 @@
-import { Button, Input, Text, useToast, BodyModal } from 'src/design-system'
+import {
+  Button,
+  Input,
+  Text,
+  useToast,
+  BodyModal,
+  Box,
+} from 'src/design-system'
 
 import { useState } from 'react'
 import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
+import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
+import { Flex } from '@chakra-ui/react'
 
 const CREATE_TAG = gql`
   mutation CreateTag($name: String!, $tagGroupId: String!) {
@@ -52,15 +61,27 @@ export const CreateTagModal = ({ tagGroup, onClose }) => {
       title="Create Tag"
       body={
         <>
-          <Text>Tag group: {tagGroup?.name}</Text>
+          <Box mb={2}>
+            <TagGroupItem tagGroup={tagGroup} />
+          </Box>
           <Input
             type="text"
             placeholder="Tag name"
             onChange={(e) => setTagName(e.target.value)}
           />
-          <Button onClick={() => handleCreateTag(tagName)} disabled={loading}>
-            Create
-          </Button>
+          <Flex justify="end" my={4}>
+            <Button onClick={onClose} mr={2}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleCreateTag(tagName)}
+              isLoading={loading}
+              variant="solid"
+              colorScheme="blue"
+            >
+              Create
+            </Button>
+          </Flex>
         </>
       }
     />

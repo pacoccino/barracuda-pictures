@@ -1,8 +1,20 @@
-import { Button, Input, Text, useToast, BodyModal } from 'src/design-system'
+import {
+  Button,
+  Input,
+  Text,
+  useToast,
+  BodyModal,
+  Box,
+} from 'src/design-system'
 
 import { useEffect, useState } from 'react'
 import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
+import {
+  TagGroupItem,
+  TagItemWithGroup,
+} from 'src/components/Tag/TagItem/TagItem'
+import { Flex, FormLabel } from '@chakra-ui/react'
 
 const UPDATE_TAG = gql`
   mutation UpdateTag($name: String!, $tagId: String!) {
@@ -56,16 +68,29 @@ export const EditTagModal = ({ tag, onClose }) => {
       title="Edit Tag"
       body={
         <>
-          <Text>Tag group: {tag?.tagGroup?.name}</Text>
+          <Box mb={2}>
+            <TagItemWithGroup tag={tag} />
+          </Box>
+          <FormLabel>New name:</FormLabel>
           <Input
             type="text"
             placeholder="Tag name"
             onChange={(e) => setTagName(e.target.value)}
             value={tagName}
           />
-          <Button onClick={() => handleUpdateTag(tagName)} disabled={loading}>
-            Edit
-          </Button>
+          <Flex justify="end" my={4}>
+            <Button onClick={onClose} mr={2}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleUpdateTag(tagName)}
+              isLoading={loading}
+              variant="solid"
+              colorScheme="yellow"
+            >
+              Edit
+            </Button>
+          </Flex>
         </>
       }
     />
