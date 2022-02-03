@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
+import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
 
 const UPDATE_TAG_GROUP = gql`
   mutation UpdateTagGroup($name: String!, $tagGroupId: String!) {
@@ -27,7 +28,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
   const handleUpdateTagGroup = (name) =>
     updateTagGroup({
       variables: { tagGroupId: tagGroup.id, name },
-      refetchQueries: ['FindTags', 'EditTags'],
+      refetchQueries: QUERIES_TO_REFETCH,
     }).then((res) => {
       if (res.error) {
         toast({
@@ -51,7 +52,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
 
   return (
     <BodyModal
-      isOpen={!!tagGroup}
+      isOpen={loading || !!tagGroup}
       onClose={onClose}
       title="Edit tag group"
       body={

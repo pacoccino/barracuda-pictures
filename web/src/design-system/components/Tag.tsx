@@ -23,8 +23,10 @@ export type TagProps = CTagProps & {
 
 export type TagNewProps = FlexProps & {
   name: string
+  groupName: string
   actionLabel?: string
   color?: string
+  groupColor?: string
   leftAction?: React.ReactNode
   rightAction?: React.ReactNode
   menuItems?: {
@@ -99,7 +101,9 @@ export const Tag = ({
 
 export const TagNew = ({
   name,
+  groupName,
   color,
+  groupColor,
   leftAction,
   actionLabel,
   onClick,
@@ -109,14 +113,27 @@ export const TagNew = ({
   <Flex borderRadius={4} bg={color + '.500'} align="stretch" {...args}>
     <TagTooltip label={actionLabel}>
       <Flex
-        align="center"
+        align="stretch"
         cursor={onClick ? 'pointer' : 'initial'}
         onClick={onClick}
         _hover={onClick && { bg: color + '.400' }}
         pr={menuItems ? 1 : 1}
-        pl={1}
+        pl={groupName ? 0 : 1}
         borderRadius={4}
       >
+        {groupName && (
+          <Text
+            px={1}
+            mr={1}
+            py={1}
+            borderRadius={4}
+            color="white"
+            bg={groupColor + '.500'}
+            fontSize="0.7rem"
+          >
+            {groupName}
+          </Text>
+        )}
         {leftAction && <Center>{leftAction}</Center>}
 
         <Text color="white" fontSize="0.7rem" py={1}>
@@ -143,7 +160,11 @@ export const TagNew = ({
           />
           <MenuList>
             {menuItems.map((menuItem) => (
-              <MenuItem icon={menuItem.icon} onClick={menuItem.onClick}>
+              <MenuItem
+                key={menuItem.label}
+                icon={menuItem.icon}
+                onClick={menuItem.onClick}
+              >
                 {menuItem.label}
               </MenuItem>
             ))}
@@ -153,6 +174,3 @@ export const TagNew = ({
     )}
   </Flex>
 )
-
-/*
- */

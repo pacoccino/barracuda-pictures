@@ -2,6 +2,7 @@ import {
   Box,
   Wrap,
   WrapItem,
+  Flex,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -9,20 +10,11 @@ import {
   ModalBody,
   ModalCloseButton,
   Heading,
-  Button,
-  Flex,
   VStack,
 } from '@chakra-ui/react'
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
 
-import { useMemo, useState } from 'react'
-import {
-  TagGroupItem,
-  TagItem,
-  TagItemWithGroup,
-} from 'src/components/Tag/TagItem/TagItem'
-import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
-import { TagStatus } from 'src/design-system/components/Tag'
+import { useMemo } from 'react'
+import { TagGroupItemNew, TagItemNew } from 'src/components/Tag/TagItem/TagItem'
 
 const ImageTagsModal = ({
   isOpen,
@@ -32,17 +24,13 @@ const ImageTagsModal = ({
   handleAddTagOnImage,
   handleRemoveTagOnImage,
 }) => {
-  const [editTagOpen, setEditTagOpen] = useState(false)
-
   const availableTagGroups = useMemo(() => {
-    return tagGroups
-      .map((tg) => ({
-        ...tg,
-        tags: tg.tags.filter(
-          (tag) => !image.tagsOnImages.find((t) => t.tag.id === tag.id)
-        ),
-      }))
-      .filter((tg) => tg.tags.length !== 0)
+    return tagGroups.map((tg) => ({
+      ...tg,
+      tags: tg.tags.filter(
+        (tag) => !image.tagsOnImages.find((t) => t.tag.id === tag.id)
+      ),
+    }))
   }, [image, tagGroups])
 
   return (
@@ -52,59 +40,47 @@ const ImageTagsModal = ({
         <ModalHeader>Edit image tags</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Flex w="100%">
-            <Box flex="1" />
-            <Button
-              onClick={() => setEditTagOpen(true)}
-              size="xs"
-              colorScheme="blue"
-            >
-              Edit tags
-            </Button>
-            <EditTagsModalCell
-              isOpen={editTagOpen}
-              onClose={() => setEditTagOpen(false)}
-            />
-          </Flex>
-          <h3>On Image</h3>
-          <Box>
-            {image.tagsOnImages.map((tagsOnImage) => (
-              <Wrap key={tagsOnImage.id}>
-                <WrapItem>
-                  <TagItemWithGroup
-                    onClick={() =>
-                      handleRemoveTagOnImage(image.id, tagsOnImage.tag.id)
-                    }
-                    tag={tagsOnImage.tag}
-                    actionIcon={DeleteIcon}
-                  ></TagItemWithGroup>
+          <Heading textStyle="h3" size="sm" mb={2}>
+            On Image
+          </Heading>
+          <Wrap mb={2}>
+            {image.tagsOnImages
+              .map((ti) => ti.tag)
+              .map((tag) => (
+                <WrapItem key={tag.id}>
+                  <TagItemNew
+                    tag={tag}
+                    onClick={() => handleRemoveTagOnImage(image.id, tag.id)}
+                    actionLabel="Remove tag from image"
+                    showGroup
+                  />
                 </WrapItem>
-              </Wrap>
-            ))}
-          </Box>
-          <h3>Available</h3>
-
-          <Box>
-            <VStack>
-              {availableTagGroups.map((tagGroup) => (
-                <Box key={tagGroup.id}>
-                  <TagGroupItem tagGroup={tagGroup} />
-                  <Wrap m={2}>
-                    {tagGroup.tags.map((tag) => (
-                      <WrapItem key={tag.id}>
-                        <TagItem
-                          tag={tag}
-                          onClick={() => handleAddTagOnImage(image.id, tag.id)}
-                          actionIcon={AddIcon}
-                          actionLabel="Add tag"
-                        />
-                      </WrapItem>
-                    ))}
-                  </Wrap>
-                </Box>
               ))}
-            </VStack>
-          </Box>
+          </Wrap>
+
+          <Heading textStyle="h3" size="sm" mb={2}>
+            Available
+          </Heading>
+          <VStack align="start">
+            {availableTagGroups.map((tagGroup) => (
+              <Box key={tagGroup.id}>
+                <Flex mb={2} justify="start">
+                  <TagGroupItemNew tagGroup={tagGroup} />
+                </Flex>
+                <Wrap mb={1}>
+                  {tagGroup.tags.map((tag) => (
+                    <WrapItem key={tag.id}>
+                      <TagItemNew
+                        tag={tag}
+                        onClick={() => handleAddTagOnImage(image.id, tag.id)}
+                        actionLabel="Add tag to image"
+                      />
+                    </WrapItem>
+                  ))}
+                </Wrap>
+              </Box>
+            ))}
+          </VStack>
         </ModalBody>
       </ModalContent>
     </Modal>

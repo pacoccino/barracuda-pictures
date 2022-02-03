@@ -22,13 +22,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
 import ImageTagsModalCell from 'src/components/Tag/ImageTagsModal/ImageTagsModalCell'
-import { CloseIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import {
+  EditIcon,
+  CloseIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@chakra-ui/icons'
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 
-const ImageDetails = ({ image }) => {
-  const [editTagOpen, setEditTagOpen] = useState(false)
-
+const ImageDetails = ({ image, setEditTagOpen }) => {
   return (
     <Table size="md" w="100%">
       <TableCaption placement="top">Details</TableCaption>
@@ -72,8 +75,8 @@ const ImageDetails = ({ image }) => {
         <Tr>
           <Th>Tags</Th>
           <Td>
-            <VStack>
-              <Wrap>
+            <Flex>
+              <Wrap flex="1">
                 {image.tagsOnImages
                   .map((ti) => ti.tag)
                   .map((tag) => (
@@ -89,12 +92,7 @@ const ImageDetails = ({ image }) => {
               >
                 Edit
               </Button>
-            </VStack>
-            <ImageTagsModalCell
-              imageId={image.id}
-              isOpen={editTagOpen}
-              onClose={() => setEditTagOpen(false)}
-            />
+            </Flex>
           </Td>
         </Tr>
         <Tr>
@@ -110,7 +108,8 @@ const ImageDetails = ({ image }) => {
   )
 }
 
-const Hud = ({ imagesAfter, imagesBefore }) => {
+const HUD_TIMEOUT = 2000
+const Hud = ({ imagesAfter, imagesBefore, setEditTagOpen }) => {
   const [hudVisible, setHUDVisible] = useState(false)
 
   useEffect(() => {
@@ -133,7 +132,7 @@ const Hud = ({ imagesAfter, imagesBefore }) => {
     function handleMouseMove() {
       setHUDVisible(true)
       clearTimeout(timeout)
-      timeout = setTimeout(() => setHUDVisible(false), 3000)
+      timeout = setTimeout(() => setHUDVisible(false), HUD_TIMEOUT)
     }
     document.addEventListener('keydown', handleKeyDown)
     document.addEventListener('mousemove', handleMouseMove)
@@ -198,6 +197,19 @@ const Hud = ({ imagesAfter, imagesBefore }) => {
             </Center>
           </Link>
         )}
+
+        <Center
+          position="absolute"
+          right={0}
+          top={0}
+          width={100}
+          height={100}
+          opacity={0.7}
+          cursor="pointer"
+          onClick={() => setEditTagOpen(true)}
+        >
+          <Icon as={EditIcon} color="white" boxSize={8} />
+        </Center>
       </Box>
     </Fade>
   )
@@ -207,6 +219,7 @@ const Image = ({
   imagesBefore,
   imagesAfter,
 }: CellSuccessProps<FindImageWithTagsById>) => {
+  const [editTagOpen, setEditTagOpen] = useState(false)
   const imageUrl = useMemo(() => getImageUrl(image), [image])
 
   return (
@@ -228,10 +241,17 @@ const Image = ({
           image={image}
           imagesBefore={imagesBefore}
           imagesAfter={imagesAfter}
+          setEditTagOpen={setEditTagOpen}
         />
       </Flex>
 
-      <ImageDetails image={image} />
+      <ImageDetails image={image} setEditTagOpen={setEditTagOpen} />
+
+      <ImageTagsModalCell
+        imageId={image.id}
+        isOpen={editTagOpen}
+        onClose={() => setEditTagOpen(false)}
+      />
     </Box>
   )
 }

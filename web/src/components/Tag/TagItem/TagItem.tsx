@@ -1,7 +1,7 @@
 import { Tag, TagNew } from 'src/design-system'
 import { TagStatus, TagProps } from 'src/design-system/components/Tag'
 import { useTagContext } from 'src/contexts/tags'
-import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
+import { AddIcon, EditIcon, DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons'
 
 type TagItemProps = {
   tag: { id: string; name: string }
@@ -36,7 +36,7 @@ const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
   return <Tag name={tagGroup.name} color="red" {...tagArgs} />
 }
 
-export const TagItemNew = ({ tag, ...args }) => {
+export const TagItemNew = ({ tag, showGroup, ...args }) => {
   const { setTagForDelete, setTagForEdit } = useTagContext()
   return (
     <TagNew
@@ -53,7 +53,9 @@ export const TagItemNew = ({ tag, ...args }) => {
         },
       ]}
       color="green"
+      groupColor="red"
       name={tag.name}
+      groupName={showGroup && tag.tagGroup?.name}
       {...args}
     />
   )
@@ -61,10 +63,25 @@ export const TagItemNew = ({ tag, ...args }) => {
 
 //       menuItems={[{ icon: <DeleteIcon />, onClick: null, label: 'dekete' }]}
 export const TagGroupItemNew = ({ tagGroup, ...args }) => {
-  const { setTagGroupForDelete, setTagGroupForEdit } = useTagContext()
+  const {
+    setTagGroupCreateOpen,
+    setTagCreateTagGroup,
+    setTagGroupForDelete,
+    setTagGroupForEdit,
+  } = useTagContext()
   return (
     <TagNew
       menuItems={[
+        {
+          icon: <AddIcon />,
+          onClick: () => setTagCreateTagGroup(tagGroup),
+          label: 'Create tag in group',
+        },
+        {
+          icon: <PlusSquareIcon />,
+          onClick: () => setTagGroupCreateOpen(tagGroup),
+          label: 'Create new tag group',
+        },
         {
           icon: <EditIcon />,
           onClick: () => setTagGroupForEdit(tagGroup),

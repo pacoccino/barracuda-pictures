@@ -2,6 +2,7 @@ import { Box, Text, useToast, AlertModal } from 'src/design-system'
 
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 import { useMutation } from '@redwoodjs/web'
+import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
 
 const DELETE_TAG = gql`
   mutation DeleteTag($tagId: String!) {
@@ -15,7 +16,7 @@ export const DeleteTagModal = ({ tag, onClose }) => {
   const handleDeleteTag = (tagId) =>
     deleteTag({
       variables: { tagId },
-      refetchQueries: ['FindTags', 'EditTags'],
+      refetchQueries: QUERIES_TO_REFETCH,
     }).then((res) => {
       if (res.error) {
         toast({
@@ -39,7 +40,7 @@ export const DeleteTagModal = ({ tag, onClose }) => {
 
   return (
     <AlertModal
-      isOpen={!!tag}
+      isOpen={loading || !!tag}
       loading={loading}
       header={'Delete Tag'}
       body={

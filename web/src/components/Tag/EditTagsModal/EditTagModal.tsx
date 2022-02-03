@@ -1,13 +1,10 @@
 import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
 import { useEffect, useState } from 'react'
-import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
-import {
-  TagGroupItem,
-  TagItemWithGroup,
-} from 'src/components/Tag/TagItem/TagItem'
+import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
+import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
 
 const UPDATE_TAG = gql`
   mutation UpdateTag($name: String!, $tagId: String!) {
@@ -32,7 +29,7 @@ export const EditTagModal = ({ tag, onClose }) => {
   const handleUpdateTag = (name) =>
     updateTag({
       variables: { name, tagId: tag.id },
-      refetchQueries: ['FindTags', 'EditTags'],
+      refetchQueries: QUERIES_TO_REFETCH,
     }).then((res) => {
       if (res.error) {
         toast({
@@ -56,7 +53,7 @@ export const EditTagModal = ({ tag, onClose }) => {
 
   return (
     <BodyModal
-      isOpen={!!tag}
+      isOpen={loading || !!tag}
       onClose={onClose}
       title="Edit Tag"
       body={

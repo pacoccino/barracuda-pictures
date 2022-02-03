@@ -3,6 +3,7 @@ import { Button, Input, useToast, BodyModal } from 'src/design-system'
 import { useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { Flex } from '@chakra-ui/react'
+import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
 
 const CREATE_TAG_GROUP = gql`
   mutation CreateTagGroup($name: String!) {
@@ -22,7 +23,7 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
   const handleCreateTagGroup = (name) =>
     createTagGroup({
       variables: { name },
-      refetchQueries: ['FindTags', 'EditTags'],
+      refetchQueries: QUERIES_TO_REFETCH,
     }).then((res) => {
       if (res.error) {
         toast({
@@ -46,7 +47,7 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
 
   return (
     <BodyModal
-      isOpen={isOpen}
+      isOpen={loading || isOpen}
       onClose={onClose}
       title="Create tag group"
       body={

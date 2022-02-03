@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex } from '@chakra-ui/react'
+import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
 
 const CREATE_TAG = gql`
   mutation CreateTag($name: String!, $tagGroupId: String!) {
@@ -24,7 +25,7 @@ export const CreateTagModal = ({ tagGroup, onClose }) => {
   const handleCreateTag = (name) =>
     createTag({
       variables: { name, tagGroupId: tagGroup.id },
-      refetchQueries: ['FindTags', 'EditTags'],
+      refetchQueries: QUERIES_TO_REFETCH,
     }).then((res) => {
       if (res.error) {
         toast({
@@ -48,7 +49,7 @@ export const CreateTagModal = ({ tagGroup, onClose }) => {
 
   return (
     <BodyModal
-      isOpen={!!tagGroup}
+      isOpen={loading || !!tagGroup}
       onClose={onClose}
       title="Create Tag"
       body={

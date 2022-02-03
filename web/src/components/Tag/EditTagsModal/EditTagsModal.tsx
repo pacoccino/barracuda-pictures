@@ -11,17 +11,13 @@ import {
   Button,
   Flex,
   Heading,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Icon,
 } from 'src/design-system'
-import { AddIcon, EditIcon, DeleteIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { AddIcon } from '@chakra-ui/icons'
 
 import { TagGroupItemNew, TagItemNew } from 'src/components/Tag/TagItem/TagItem'
 import { useTagContext } from 'src/contexts/tags'
+
+export const QUERIES_TO_REFETCH = ['FindTags', 'EditTags', 'ImageAndTags']
 
 const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
   const { setTagGroupCreateOpen, setTagCreateTagGroup } = useTagContext()
