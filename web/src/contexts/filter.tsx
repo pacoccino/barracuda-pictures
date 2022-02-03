@@ -3,19 +3,22 @@ import type {
   TagGroup,
   FilterByTagList,
   TagListCondition,
+  DateRange,
 } from 'types/graphql'
 import { useContext, useMemo, useState, useCallback } from 'react'
 
 interface FilterContextType {
-  addTagToFilter: (Tag, TagGroup) => void
-  removeTagToFilter: (Tag, TagGroup) => void
+  addTagToFilter: (t: Tag, tg: TagGroup) => void
+  removeTagToFilter: (t: Tag, tg: TagGroup) => void
   clearFilter: () => void
   filter: {
     tagLists: FilterByTagList[]
   }
   selectedTagIds: string[]
-  setTagListCondition: (string, TagListCondition) => void
-  tagListConditions: Map<string, TagListCondition>
+  tagListConditions: { [key: string]: TagListCondition }
+  setTagListCondition: (s: string, c: TagListCondition) => void
+  dateRange: DateRange | null
+  setDateRange: (d: DateRange | null) => void
 }
 
 export const FilterContext = React.createContext<FilterContextType>({
@@ -28,10 +31,20 @@ export const FilterContext = React.createContext<FilterContextType>({
   selectedTagIds: [],
   setTagListCondition: () => 0,
   tagListConditions: new Map(),
+  dateRange: null,
+  setDateRange: () => 0,
 })
 
 export const FilterContextProvider = ({ children }) => {
   const [tagLists, setTagLists] = useState<FilterByTagList[]>([])
+  const [dateRange, setDateRange] = useState<DateRange | null>(null)
+
+  const filter = useMemo(() => {
+    return {
+      tagLists,
+      dateRange,
+    }
+  }, [tagLists, dateRange])
 
   const selectedTagIds = useMemo(
     () => tagLists.reduce((acc, tagList) => acc.concat(tagList.tagIds), []),
@@ -48,12 +61,6 @@ export const FilterContextProvider = ({ children }) => {
       ),
     [tagLists]
   )
-
-  const filter = useMemo(() => {
-    return {
-      tagLists,
-    }
-  }, [tagLists])
 
   const setTagListCondition = useCallback(
     (tagGroup: TagGroup, condition: TagListCondition) => {
@@ -79,6 +86,7 @@ export const FilterContextProvider = ({ children }) => {
     },
     [tagLists]
   )
+
   const addTagToFilter = useCallback(
     (tag: Tag, tagGroup: TagGroup) => {
       const tagListIndex = tagLists.findIndex(
@@ -125,6 +133,7 @@ export const FilterContextProvider = ({ children }) => {
 
   const clearFilter = useCallback(() => {
     setTagLists([])
+    setDateRange(null)
   }, [])
 
   return (
@@ -137,6 +146,8 @@ export const FilterContextProvider = ({ children }) => {
         removeTagToFilter,
         filter,
         clearFilter,
+        dateRange,
+        setDateRange,
       }}
     >
       {children}

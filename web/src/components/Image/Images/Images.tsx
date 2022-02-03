@@ -61,7 +61,13 @@ const Images = ({ images, loadMore }: ImagesProps) => {
     >
       {imageGroups.map((group) => (
         <Box key={group.title}>
-          <Heading textStyle="h4" size="sm">
+          <Heading
+            textStyle="h4"
+            size="sm"
+            mt={6}
+            borderBottomColor="gray.300"
+            borderBottomWidth={1}
+          >
             {group.title}
           </Heading>
           <Wrap m={2} ml={0} spacing={0.5}>

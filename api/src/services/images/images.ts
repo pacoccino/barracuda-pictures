@@ -62,6 +62,16 @@ export const images = ({
         })),
       }
     }
+
+    if (filter.dateRange) {
+      query.where.dateTaken = {}
+      if (filter.dateRange.from) {
+        query.where.dateTaken.gte = filter.dateRange.from
+      }
+      if (filter.dateRange.to) {
+        query.where.dateTaken.lte = filter.dateRange.to
+      }
+    }
   }
 
   return db.image.findMany(query)

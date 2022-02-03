@@ -22,12 +22,18 @@ export const schema = gql`
 
   input ImageFilters {
     tagLists: [FilterByTagList!]
+    dateRange: DateRange
   }
 
   input FilterByTagList {
     tagGroupId: String!
     tagIds: [String]!
     condition: TagListCondition!
+  }
+
+  input DateRange {
+    from: DateTime
+    to: DateTime
   }
 
   enum TagListCondition {

@@ -10,7 +10,7 @@ import {
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
 import {
@@ -21,13 +21,27 @@ import {
 import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 
 const DatePanel = () => {
-  const [value, onChange] = useState([null, null])
+  const { dateRange, setDateRange } = useFilterContext()
+
+  const onChange = (newValue) => {
+    if (newValue && newValue[0] && newValue[1])
+      setDateRange({
+        from: newValue[0],
+        to: newValue[1],
+      })
+    else setDateRange(null)
+  }
+
   return (
     <Box>
       <Heading textStyle="h3" size="sm" mb={2} flex="1">
         Date Range
       </Heading>
-      <DateRangePicker calendarIcon={null} onChange={onChange} value={value} />
+      <DateRangePicker
+        calendarIcon={null}
+        onChange={onChange}
+        value={dateRange && [dateRange.from, dateRange.to]}
+      />
     </Box>
   )
 }

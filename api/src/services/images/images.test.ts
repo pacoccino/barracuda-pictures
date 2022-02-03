@@ -161,4 +161,56 @@ describe('images', () => {
     expect(result[0]).toEqual(scenario.image.p3)
     expect(result[1]).toEqual(scenario.image.p4)
   })
+
+  describe(' filter date range', () => {
+    scenario('date range from to', async (scenario: StandardScenario) => {
+      const result = await images({
+        sorting: {
+          dateTaken: 'asc',
+        },
+        filter: {
+          dateRange: {
+            from: '2022-01-01T00:03:00Z',
+            to: '2022-01-01T00:04:00Z',
+          },
+        },
+      })
+
+      expect(result.length).toEqual(2)
+      expect(result[0]).toEqual(scenario.image.p3)
+      expect(result[1]).toEqual(scenario.image.p4)
+    })
+    scenario('date range from', async (scenario: StandardScenario) => {
+      const result = await images({
+        sorting: {
+          dateTaken: 'asc',
+        },
+        filter: {
+          dateRange: {
+            from: '2022-01-01T00:05:00Z',
+          },
+        },
+      })
+
+      expect(result.length).toEqual(2)
+      expect(result[0]).toEqual(scenario.image.p5)
+      expect(result[1]).toEqual(scenario.image.notag)
+    })
+    scenario('date range to', async (scenario: StandardScenario) => {
+      const result = await images({
+        sorting: {
+          dateTaken: 'asc',
+        },
+        filter: {
+          dateRange: {
+            to: '2022-01-01T00:02:00Z',
+          },
+        },
+      })
+
+      expect(result.length).toEqual(2)
+      expect(result[0]).toEqual(scenario.image.p1)
+      expect(result[1]).toEqual(scenario.image.p2)
+    })
+  })
 })
