@@ -1,4 +1,4 @@
-import type { Tag } from 'types/graphql'
+import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 
 import {
   Box,
@@ -20,34 +20,34 @@ import {
 } from 'src/components/Tag/TagItem/TagItem'
 import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 
-const FilterPanel = ({ tagGroups }) => {
+const DatePanel = () => {
+  const [value, onChange] = useState([null, null])
+  return (
+    <Box>
+      <Heading textStyle="h3" size="sm" mb={2} flex="1">
+        Date Range
+      </Heading>
+      <DateRangePicker calendarIcon={null} onChange={onChange} value={value} />
+    </Box>
+  )
+}
+
+const TagsPanel = ({ tagGroups }) => {
   const {
     selectedTagIds,
-    setTagListCondition,
-    tagListConditions,
     addTagToFilter,
     removeTagToFilter,
-    clearFilter,
+    tagListConditions,
+    setTagListCondition,
   } = useFilterContext()
+
   const [editTagOpen, setEditTagOpen] = useState(false)
-
-  const tags = useMemo(
-    () => tagGroups.reduce((acc, tagGroup) => acc.concat(tagGroup.tags), []),
-    [tagGroups]
-  )
-
-  const selectedTags = useMemo(
-    () => tags.filter((tag) => selectedTagIds.indexOf(tag.id) !== -1),
-    [selectedTagIds, tagGroups]
-  )
-
   const isTagSelected = useCallback(
     (tag) => selectedTagIds.indexOf(tag.id) !== -1,
     [selectedTagIds]
   )
-
   return (
-    <VStack py={4} px={2} align="start" h="100%">
+    <>
       <Flex w="100%">
         <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Tags
@@ -113,6 +113,24 @@ const FilterPanel = ({ tagGroups }) => {
           ))}
         </VStack>
       </Box>
+    </>
+  )
+}
+
+const SelectedTagsPanel = ({ tagGroups }) => {
+  const { selectedTagIds, removeTagToFilter, clearFilter } = useFilterContext()
+
+  const tags = useMemo(
+    () => tagGroups.reduce((acc, tagGroup) => acc.concat(tagGroup.tags), []),
+    [tagGroups]
+  )
+  const selectedTags = useMemo(
+    () => tags.filter((tag) => selectedTagIds.indexOf(tag.id) !== -1),
+    [selectedTagIds, tags]
+  )
+
+  return (
+    <Box>
       <Flex w="100%">
         <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Filters
@@ -139,6 +157,15 @@ const FilterPanel = ({ tagGroups }) => {
           ))}
         </Wrap>
       )}
+    </Box>
+  )
+}
+const FilterPanel = ({ tagGroups }) => {
+  return (
+    <VStack py={4} px={2} align="start" h="100%">
+      <TagsPanel tagGroups={tagGroups} />
+      <DatePanel />
+      <SelectedTagsPanel tagGroups={tagGroups} />
     </VStack>
   )
 }

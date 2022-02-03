@@ -14,7 +14,10 @@ interface FilterContextType {
     tagLists: FilterByTagList[]
   }
   selectedTagIds: string[]
+  setTagListCondition: (string, TagListCondition) => void
+  tagListConditions: Map<string, TagListCondition>
 }
+
 export const FilterContext = React.createContext<FilterContextType>({
   addTagToFilter: () => 0,
   removeTagToFilter: () => 0,
@@ -23,6 +26,8 @@ export const FilterContext = React.createContext<FilterContextType>({
     tagLists: [],
   },
   selectedTagIds: [],
+  setTagListCondition: () => 0,
+  tagListConditions: new Map(),
 })
 
 export const FilterContextProvider = ({ children }) => {
