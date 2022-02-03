@@ -47,9 +47,9 @@ const FilterPanel = ({ tagGroups }) => {
   )
 
   return (
-    <VStack py={4} px={2} align="start" bg="gray.100" h="100%">
+    <VStack py={4} px={2} align="start" h="100%">
       <Flex w="100%">
-        <Heading as="h3" size="sm" mb={2} flex="1">
+        <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Tags
         </Heading>
         <Button
@@ -114,7 +114,7 @@ const FilterPanel = ({ tagGroups }) => {
         </VStack>
       </Box>
       <Flex w="100%">
-        <Heading as="h3" size="sm" mb={2} flex="1">
+        <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Filters
         </Heading>
         <Button

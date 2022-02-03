@@ -9,7 +9,7 @@ const PhotosPage = () => {
   return (
     <Flex h="100%">
       <MetaTags title="Photos" description="Photos page" />
-      <Box w={250}>
+      <Box w={250} borderRightWidth={1} boxShadow="lg">
         <FilterPanelCell />
       </Box>
       <Box flex="1" position="relative">

@@ -1,12 +1,5 @@
 import { Link, routes, useMatch } from '@redwoodjs/router'
-import {
-  Box,
-  IconButton,
-  Button,
-  Flex,
-  Heading,
-  HStack,
-} from '@chakra-ui/react'
+import { Box, IconButton, Text, Flex, Heading, HStack } from '@chakra-ui/react'
 import { SettingsIcon } from '@chakra-ui/icons'
 
 type DashboardLayoutProps = {
@@ -33,12 +26,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         align="center"
         as="header"
         h={34}
-        bg="gray.700"
         w="100%"
+        boxShadow="md"
       >
         <Link to={routes.photos()}>
-          <Heading as="h4" size="md" textTransform="uppercase" color="white">
-            Barracuda photos
+          <Heading
+            as="h2"
+            textStyle="appTitle"
+            size="md"
+            textTransform="uppercase"
+          >
+            🖼 Barracuda
           </Heading>
         </Link>
         <HStack as="nav">

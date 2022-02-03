@@ -2,7 +2,7 @@ import type { FindImages } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Images from './Images'
-import { Skeleton, Box, Wrap, WrapItem } from '@chakra-ui/react'
+import { Skeleton, Box, Wrap, WrapItem, Center } from '@chakra-ui/react'
 import { createInfiniteCell, InfiniteSuccessProps } from 'src/lib/InfiniteCell'
 
 const QUERY = gql`
@@ -38,7 +38,7 @@ const Loading = () => (
   </Wrap>
 )
 
-const Empty = () => <Box>No images</Box>
+const Empty = () => <Center p={8}>No images</Center>
 
 const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>

@@ -153,7 +153,7 @@ const EditTagsModal = ({
         <ModalCloseButton />
         <ModalBody>
           <Flex w="100%">
-            <Heading as="h3" size="sm" mb={2} flex="1">
+            <Heading textStyle="h3" mb={2} flex="1">
               Tags
             </Heading>
             <Button
