@@ -9,141 +9,37 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Input,
-  Text,
-  useToast,
   Flex,
   Heading,
-} from '@chakra-ui/react'
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons'
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from 'src/design-system'
+import { EditIcon, DeleteIcon, HamburgerIcon } from '@chakra-ui/icons'
 
 import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { useState } from 'react'
-import EditTagsModalCell, {
-  QUERY,
-} from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
-import { TagGroup } from 'types/graphql'
+import type { Tag, TagGroup } from 'types/graphql'
 
-const CreateTagGroupModal = ({ isOpen, onClose, createTagGroupMutation }) => {
-  const [tagGroupName, setTagGroupName] = useState('')
-  const toast = useToast()
+import { CreateTagGroupModal } from 'src/components/Tag/EditTagsModal/CreateTagGroupModal'
+import { CreateTagModal } from 'src/components/Tag/EditTagsModal/CreateTagModal'
+import { DeleteTagModal } from 'src/components/Tag/EditTagsModal/DeleteTagModal'
+import { DeleteTagGroupModal } from 'src/components/Tag/EditTagsModal/DeleteTagGroupModal'
+import { EditTagModal } from 'src/components/Tag/EditTagsModal/EditTagModal'
+import { EditTagGroupModal } from 'src/components/Tag/EditTagsModal/EditTagGroupModal'
 
-  const [createTagGroup, { loading }] = createTagGroupMutation
-  const handleCreateTagGroup = (name) =>
-    createTagGroup({
-      variables: { name },
-      refetchQueries: [QUERY, 'EditTags'],
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error creating tag group',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
-        toast({
-          title: 'Tag group created completed',
-          description: name,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        })
-        onClose()
-      }
-    })
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create tag group</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Input
-            type="text"
-            placeholder="Tag group name"
-            onChange={(e) => setTagGroupName(e.target.value)}
-          />
-          <Button
-            onClick={() => handleCreateTagGroup(tagGroupName)}
-            disabled={loading}
-          >
-            Create
-          </Button>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  )
-}
-
-const CreateTagModal = ({ tagGroup, isOpen, onClose, createTagMutation }) => {
-  const [tagName, setTagName] = useState('')
-  const toast = useToast()
-
-  const [createTag, { loading }] = createTagMutation
-  const handleCreateTag = (name) =>
-    createTag({
-      variables: { name, tagGroupId: tagGroup.id },
-      refetchQueries: [QUERY, 'EditTags'],
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error creating tag',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
-        toast({
-          title: 'Tag created completed',
-          description: `${tagGroup.name} / ${name}`,
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        })
-        onClose()
-      }
-    })
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Create tag</ModalHeader>
-        <ModalCloseButton />
-        {tagGroup && (
-          <ModalBody>
-            <Text>Tag group: {tagGroup.name}</Text>
-            <Input
-              type="text"
-              placeholder="Tag name"
-              onChange={(e) => setTagName(e.target.value)}
-            />
-            <Button onClick={() => handleCreateTag(tagName)} disabled={loading}>
-              Create
-            </Button>
-          </ModalBody>
-        )}
-      </ModalContent>
-    </Modal>
-  )
-}
-
-const EditTagsModal = ({
-  isOpen,
-  onClose,
-  tagGroups,
-  createTagMutation,
-  handleDeleteTag,
-  createTagGroupMutation,
-  handleDeleteTagGroup,
-}) => {
+const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
   const [createTagGroupModalOpen, setCreateTagGroupModalOpen] = useState(false)
   const [tagGroupForCreateTag, setTagGroupForCreateTag] =
     useState<TagGroup | null>(null)
+  const [tagGroupForDelete, setTagGroupForDelete] = useState<TagGroup | null>(
+    null
+  )
+  const [tagForDelete, setTagForDelete] = useState<Tag | null>(null)
+  const [tagGroupForEdit, setTagGroupForEdit] = useState<TagGroup | null>(null)
+  const [tagForEdit, setTagForEdit] = useState<Tag | null>(null)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -168,21 +64,57 @@ const EditTagsModal = ({
           <Box>
             {tagGroups.map((tagGroup) => (
               <Box key={tagGroup.id}>
-                <TagGroupItem
-                  tagGroup={tagGroup}
-                  onClick={() => handleDeleteTagGroup(tagGroup.id)}
-                  actionIcon={DeleteIcon}
-                  actionLabel="Delete tag group"
-                />
+                <Box>
+                  <TagGroupItem tagGroup={tagGroup} />
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<HamburgerIcon />}
+                      variant="outline"
+                    />
+                    <MenuList>
+                      <MenuItem
+                        icon={<EditIcon />}
+                        onClick={() => setTagGroupForEdit(tagGroup)}
+                      >
+                        Edit tag group ...
+                      </MenuItem>
+                      <MenuItem
+                        icon={<DeleteIcon />}
+                        onClick={() => setTagGroupForDelete(tagGroup)}
+                      >
+                        Delete tag group ...
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
                 <Wrap m={2}>
                   {tagGroup.tags.map((tag) => (
                     <WrapItem key={tag.id}>
-                      <TagItem
-                        onClick={() => handleDeleteTag(tag.id)}
-                        tag={tag}
-                        actionIcon={DeleteIcon}
-                        actionLabel="Delete tag"
-                      ></TagItem>
+                      <TagItem tag={tag}></TagItem>
+                      <Menu>
+                        <MenuButton
+                          as={IconButton}
+                          aria-label="Options"
+                          icon={<HamburgerIcon />}
+                          variant="outline"
+                        />
+                        <MenuList>
+                          <MenuItem
+                            icon={<EditIcon />}
+                            onClick={() => setTagForEdit(tag)}
+                          >
+                            Edit tag ...
+                          </MenuItem>
+                          <MenuItem
+                            icon={<DeleteIcon />}
+                            onClick={() => setTagForDelete(tag)}
+                          >
+                            Delete tag ...
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
                     </WrapItem>
                   ))}
                   <WrapItem>
@@ -202,13 +134,23 @@ const EditTagsModal = ({
           <CreateTagGroupModal
             isOpen={createTagGroupModalOpen}
             onClose={() => setCreateTagGroupModalOpen(false)}
-            createTagGroupMutation={createTagGroupMutation}
           />
           <CreateTagModal
             tagGroup={tagGroupForCreateTag}
-            isOpen={!!tagGroupForCreateTag}
             onClose={() => setTagGroupForCreateTag(null)}
-            createTagMutation={createTagMutation}
+          />
+          <DeleteTagModal
+            tag={tagForDelete}
+            onClose={() => setTagForDelete(null)}
+          />
+          <DeleteTagGroupModal
+            tagGroup={tagGroupForDelete}
+            onClose={() => setTagGroupForDelete(null)}
+          />
+          <EditTagModal tag={tagForEdit} onClose={() => setTagForEdit(null)} />
+          <EditTagGroupModal
+            tagGroup={tagGroupForEdit}
+            onClose={() => setTagGroupForEdit(null)}
           />
         </ModalBody>
       </ModalContent>
