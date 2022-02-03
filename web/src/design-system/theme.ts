@@ -109,7 +109,7 @@ export const chakraTheme = extendTheme({
         fontFamily: "'Montserrat', sans-serif",
         fontSize: '16px',
         fontWeight: '400',
-        lineHeight: '1.5',
+        lineHeight: '1',
       },
     },
   },

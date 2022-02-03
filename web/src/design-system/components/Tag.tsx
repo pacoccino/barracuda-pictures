@@ -1,6 +1,9 @@
-import { Flex, Tooltip, Box, Text, Icon } from '@chakra-ui/react'
+import { Flex, Tooltip, Box, Text, Icon, Center } from '@chakra-ui/react'
 import type { TagProps as CTagProps } from '@chakra-ui/react'
+import type { FlexProps } from '@chakra-ui/react'
 import { As } from '@chakra-ui/system/dist/declarations/src/system.types'
+import { Menu, MenuButton, MenuItem, MenuList } from 'src/design-system'
+import { DeleteIcon, EditIcon, HamburgerIcon } from '@chakra-ui/icons'
 
 export enum TagStatus {
   'positive' = 'positive',
@@ -16,6 +19,14 @@ export type TagProps = CTagProps & {
   actionIcon?: As
   color?: string
   status?: TagStatus
+}
+
+export type TagNewProps = FlexProps & {
+  name: string
+  actionLabel?: string
+  color?: string
+  leftAction?: React.ReactNode
+  rightAction?: React.ReactNode
 }
 
 const TagTooltip = ({ label, children }) => (
@@ -80,3 +91,63 @@ export const Tag = ({
     </Flex>
   </TagTooltip>
 )
+
+export const TagNew = ({
+  name,
+  color,
+  leftAction,
+  actionLabel,
+  onClick,
+  menuItems,
+  ...args
+}: TagNewProps) => (
+  <Flex borderRadius={4} bg={color + '.500'} align="stretch" {...args}>
+    <TagTooltip label={actionLabel}>
+      <Flex
+        align="center"
+        cursor={onClick ? 'pointer' : 'initial'}
+        onClick={onClick}
+        _hover={onClick && { bg: color + '.400' }}
+        pr={menuItems ? 1 : 1}
+        pl={1}
+        borderRadius={4}
+      >
+        {leftAction && <Center>{leftAction}</Center>}
+
+        <Text color="white" fontSize="0.7rem" py={1}>
+          {name}
+        </Text>
+      </Flex>
+    </TagTooltip>
+
+    {menuItems && (
+      <Flex
+        borderRadius={4}
+        cursor={'pointer'}
+        _hover={{ bg: 'gray.500' }}
+        pl={1}
+        pr={1}
+        align="center"
+      >
+        <Menu>
+          <MenuButton
+            as={HamburgerIcon}
+            aria-label="Options"
+            color="white"
+            boxSize={2}
+          />
+          <MenuList>
+            {menuItems.map((menuItem) => (
+              <MenuItem icon={menuItem.icon} onClick={menuItem.onClick}>
+                {menuItem.label}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </Flex>
+    )}
+  </Flex>
+)
+
+/*
+ */

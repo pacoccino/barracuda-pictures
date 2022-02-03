@@ -16,13 +16,14 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Icon,
 } from 'src/design-system'
 import { AddIcon, EditIcon, DeleteIcon, HamburgerIcon } from '@chakra-ui/icons'
 
 import {
   TagGroupItem,
-  TagGroupNew,
-  TagNew,
+  TagGroupItemNew,
+  TagItemNew,
 } from 'src/components/Tag/TagItem/TagItem'
 import { useState } from 'react'
 import type { Tag, TagGroup } from 'types/graphql'
@@ -71,7 +72,7 @@ const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
             {tagGroups.map((tagGroup) => (
               <Box key={tagGroup.id}>
                 <Flex align="start">
-                  <TagGroupNew
+                  <TagGroupItemNew
                     tagGroup={tagGroup}
                     rightAction={
                       <Menu>
@@ -116,12 +117,12 @@ const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
                 <Wrap m={2}>
                   {tagGroup.tags.map((tag) => (
                     <WrapItem key={tag.id}>
-                      <TagNew
+                      <TagItemNew
                         tag={tag}
                         rightAction={
                           <Menu>
                             <MenuButton
-                              as={IconButton}
+                              as={Icon}
                               aria-label="Options"
                               icon={<HamburgerIcon />}
                               variant="tagAction"

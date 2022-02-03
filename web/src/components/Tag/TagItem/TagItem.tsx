@@ -1,15 +1,5 @@
-import {
-  Text,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  HStack,
-  Tag,
-} from 'src/design-system'
+import { Tag, TagNew } from 'src/design-system'
 import { TagStatus, TagProps } from 'src/design-system/components/Tag'
-import { Box, Flex, IconButton } from '@chakra-ui/react'
-import { DeleteIcon, EditIcon, HamburgerIcon } from '@chakra-ui/icons'
 
 type TagItemProps = {
   tag: { id: string; name: string }
@@ -44,46 +34,13 @@ const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
   return <Tag name={tagGroup.name} color="red" {...tagArgs} />
 }
 
-export const TagNew = ({ leftAction, rightAction, tag }) => {
-  return (
-    <Flex
-      borderRadius={4}
-      bg="green.500"
-      h={6}
-      pl={leftAction ? 1 : 2}
-      pr={rightAction ? 1 : 2}
-      align="center"
-    >
-      {leftAction && <Box>{leftAction}</Box>}
-
-      <Text color="white" fontSize="xs">
-        {tag.name}
-      </Text>
-
-      {rightAction && <Box>{rightAction}</Box>}
-    </Flex>
-  )
+export const TagItemNew = ({ tag, ...args }) => {
+  return <TagNew color="green" name={tag.name} {...args} />
 }
-export const TagGroupNew = ({ leftAction, rightAction, tagGroup }) => {
-  return (
-    <HStack
-      borderRadius={4}
-      bg="red.500"
-      h={6}
-      align="center"
-      justify="start"
-      pl={leftAction ? 1 : 2}
-      pr={rightAction ? 1 : 2}
-    >
-      {leftAction && <Box>{leftAction}</Box>}
 
-      <Text color="white" fontSize="xs">
-        {tagGroup.name}
-      </Text>
-
-      {rightAction && <Box>{rightAction}</Box>}
-    </HStack>
-  )
+//       menuItems={[{ icon: <DeleteIcon />, onClick: null, label: 'dekete' }]}
+export const TagGroupItemNew = ({ tagGroup, ...args }) => {
+  return <TagNew color="red" name={tagGroup.name} {...args} />
 }
 
 export { TagItem, TagGroupItem, TagItemWithGroup }

@@ -4,4 +4,4 @@ export { chakraTheme } from './theme'
 
 export { BodyModal } from './components/BodyModal'
 export { AlertModal } from './components/AlertModal'
-export { Tag } from './components/Tag'
+export { Tag, TagNew } from './components/Tag'

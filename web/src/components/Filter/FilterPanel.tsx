@@ -5,20 +5,30 @@ import {
   Button,
   Flex,
   Heading,
+  Icon,
   Switch,
   VStack,
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
-import { useMemo, useCallback, useState, useEffect } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
 import {
-  TagGroupItem,
-  TagItem,
+  TagGroupItemNew,
   TagItemWithGroup,
+  TagItemNew,
 } from 'src/components/Tag/TagItem/TagItem'
 import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
+
+const FilterStatusIcon = ({ color }) => (
+  <Icon viewBox="25 25 150 150" color={color} boxSize={2} mr={1}>
+    <path
+      fill="currentColor"
+      d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+    />
+  </Icon>
+)
 
 const DatePanel = () => {
   const { dateRange, setDateRange } = useFilterContext()
@@ -44,6 +54,12 @@ const DatePanel = () => {
       />
     </Box>
   )
+}
+
+const STATUS_TO_COLOR = {
+  positive: 'blue.300',
+  disabled: 'gray.100',
+  negative: 'red.600',
 }
 
 const TagsPanel = ({ tagGroups }) => {
@@ -83,9 +99,9 @@ const TagsPanel = ({ tagGroups }) => {
           {tagGroups.map((tagGroup) => (
             <Box key={tagGroup.id}>
               <Flex>
-                <Box flex="1">
-                  <TagGroupItem tagGroup={tagGroup} />
-                </Box>
+                <Flex flex="1" justify="start" pl={2}>
+                  <TagGroupItemNew tagGroup={tagGroup} />
+                </Flex>
                 <Box>
                   <Switch
                     isChecked={tagListConditions[tagGroup.id] === 'AND'}
@@ -99,20 +115,26 @@ const TagsPanel = ({ tagGroups }) => {
                   {tagListConditions[tagGroup.id] || 'OR'}
                 </Box>
               </Flex>
-              <Wrap m={2}>
+              <Wrap my={2}>
                 {tagGroup.tags.map((tag) => (
                   <WrapItem key={tag.id}>
-                    <TagItem
+                    <TagItemNew
                       tag={tag}
                       onClick={
                         isTagSelected(tag)
                           ? () => removeTagToFilter(tag, tagGroup)
                           : () => addTagToFilter(tag, tagGroup)
                       }
-                      status={
-                        isTagSelected(tag)
-                          ? TagStatus.positive
-                          : TagStatus.disabled
+                      leftAction={
+                        <FilterStatusIcon
+                          color={
+                            STATUS_TO_COLOR[
+                              isTagSelected(tag)
+                                ? TagStatus.positive
+                                : TagStatus.disabled
+                            ]
+                          }
+                        />
                       }
                       actionLabel={
                         isTagSelected(tag)
