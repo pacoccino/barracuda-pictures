@@ -12,6 +12,7 @@ import './index.css'
 import './lib/locale'
 
 import { FilterContextProvider } from 'src/contexts/filter'
+import { TagContextProvider } from 'src/contexts/tags'
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
@@ -19,7 +20,9 @@ const App = () => (
       <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
         <RedwoodApolloProvider>
           <FilterContextProvider>
-            <Routes />
+            <TagContextProvider>
+              <Routes />
+            </TagContextProvider>
           </FilterContextProvider>
         </RedwoodApolloProvider>
       </RedwoodProvider>

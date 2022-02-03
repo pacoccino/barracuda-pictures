@@ -65,12 +65,6 @@ const Button = {
     borderRadius: '2rem',
     fontWeight: 'normal',
   },
-  sizes: {
-    md: {
-      fontSize: '0.9rem',
-      padding: '16px',
-    },
-  },
   variants: {
     outline: {
       border: '1px solid',
@@ -94,7 +88,6 @@ const Button = {
     },
   },
   defaultProps: {
-    size: 'md',
     variant: 'outline',
   },
 }

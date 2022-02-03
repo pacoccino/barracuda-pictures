@@ -3,7 +3,7 @@ import type { TagProps as CTagProps } from '@chakra-ui/react'
 import type { FlexProps } from '@chakra-ui/react'
 import { As } from '@chakra-ui/system/dist/declarations/src/system.types'
 import { Menu, MenuButton, MenuItem, MenuList } from 'src/design-system'
-import { DeleteIcon, EditIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { HamburgerIcon } from '@chakra-ui/icons'
 
 export enum TagStatus {
   'positive' = 'positive',
@@ -27,6 +27,11 @@ export type TagNewProps = FlexProps & {
   color?: string
   leftAction?: React.ReactNode
   rightAction?: React.ReactNode
+  menuItems?: {
+    onClick: () => void
+    icon: React.ReactNode
+    label: string
+  }[]
 }
 
 const TagTooltip = ({ label, children }) => (
@@ -134,7 +139,7 @@ export const TagNew = ({
             as={HamburgerIcon}
             aria-label="Options"
             color="white"
-            boxSize={2}
+            boxSize={3}
           />
           <MenuList>
             {menuItems.map((menuItem) => (

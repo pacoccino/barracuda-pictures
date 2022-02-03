@@ -2,6 +2,7 @@ import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 
 import {
   Box,
+  IconButton,
   Button,
   Flex,
   Heading,
@@ -20,6 +21,8 @@ import {
   TagItemNew,
 } from 'src/components/Tag/TagItem/TagItem'
 import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
+import { AddIcon } from '@chakra-ui/icons'
+import { useTagContext } from 'src/contexts/tags'
 
 const FilterStatusIcon = ({ color }) => (
   <Icon viewBox="25 25 150 150" color={color} boxSize={2} mr={1}>
@@ -71,6 +74,7 @@ const TagsPanel = ({ tagGroups }) => {
     setTagListCondition,
   } = useFilterContext()
 
+  const { setTagGroupCreateOpen, setTagCreateTagGroup } = useTagContext()
   const [editTagOpen, setEditTagOpen] = useState(false)
   const isTagSelected = useCallback(
     (tag) => selectedTagIds.indexOf(tag.id) !== -1,
@@ -83,16 +87,14 @@ const TagsPanel = ({ tagGroups }) => {
           Tags
         </Heading>
         <Button
-          onClick={() => setEditTagOpen(true)}
+          onClick={() => setTagGroupCreateOpen(true)}
+          leftIcon={<AddIcon />}
           size="xs"
           colorScheme="blue"
+          variant="solid"
         >
-          Edit tags
+          Create Tag Group
         </Button>
-        <EditTagsModalCell
-          isOpen={editTagOpen}
-          onClose={() => setEditTagOpen(false)}
-        />
       </Flex>
       <Box flex="1">
         <VStack>
@@ -101,6 +103,16 @@ const TagsPanel = ({ tagGroups }) => {
               <Flex>
                 <Flex flex="1" justify="start" pl={2}>
                   <TagGroupItemNew tagGroup={tagGroup} />
+
+                  <IconButton
+                    aria-label="create tag"
+                    size="xs"
+                    colorScheme="blue"
+                    variant="solid"
+                    icon={<AddIcon />}
+                    onClick={() => setTagCreateTagGroup(tagGroup)}
+                    ml={2}
+                  />
                 </Flex>
                 <Box>
                   <Switch

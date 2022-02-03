@@ -1,7 +1,6 @@
 import { Box, Button, Input, useToast, BodyModal } from 'src/design-system'
 
 import { useEffect, useState } from 'react'
-import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
@@ -28,7 +27,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
   const handleUpdateTagGroup = (name) =>
     updateTagGroup({
       variables: { tagGroupId: tagGroup.id, name },
-      refetchQueries: [QUERY, 'EditTags'],
+      refetchQueries: ['FindTags', 'EditTags'],
     }).then((res) => {
       if (res.error) {
         toast({

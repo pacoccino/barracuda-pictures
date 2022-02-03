@@ -4,7 +4,7 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import FilterPanel from 'src/components/Filter/FilterPanel'
 
 export const QUERY = gql`
-  query FindFilters {
+  query FindTags {
     tagGroups {
       id
       name

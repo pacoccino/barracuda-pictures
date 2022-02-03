@@ -1,5 +1,7 @@
 import { Tag, TagNew } from 'src/design-system'
 import { TagStatus, TagProps } from 'src/design-system/components/Tag'
+import { useTagContext } from 'src/contexts/tags'
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 
 type TagItemProps = {
   tag: { id: string; name: string }
@@ -35,12 +37,50 @@ const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
 }
 
 export const TagItemNew = ({ tag, ...args }) => {
-  return <TagNew color="green" name={tag.name} {...args} />
+  const { setTagForDelete, setTagForEdit } = useTagContext()
+  return (
+    <TagNew
+      menuItems={[
+        {
+          icon: <EditIcon />,
+          onClick: () => setTagForEdit(tag),
+          label: 'Edit tag',
+        },
+        {
+          icon: <DeleteIcon />,
+          onClick: () => setTagForDelete(tag),
+          label: 'Delete tag',
+        },
+      ]}
+      color="green"
+      name={tag.name}
+      {...args}
+    />
+  )
 }
 
 //       menuItems={[{ icon: <DeleteIcon />, onClick: null, label: 'dekete' }]}
 export const TagGroupItemNew = ({ tagGroup, ...args }) => {
-  return <TagNew color="red" name={tagGroup.name} {...args} />
+  const { setTagGroupForDelete, setTagGroupForEdit } = useTagContext()
+  return (
+    <TagNew
+      menuItems={[
+        {
+          icon: <EditIcon />,
+          onClick: () => setTagGroupForEdit(tagGroup),
+          label: 'Edit tag group',
+        },
+        {
+          icon: <DeleteIcon />,
+          onClick: () => setTagGroupForDelete(tagGroup),
+          label: 'Delete tag group',
+        },
+      ]}
+      color="red"
+      name={tagGroup.name}
+      {...args}
+    />
+  )
 }
 
 export { TagItem, TagGroupItem, TagItemWithGroup }

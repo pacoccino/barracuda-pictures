@@ -1,11 +1,4 @@
-import {
-  Button,
-  Input,
-  Text,
-  useToast,
-  BodyModal,
-  Box,
-} from 'src/design-system'
+import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
 import { useEffect, useState } from 'react'
 import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
@@ -39,7 +32,7 @@ export const EditTagModal = ({ tag, onClose }) => {
   const handleUpdateTag = (name) =>
     updateTag({
       variables: { name, tagId: tag.id },
-      refetchQueries: [QUERY, 'EditTags'],
+      refetchQueries: ['FindTags', 'EditTags'],
     }).then((res) => {
       if (res.error) {
         toast({

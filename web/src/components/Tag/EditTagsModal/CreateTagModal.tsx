@@ -1,14 +1,6 @@
-import {
-  Button,
-  Input,
-  Text,
-  useToast,
-  BodyModal,
-  Box,
-} from 'src/design-system'
+import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
 import { useState } from 'react'
-import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex } from '@chakra-ui/react'
@@ -32,7 +24,7 @@ export const CreateTagModal = ({ tagGroup, onClose }) => {
   const handleCreateTag = (name) =>
     createTag({
       variables: { name, tagGroupId: tagGroup.id },
-      refetchQueries: [QUERY, 'EditTags'],
+      refetchQueries: ['FindTags', 'EditTags'],
     }).then((res) => {
       if (res.error) {
         toast({

@@ -1,7 +1,6 @@
 import { Box, Text, useToast, AlertModal } from 'src/design-system'
 
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
-import { QUERY } from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { useMutation } from '@redwoodjs/web'
 
 const DELETE_TAG_GROUP = gql`
@@ -16,7 +15,7 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
   const handleDeleteTagGroup = (tagGroupId) =>
     deleteTagGroup({
       variables: { tagGroupId },
-      refetchQueries: [QUERY, 'EditTags'],
+      refetchQueries: ['FindTags', 'EditTags'],
     }).then((res) => {
       if (res.error) {
         toast({
