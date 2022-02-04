@@ -83,7 +83,7 @@ export const TagGroupItemNew = ({ tagGroup, showMenu, ...args }) => {
           {
             icon: <PlusSquareIcon />,
             onClick: () => setTagGroupCreateOpen(tagGroup),
-            label: 'Create new tag group',
+            label: 'Create tag group',
           },
           {
             icon: <EditIcon />,

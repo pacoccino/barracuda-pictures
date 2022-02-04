@@ -34,6 +34,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             as="h2"
             textStyle="appTitle"
             size="md"
+            fontWeight={300}
             textTransform="uppercase"
           >
             🖼 Barracuda

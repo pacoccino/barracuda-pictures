@@ -13,7 +13,7 @@ const textStyles = {
   },
   h3: {
     fontFamily: '"Montserrat", sans-serif',
-    fontWeight: 600,
+    fontWeight: 400,
     fontSize: ['1.1rem', '1.1rem', '1.2rem'],
     textTransform: 'uppercase',
   },
@@ -46,7 +46,7 @@ const textStyles = {
   },
   appTitle: {
     fontFamily: '"Montserrat", sans-serif',
-    fontWeight: 200,
+    fontWeight: 300,
     textTransform: 'uppercase',
     letterSpacing: '0.1rem',
     lineHeight: 1,
