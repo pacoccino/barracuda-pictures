@@ -2,6 +2,7 @@ import type { ImageAndTags } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import EditTagsModal from './EditTagsModal'
+import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
 
 export const QUERY = gql`
   query EditTags {
@@ -19,7 +20,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = DefaultSpinner
 
 export const Empty = () => {
   return <div className="rw-text-center">{'No tags yet. '}</div>

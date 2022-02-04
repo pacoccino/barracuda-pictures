@@ -65,7 +65,7 @@ const EditTagsModal = ({ isOpen, onClose, tagGroups }) => {
                 <Wrap m={2}>
                   {tagGroup.tags.map((tag) => (
                     <WrapItem key={tag.id}>
-                      <TagItemNew tag={tag} />
+                      <TagItemNew tag={tag} showMenu />
                     </WrapItem>
                   ))}
                 </Wrap>

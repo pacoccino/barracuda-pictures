@@ -113,7 +113,7 @@ export const TagNew = ({
   <Flex borderRadius={4} bg={color + '.500'} align="stretch" {...args}>
     <TagTooltip label={actionLabel}>
       <Flex
-        align="stretch"
+        align="center"
         cursor={onClick ? 'pointer' : 'initial'}
         onClick={onClick}
         _hover={onClick && { bg: color + '.400' }}

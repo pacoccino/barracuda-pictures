@@ -102,7 +102,7 @@ const TagsPanel = ({ tagGroups }) => {
             <Box key={tagGroup.id}>
               <Flex>
                 <Flex flex="1" justify="start" pl={2}>
-                  <TagGroupItemNew tagGroup={tagGroup} />
+                  <TagGroupItemNew tagGroup={tagGroup} showMenu />
 
                   <IconButton
                     aria-label="create tag"
@@ -153,6 +153,7 @@ const TagsPanel = ({ tagGroups }) => {
                           ? 'Remove from filter'
                           : 'Add to filter'
                       }
+                      showMenu
                     />
                   </WrapItem>
                 ))}

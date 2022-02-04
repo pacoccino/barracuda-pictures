@@ -36,22 +36,24 @@ const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
   return <Tag name={tagGroup.name} color="red" {...tagArgs} />
 }
 
-export const TagItemNew = ({ tag, showGroup, ...args }) => {
+export const TagItemNew = ({ tag, showGroup, showMenu, ...args }) => {
   const { setTagForDelete, setTagForEdit } = useTagContext()
   return (
     <TagNew
-      menuItems={[
-        {
-          icon: <EditIcon />,
-          onClick: () => setTagForEdit(tag),
-          label: 'Edit tag',
-        },
-        {
-          icon: <DeleteIcon />,
-          onClick: () => setTagForDelete(tag),
-          label: 'Delete tag',
-        },
-      ]}
+      menuItems={
+        showMenu && [
+          {
+            icon: <EditIcon />,
+            onClick: () => setTagForEdit(tag),
+            label: 'Edit tag',
+          },
+          {
+            icon: <DeleteIcon />,
+            onClick: () => setTagForDelete(tag),
+            label: 'Delete tag',
+          },
+        ]
+      }
       color="green"
       groupColor="red"
       name={tag.name}
@@ -62,7 +64,7 @@ export const TagItemNew = ({ tag, showGroup, ...args }) => {
 }
 
 //       menuItems={[{ icon: <DeleteIcon />, onClick: null, label: 'dekete' }]}
-export const TagGroupItemNew = ({ tagGroup, ...args }) => {
+export const TagGroupItemNew = ({ tagGroup, showMenu, ...args }) => {
   const {
     setTagGroupCreateOpen,
     setTagCreateTagGroup,
@@ -71,28 +73,30 @@ export const TagGroupItemNew = ({ tagGroup, ...args }) => {
   } = useTagContext()
   return (
     <TagNew
-      menuItems={[
-        {
-          icon: <AddIcon />,
-          onClick: () => setTagCreateTagGroup(tagGroup),
-          label: 'Create tag in group',
-        },
-        {
-          icon: <PlusSquareIcon />,
-          onClick: () => setTagGroupCreateOpen(tagGroup),
-          label: 'Create new tag group',
-        },
-        {
-          icon: <EditIcon />,
-          onClick: () => setTagGroupForEdit(tagGroup),
-          label: 'Edit tag group',
-        },
-        {
-          icon: <DeleteIcon />,
-          onClick: () => setTagGroupForDelete(tagGroup),
-          label: 'Delete tag group',
-        },
-      ]}
+      menuItems={
+        showMenu && [
+          {
+            icon: <AddIcon />,
+            onClick: () => setTagCreateTagGroup(tagGroup),
+            label: 'Create tag in group',
+          },
+          {
+            icon: <PlusSquareIcon />,
+            onClick: () => setTagGroupCreateOpen(tagGroup),
+            label: 'Create new tag group',
+          },
+          {
+            icon: <EditIcon />,
+            onClick: () => setTagGroupForEdit(tagGroup),
+            label: 'Edit tag group',
+          },
+          {
+            icon: <DeleteIcon />,
+            onClick: () => setTagGroupForDelete(tagGroup),
+            label: 'Delete tag group',
+          },
+        ]
+      }
       color="red"
       name={tagGroup.name}
       {...args}

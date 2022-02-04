@@ -3,6 +3,7 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import TagsModal from './ImageTagsModal'
 import { useMutation } from '@redwoodjs/web'
+import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
 
 export const QUERY = gql`
   query ImageAndTags($imageId: String!) {
@@ -49,7 +50,7 @@ const REMOVE_TAG_ON_IMAGE = gql`
     deleteTagsOnImage(imageId: $imageId, tagId: $tagId)
   }
 `
-export const Loading = () => <div>Loading...</div>
+export const Loading = DefaultSpinner
 
 export const Empty = () => {
   return <div className="rw-text-center">{'No tags yet. '}</div>

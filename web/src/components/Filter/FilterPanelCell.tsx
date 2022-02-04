@@ -2,6 +2,7 @@ import type { FindFilters } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import FilterPanel from 'src/components/Filter/FilterPanel'
+import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
 
 export const QUERY = gql`
   query FindTags {
@@ -20,7 +21,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = DefaultSpinner
 
 export const Empty = () => {
   return <div className="rw-text-center">{'No tags yet. '}</div>
