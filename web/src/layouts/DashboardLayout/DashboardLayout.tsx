@@ -49,7 +49,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </Link>
         </HStack>
       </HStack>
-      <Box as="main" flex="1">
+      <Box as="main" flex="1" overflow="hidden">
         {children}
       </Box>
     </Flex>

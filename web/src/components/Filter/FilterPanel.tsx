@@ -6,13 +6,14 @@ import {
   Button,
   Flex,
   Heading,
+  Text,
   Icon,
   Switch,
   VStack,
   Wrap,
   WrapItem,
 } from '@chakra-ui/react'
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
 import {
@@ -20,7 +21,6 @@ import {
   TagItemWithGroup,
   TagItemNew,
 } from 'src/components/Tag/TagItem/TagItem'
-import EditTagsModalCell from 'src/components/Tag/EditTagsModal/EditTagsModalCell'
 import { AddIcon } from '@chakra-ui/icons'
 import { useTagContext } from 'src/contexts/tags'
 
@@ -75,14 +75,13 @@ const TagsPanel = ({ tagGroups }) => {
   } = useFilterContext()
 
   const { setTagGroupCreateOpen, setTagCreateTagGroup } = useTagContext()
-  const [editTagOpen, setEditTagOpen] = useState(false)
   const isTagSelected = useCallback(
     (tag) => selectedTagIds.indexOf(tag.id) !== -1,
     [selectedTagIds]
   )
   return (
-    <>
-      <Flex w="100%">
+    <VStack flex={1} overflow="hidden" align="stretch">
+      <Flex>
         <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Tags
         </Heading>
@@ -96,73 +95,81 @@ const TagsPanel = ({ tagGroups }) => {
           Create Tag Group
         </Button>
       </Flex>
-      <Box flex="1">
-        <VStack>
-          {tagGroups.map((tagGroup) => (
-            <Box key={tagGroup.id}>
-              <Flex>
-                <Flex flex="1" justify="start" pl={2}>
-                  <TagGroupItemNew tagGroup={tagGroup} showMenu />
+      <VStack
+        flex={1}
+        overflowX="hidden"
+        overflowY="scroll"
+        py={1}
+        align="stretch"
+      >
+        {tagGroups.map((tagGroup) => (
+          <Box key={tagGroup.id}>
+            <Flex>
+              <Flex flex={1}>
+                <TagGroupItemNew tagGroup={tagGroup} showMenu />
 
-                  <IconButton
-                    aria-label="create tag"
-                    size="xs"
-                    colorScheme="blue"
-                    variant="solid"
-                    icon={<AddIcon />}
-                    onClick={() => setTagCreateTagGroup(tagGroup)}
-                    ml={2}
-                  />
-                </Flex>
-                <Box>
-                  <Switch
-                    isChecked={tagListConditions[tagGroup.id] === 'AND'}
-                    onChange={() =>
-                      setTagListCondition(
-                        tagGroup,
-                        tagListConditions[tagGroup.id] === 'AND' ? 'OR' : 'AND'
-                      )
-                    }
-                  />
-                  {tagListConditions[tagGroup.id] || 'OR'}
-                </Box>
+                <IconButton
+                  aria-label="create tag"
+                  size="xs"
+                  colorScheme="blue"
+                  variant="solid"
+                  icon={<AddIcon />}
+                  onClick={() => setTagCreateTagGroup(tagGroup)}
+                  ml={2}
+                />
               </Flex>
-              <Wrap my={2}>
-                {tagGroup.tags.map((tag) => (
-                  <WrapItem key={tag.id}>
-                    <TagItemNew
-                      tag={tag}
-                      onClick={
-                        isTagSelected(tag)
-                          ? () => removeTagToFilter(tag, tagGroup)
-                          : () => addTagToFilter(tag, tagGroup)
-                      }
-                      leftAction={
-                        <FilterStatusIcon
-                          color={
-                            STATUS_TO_COLOR[
-                              isTagSelected(tag)
-                                ? TagStatus.positive
-                                : TagStatus.disabled
-                            ]
-                          }
-                        />
-                      }
-                      actionLabel={
-                        isTagSelected(tag)
-                          ? 'Remove from filter'
-                          : 'Add to filter'
-                      }
-                      showMenu
-                    />
-                  </WrapItem>
-                ))}
-              </Wrap>
-            </Box>
-          ))}
-        </VStack>
-      </Box>
-    </>
+              <Flex align="center">
+                <Text fontSize="sm">
+                  {tagListConditions[tagGroup.id] || 'OR'}
+                </Text>
+                <Switch
+                  isChecked={tagListConditions[tagGroup.id] === 'AND'}
+                  onChange={() =>
+                    setTagListCondition(
+                      tagGroup,
+                      tagListConditions[tagGroup.id] === 'AND' ? 'OR' : 'AND'
+                    )
+                  }
+                  ml={1}
+                  size="sm"
+                />
+              </Flex>
+            </Flex>
+            <Wrap my={2}>
+              {tagGroup.tags.map((tag) => (
+                <WrapItem key={tag.id}>
+                  <TagItemNew
+                    tag={tag}
+                    onClick={
+                      isTagSelected(tag)
+                        ? () => removeTagToFilter(tag, tagGroup)
+                        : () => addTagToFilter(tag, tagGroup)
+                    }
+                    leftAction={
+                      <FilterStatusIcon
+                        color={
+                          STATUS_TO_COLOR[
+                            isTagSelected(tag)
+                              ? TagStatus.positive
+                              : TagStatus.disabled
+                          ]
+                        }
+                      />
+                    }
+                    actionLabel={
+                      isTagSelected(tag)
+                        ? 'Remove from filter'
+                        : 'Add to filter'
+                    }
+                    showMenu
+                  />
+                </WrapItem>
+              ))}
+            </Wrap>
+          </Box>
+        ))}
+      </VStack>
+    </VStack>
   )
 }
 
@@ -179,8 +186,8 @@ const SelectedTagsPanel = ({ tagGroups }) => {
   )
 
   return (
-    <Box>
-      <Flex w="100%">
+    <VStack align="stretch">
+      <Flex>
         <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Filters
         </Heading>
@@ -206,12 +213,13 @@ const SelectedTagsPanel = ({ tagGroups }) => {
           ))}
         </Wrap>
       )}
-    </Box>
+    </VStack>
   )
 }
+
 const FilterPanel = ({ tagGroups }) => {
   return (
-    <VStack py={4} px={2} align="start" h="100%">
+    <VStack py={4} px={2} align="stretch" h="100%">
       <TagsPanel tagGroups={tagGroups} />
       <DatePanel />
       <SelectedTagsPanel tagGroups={tagGroups} />
