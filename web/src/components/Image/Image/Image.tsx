@@ -22,7 +22,6 @@ const Image = ({
 }: CellSuccessProps<FindImageWithTagsById>) => {
   const [rightPanel, setRightPanel] = useState<RightPanelOptions | null>(null)
 
-  console.log(rightPanel)
   const switchRightPanel = useCallback(
     (rightPanelToToggle) => {
       if (rightPanelToToggle === null) setRightPanel(null)
