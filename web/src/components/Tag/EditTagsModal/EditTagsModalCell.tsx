@@ -20,7 +20,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = DefaultSpinner
+export const Loading = () => <DefaultSpinner />
 
 export const Empty = () => {
   return <div className="rw-text-center">{'No tags yet. '}</div>

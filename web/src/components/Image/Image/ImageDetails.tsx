@@ -101,8 +101,8 @@ export const ImageDetails = ({ image }) => {
                 <ModalCloseButton />
                 <ModalBody>
                   <Box py={2}>
-                    <Text as="kbd" wordBreak="break-all" fontSize="xs">
-                      {JSON.stringify(image.metadata)}
+                    <Text fontFamily="monospace" fontSize="xs" whiteSpace="pre">
+                      {JSON.stringify(image.metadata, null, 2)}
                     </Text>
                   </Box>
                 </ModalBody>

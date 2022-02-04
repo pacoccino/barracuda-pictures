@@ -15,6 +15,7 @@ import ImageTagsModalCell from 'src/components/Tag/ImageTagsModal/ImageTagsModal
 import { CloseIcon } from '@chakra-ui/icons'
 import { ImageDetails } from 'src/components/Image/Image/ImageDetails'
 import { Hud } from 'src/components/Image/Image/HUD'
+import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
 
 export enum RightPanelOptions {
   DETAILS,
@@ -23,7 +24,11 @@ export enum RightPanelOptions {
 
 export const RightPanel = ({ image, rightPanel, switchRightPanel }) => {
   return (
-    <Box bg="white" height="100%">
+    <Box
+      bg="white"
+      height="100%"
+      boxShadow="inset 4px 0px 6px 0px rgba(0,0,0,0.6);"
+    >
       <Flex boxShadow="md" py={2} align="center">
         <Heading textStyle="h2" size="md" flex={1} ml={4}>
           {rightPanel === RightPanelOptions.EDIT_TAGS && 'Edit'}
@@ -37,14 +42,18 @@ export const RightPanel = ({ image, rightPanel, switchRightPanel }) => {
           onClick={() => switchRightPanel(null)}
         />
       </Flex>
-      <Box p={2} mt={2}>
-        {rightPanel === RightPanelOptions.EDIT_TAGS && (
-          <ImageTagsModalCell imageId={image.id} />
-        )}
-        {rightPanel === RightPanelOptions.DETAILS && (
-          <ImageDetails image={image} />
-        )}
-      </Box>
+      {image ? (
+        <Box py={2} px={3} mt={2}>
+          {rightPanel === RightPanelOptions.EDIT_TAGS && (
+            <ImageTagsModalCell imageId={image.id} />
+          )}
+          {rightPanel === RightPanelOptions.DETAILS && (
+            <ImageDetails image={image} />
+          )}
+        </Box>
+      ) : (
+        <DefaultSpinner />
+      )}
     </Box>
   )
 }

@@ -29,11 +29,12 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
           navigate(routes.photos())
           break
         case 'ArrowLeft':
-          if (imagesBefore[0])
+          if (imagesBefore && imagesBefore[0])
             navigate(routes.photo({ id: imagesBefore[0].id }))
           break
         case 'ArrowRight':
-          if (imagesAfter[0]) navigate(routes.photo({ id: imagesAfter[0].id }))
+          if (imagesAfter && imagesAfter[0])
+            navigate(routes.photo({ id: imagesAfter[0].id }))
           break
       }
     }
@@ -42,8 +43,10 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
       clearTimeout(timeout)
       timeout = setTimeout(() => setHUDVisible(false), HUD_TIMEOUT)
     }
+
     document.addEventListener('keydown', handleKeyDown)
     document.addEventListener('mousemove', handleMouseMove)
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousemove', handleMouseMove)
@@ -68,7 +71,7 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
           </Center>
         </Link>
 
-        {imagesBefore[0] && (
+        {imagesBefore && imagesBefore[0] && (
           <Link
             to={routes.photo({ id: imagesBefore[0].id })}
             title={'Previous image'}
@@ -87,7 +90,7 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
           </Link>
         )}
 
-        {imagesAfter[0] && (
+        {imagesAfter && imagesAfter[0] && (
           <Link
             to={routes.photo({ id: imagesAfter[0].id })}
             title={'Next image'}

@@ -6,42 +6,36 @@ import {
   HorizontalCollapse,
 } from 'src/design-system'
 import { getImageUrl } from 'src/lib/static'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
-import {
-  RightPanel,
-  RightPanelOptions,
-} from 'src/components/Image/Image/RightPanel'
+import { RightPanel } from 'src/components/Image/Image/RightPanel'
 import { Hud } from 'src/components/Image/Image/HUD'
+import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
 
 const Image = ({
   image,
   imagesBefore,
   imagesAfter,
+  rightPanel,
+  switchRightPanel,
 }: CellSuccessProps<FindImageWithTagsById>) => {
-  const [rightPanel, setRightPanel] = useState<RightPanelOptions | null>(null)
-
-  const switchRightPanel = useCallback(
-    (rightPanelToToggle) => {
-      if (rightPanelToToggle === null) setRightPanel(null)
-      else if (rightPanel === rightPanelToToggle) setRightPanel(null)
-      else setRightPanel(rightPanelToToggle)
-    },
-    [rightPanel]
-  )
-  const imageUrl = useMemo(() => getImageUrl(image), [image])
+  const imageUrl = useMemo(() => image && getImageUrl(image), [image])
 
   return (
     <Box>
       <Flex h="100vh" justify="stretch" align="stretch">
         <Center flex="1" bg="black" position="relative">
-          <ImageChakra
-            objectFit="contain"
-            src={imageUrl}
-            alt={image.path}
-            h="100%"
-          />
+          {image ? (
+            <ImageChakra
+              objectFit="contain"
+              src={imageUrl}
+              alt={image.path}
+              h="100%"
+            />
+          ) : (
+            <DefaultSpinner size="xl" color="gray.500" />
+          )}
 
           <Hud
             image={image}

@@ -50,7 +50,7 @@ const REMOVE_TAG_ON_IMAGE = gql`
     deleteTagsOnImage(imageId: $imageId, tagId: $tagId)
   }
 `
-export const Loading = DefaultSpinner
+export const Loading = () => <DefaultSpinner />
 
 export const Empty = () => {
   return <div className="rw-text-center">{'No tags yet. '}</div>
@@ -67,7 +67,6 @@ type TagsModalCellProps = {
 
 export const Success = ({
   tagGroups,
-  isOpen,
   onClose,
   image,
 }: CellSuccessProps<ImageAndTags> & TagsModalCellProps) => {
@@ -90,7 +89,6 @@ export const Success = ({
   return (
     <TagsModal
       tagGroups={tagGroups}
-      isOpen={isOpen}
       onClose={onClose}
       image={image}
       handleAddTagOnImage={handleAddTagOnImage}

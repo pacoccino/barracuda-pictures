@@ -46,11 +46,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => (
-  <Flex h="100vh" justify="center" align="center" bg="black">
-    <Spinner size="xl" color="gray.500" />
-  </Flex>
-)
+export const Loading = ({ ...props }) => <Image {...props} />
 
 export const Empty = () => <div>Image not found</div>
 
@@ -62,12 +58,14 @@ export const Success = ({
   image,
   imagesBefore,
   imagesAfter,
+  ...props
 }: CellSuccessProps<FindImageWithTagsById>) => {
   return (
     <Image
       image={image}
       imagesBefore={imagesBefore}
       imagesAfter={imagesAfter}
+      {...props}
     />
   )
 }
