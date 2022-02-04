@@ -17,7 +17,7 @@ export function createInfiniteCell({
   listKey,
   take = 10,
 }) {
-  function InfiniteCell(props) {
+  function InfiniteCell({ variables }) {
     const [allItems, setAllItems] = useState([])
     const [hasMore, setHasMore] = useState(true)
     const [cursor, setCursor] = useState<string | null>(null)
@@ -26,7 +26,7 @@ export function createInfiniteCell({
       setAllItems([])
       setCursor(null)
       setHasMore(true)
-    }, [props])
+    }, [variables])
 
     const addItems = useCallback(
       (items) => setAllItems(allItems.concat(items)),
@@ -39,7 +39,7 @@ export function createInfiniteCell({
           take,
           cursor: cursor,
           skip: cursor ? 1 : 0,
-          ...props,
+          ...variables,
         },
         fetchPolicy: 'cache-and-network',
         notifyOnNetworkStatusChange: true,
@@ -52,7 +52,7 @@ export function createInfiniteCell({
           }
         },
       }),
-      [cursor, addItems, props]
+      [cursor, addItems, variables]
     )
 
     const { error, loading } = useQuery(QUERY, options)
