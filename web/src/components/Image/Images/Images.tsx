@@ -57,7 +57,6 @@ const Images = ({ images, loadMore }: ImagesProps) => {
       top={0}
       bottom={0}
       overflowY="auto"
-      p={4}
     >
       {imageGroups.map((group) => (
         <Box key={group.title}>

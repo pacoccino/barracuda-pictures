@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { Box } from '@chakra-ui/react'
 
-export function HorizontalCollapse({ isOpen, children, width }) {
+export function HorizontalCollapse({ isOpen, children, width, ...props }) {
   const [hidden, setHidden] = useState(!isOpen)
 
   return (
@@ -15,7 +16,7 @@ export function HorizontalCollapse({ isOpen, children, width }) {
         opacity: isOpen ? 1 : 0,
       }}
     >
-      {children}
+      <Box {...props}>{children}</Box>
     </motion.div>
   )
 }
