@@ -13,6 +13,7 @@ import './lib/locale'
 
 import { FilterContextProvider } from 'src/contexts/filter'
 import { TagContextProvider } from 'src/contexts/tags'
+import { SelectContextProvider } from 'src/contexts/select'
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
@@ -21,7 +22,9 @@ const App = () => (
         <RedwoodApolloProvider>
           <FilterContextProvider>
             <TagContextProvider>
-              <Routes />
+              <SelectContextProvider>
+                <Routes />
+              </SelectContextProvider>
             </TagContextProvider>
           </FilterContextProvider>
         </RedwoodApolloProvider>

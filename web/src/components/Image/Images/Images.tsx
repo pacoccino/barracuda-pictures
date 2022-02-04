@@ -51,13 +51,7 @@ const Images = ({ images, loadMore }: ImagesProps) => {
   }, [loadMore])
 
   return (
-    <Box
-      ref={scrollRef}
-      position="absolute"
-      top={0}
-      bottom={0}
-      overflowY="auto"
-    >
+    <Box ref={scrollRef}>
       {imageGroups.map((group) => (
         <Box key={group.title}>
           <Heading
