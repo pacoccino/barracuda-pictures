@@ -15,7 +15,7 @@ import { DefaultSpinner } from 'src/design-system'
 import { useMutation } from '@redwoodjs/web'
 import { Tag, TagGroup } from 'types/graphql'
 import { useSelectContext } from 'src/contexts/select'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 
 const ADD_TAG_ON_SELECTION = gql`
   mutation AddTagOnSelection($input: [TagsOnImageInput!]!) {
@@ -81,6 +81,10 @@ const ApplyTagsModal = ({
 
   const { selectedImages } = useSelectContext()
 
+  useEffect(() => {
+    isOpen && selectedImages.length === 0 && onClose()
+  }, [isOpen, selectedImages])
+
   const handleApply = useCallback(
     (tag: Tag) => {
       const input = selectedImages.map((image) => ({
@@ -117,7 +121,14 @@ const ApplyTagsModal = ({
           })
         })
     },
-    [selectedImages]
+    [
+      toast,
+      onClose,
+      applyMode,
+      selectedImages,
+      createManyTagsOnImage,
+      deleteManyTagsOnImage,
+    ]
   )
 
   let content

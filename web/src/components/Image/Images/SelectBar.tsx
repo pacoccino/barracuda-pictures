@@ -1,16 +1,17 @@
 import {
+  Button,
   ButtonGroup,
   Flex,
   Text,
-  Button,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useSelectContext, SelectMode } from 'src/contexts/select'
+import { SelectMode, useSelectContext } from 'src/contexts/select'
 import { MdCheckCircleOutline, MdPlayArrow, MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
 import ApplyTagsModalCell from 'src/components/Tag/ApplyTagsModal/ApplyTagsModalCell'
 import { ApplyTagMode } from 'src/components/Tag/ApplyTagsModal/ApplyTagsModal'
+import { useEffect } from 'react'
 
 export const SelectBar = () => {
   const {
@@ -23,6 +24,32 @@ export const SelectBar = () => {
 
   const applyTagDisclosure = useDisclosure()
   const removeTagDisclosure = useDisclosure()
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      switch (e.code) {
+        case 'KeyV':
+          setSelectMode(SelectMode.VIEW)
+          break
+        case 'KeyD':
+          clearSelection()
+          break
+        case 'KeyZ':
+          applyTagDisclosure.onToggle()
+          break
+        case 'KeyX':
+          removeTagDisclosure.onToggle()
+          break
+        case 'KeyS':
+          setSelectMode(SelectMode.MULTI_SELECT)
+          break
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  })
 
   return (
     <Flex
