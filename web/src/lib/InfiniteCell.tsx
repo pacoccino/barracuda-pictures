@@ -62,20 +62,20 @@ export function createInfiniteCell({
       } else {
         console.error(displayName, error)
       }
+    } else if (items.length > 0) {
+      return <Success items={items} hasMore={hasMore} loadMore={loadMore} />
     } else if (loading) {
       if (Loading) {
         return <Loading />
       } else {
         console.log(displayName, 'loading')
       }
-    } else if (!loading && items.length === 0) {
+    } else if (!loading) {
       if (Empty) {
         return <Empty />
       } else {
         console.log(displayName, 'empty')
       }
-    } else if (items.length > 0) {
-      return <Success items={items} hasMore={hasMore} loadMore={loadMore} />
     } else {
       throw 'Cannot render Infinite Cell: zarbi'
     }
