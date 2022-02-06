@@ -1,9 +1,17 @@
-import { Flex, Tooltip, Box, Text, Icon, Center } from '@chakra-ui/react'
+import {
+  IconButton,
+  Flex,
+  Tooltip,
+  Box,
+  Text,
+  Icon,
+  Center,
+} from '@chakra-ui/react'
 import type { TagProps as CTagProps } from '@chakra-ui/react'
 import type { FlexProps } from '@chakra-ui/react'
 import { As } from '@chakra-ui/system/dist/declarations/src/system.types'
 import { Menu, MenuButton, MenuItem, MenuList } from 'src/design-system'
-import { HamburgerIcon } from '@chakra-ui/icons'
+import { MdMoreVert } from 'react-icons/md'
 
 export enum TagStatus {
   'positive' = 'positive',
@@ -47,6 +55,7 @@ const STATUS_TO_COLOR = {
   disabled: 'gray.100',
   negative: 'red.600',
 }
+
 export const Tag = ({
   name,
   color,
@@ -120,6 +129,7 @@ export const TagNew = ({
         pr={menuItems ? 1 : 1}
         pl={groupName ? 0 : 1}
         borderRadius={4}
+        py={1}
       >
         {groupName && (
           <Text
@@ -136,27 +146,26 @@ export const TagNew = ({
         )}
         {leftAction && <Center>{leftAction}</Center>}
 
-        <Text color="white" fontSize="0.7rem" py={1}>
+        <Text color="white" fontSize="0.7rem">
           {name}
         </Text>
       </Flex>
     </TagTooltip>
 
     {menuItems && (
-      <Flex
-        borderRadius={4}
-        cursor={'pointer'}
-        _hover={{ bg: 'gray.500' }}
-        pl={1}
-        pr={1}
-        align="center"
-      >
+      <Flex align="center">
         <Menu>
           <MenuButton
-            as={HamburgerIcon}
+            as={IconButton}
+            icon={<MdMoreVert />}
             aria-label="Options"
             color="white"
-            boxSize={3}
+            variant="ghost"
+            _hover={{ bg: 'gray.500' }}
+            borderRadius={4}
+            size="xs"
+            minWidth="initial"
+            height="100%"
           />
           <MenuList>
             {menuItems.map((menuItem) => (
