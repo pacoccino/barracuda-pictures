@@ -20,7 +20,7 @@ export const TagsOnImage = {
     db.tagsOnImage.findUnique({ where: { id: root.id } }).image(),
 }
 
-export const createTagsOnImage = async ({ imageId, tagId }) => {
+export const createTagsOnImage = async ({ input: { imageId, tagId } }) => {
   return db.tagsOnImage.upsert({
     where: { tagId_imageId: { imageId, tagId } },
     create: { imageId, tagId },
@@ -28,7 +28,7 @@ export const createTagsOnImage = async ({ imageId, tagId }) => {
   })
 }
 
-export const deleteTagsOnImage = async ({ imageId, tagId }) => {
+export const deleteTagsOnImage = async ({ input: { imageId, tagId } }) => {
   try {
     await db.tagsOnImage.deleteMany({
       where: { imageId, tagId },

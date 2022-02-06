@@ -36,8 +36,8 @@ export const QUERY = gql`
 `
 
 const ADD_TAG_ON_IMAGE = gql`
-  mutation AddTagOnImage($imageId: String!, $tagId: String!) {
-    createTagsOnImage(imageId: $imageId, tagId: $tagId) {
+  mutation AddTagOnImage($input: TagsOnImageInput!) {
+    createTagsOnImage(input: $input) {
       id
       imageId
       tagId
@@ -46,8 +46,8 @@ const ADD_TAG_ON_IMAGE = gql`
   }
 `
 const REMOVE_TAG_ON_IMAGE = gql`
-  mutation RemoveTagOnImage($imageId: String!, $tagId: String!) {
-    deleteTagsOnImage(imageId: $imageId, tagId: $tagId)
+  mutation RemoveTagOnImage($input: TagsOnImageInput!) {
+    deleteTagsOnImage(input: $input)
   }
 `
 export const Loading = () => <DefaultSpinner />
@@ -75,13 +75,13 @@ export const Success = ({
 
   const handleAddTagOnImage = (imageId, tagId) => {
     createTagsOnImage({
-      variables: { imageId, tagId },
+      variables: { input: { imageId, tagId } },
       refetchQueries: [QUERY, 'ImageAndTags'],
     })
   }
   const handleRemoveTagOnImage = (imageId, tagId) => {
     deleteTagsOnImage({
-      variables: { imageId, tagId },
+      variables: { input: { imageId, tagId } },
       refetchQueries: [QUERY, 'ImageAndTags'],
     })
   }

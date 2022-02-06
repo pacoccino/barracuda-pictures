@@ -1,4 +1,4 @@
-import { ButtonGroup, Flex, Text } from '@chakra-ui/react'
+import { ButtonGroup, Flex, Text, Button } from '@chakra-ui/react'
 import { useSelectContext, SelectMode } from 'src/contexts/select'
 import { MdCheckCircleOutline, MdPlayArrow, MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
@@ -38,6 +38,10 @@ export const SelectBar = () => {
       </ButtonGroup>
       {selectMode !== SelectMode.VIEW && (
         <Flex align="center">
+          <ButtonGroup size="xs" isAttached variant="outline">
+            <Button>Apply tag</Button>
+            <Button>Remove tag</Button>
+          </ButtonGroup>
           <Text fontSize="sm" ml={2}>
             {selectedImages.length} images selected
           </Text>

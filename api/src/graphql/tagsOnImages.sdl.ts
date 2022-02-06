@@ -12,8 +12,14 @@ export const schema = gql`
   }
 
   type Mutation {
-    createTagsOnImage(imageId: String!, tagId: String!): TagsOnImage!
+    createTagsOnImage(input: TagsOnImageInput!): TagsOnImage! @requireAuth
+    createManyTagsOnImage(input: [TagsOnImageInput!]!): [TagsOnImage!]!
       @requireAuth
-    deleteTagsOnImage(imageId: String!, tagId: String!): Boolean! @requireAuth
+    deleteTagsOnImage(input: TagsOnImageInput!): Boolean! @requireAuth
+  }
+
+  input TagsOnImageInput {
+    imageId: String!
+    tagId: String!
   }
 `
