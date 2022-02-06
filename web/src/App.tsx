@@ -15,11 +15,12 @@ import { FilterContextProvider } from 'src/contexts/filter'
 import { TagContextProvider } from 'src/contexts/tags'
 import { SelectContextProvider } from 'src/contexts/select'
 
+import { graphQLClientConfig } from 'src/lib/apollo'
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <ChakraProvider theme={chakraTheme}>
       <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-        <RedwoodApolloProvider>
+        <RedwoodApolloProvider graphQLClientConfig={graphQLClientConfig}>
           <FilterContextProvider>
             <TagContextProvider>
               <SelectContextProvider>

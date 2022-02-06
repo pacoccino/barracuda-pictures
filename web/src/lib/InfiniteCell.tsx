@@ -18,48 +18,43 @@ export function createInfiniteCell({
   take = 10,
 }) {
   function InfiniteCell({ variables }) {
-    const [allItems, setAllItems] = useState([])
     const [hasMore, setHasMore] = useState(true)
-    const [cursor, setCursor] = useState<string | null>(null)
 
     useEffect(() => {
-      setAllItems([])
-      setCursor(null)
       setHasMore(true)
     }, [variables])
-
-    const addItems = useCallback(
-      (items) => setAllItems(allItems.concat(items)),
-      [allItems]
-    )
 
     const options = useMemo(
       () => ({
         variables: {
           take,
-          cursor: cursor,
-          skip: cursor ? 1 : 0,
+          cursor: null,
+          skip: 0,
           ...variables,
         },
         fetchPolicy: 'cache-and-network',
         notifyOnNetworkStatusChange: true,
-        onCompleted: (data) => {
-          const newItems = data[listKey]
-          if (newItems.length > 0) {
-            addItems(data[listKey])
-          } else {
-            setHasMore(false)
-          }
-        },
       }),
-      [cursor, addItems, variables]
+      [variables]
     )
 
-    const { error, loading } = useQuery(QUERY, options)
+    const { data, error, loading, fetchMore } = useQuery(QUERY, options)
+
+    const items = data ? data[listKey] : []
 
     const loadMore = useCallback(() => {
-      if (hasMore) setCursor(allItems[allItems.length - 1].id)
-    }, [allItems, hasMore])
+      if (hasMore)
+        fetchMore({
+          variables: {
+            cursor: items[items.length - 1].id,
+            skip: 1,
+          },
+        }).then((res) => {
+          if (res.data[listKey].length === 0) {
+            setHasMore(false)
+          }
+        })
+    }, [items, hasMore, fetchMore])
 
     if (error) {
       if (Failure) {
@@ -67,20 +62,20 @@ export function createInfiniteCell({
       } else {
         console.error(displayName, error)
       }
-    } else if (loading && allItems.length === 0) {
+    } else if (loading) {
       if (Loading) {
         return <Loading />
       } else {
         console.log(displayName, 'loading')
       }
-    } else if (!loading && allItems.length === 0) {
+    } else if (!loading && items.length === 0) {
       if (Empty) {
         return <Empty />
       } else {
         console.log(displayName, 'empty')
       }
-    } else if (allItems.length > 0) {
-      return <Success items={allItems} hasMore={hasMore} loadMore={loadMore} />
+    } else if (items.length > 0) {
+      return <Success items={items} hasMore={hasMore} loadMore={loadMore} />
     } else {
       throw 'Cannot render Infinite Cell: zarbi'
     }
