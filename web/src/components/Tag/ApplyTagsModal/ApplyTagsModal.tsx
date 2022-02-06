@@ -13,21 +13,71 @@ import {
 import { TagGroupItemNew, TagItemNew } from 'src/components/Tag/TagItem/TagItem'
 import { DefaultSpinner } from 'src/design-system'
 import { useMutation } from '@redwoodjs/web'
-import { Tag } from 'types/graphql'
+import { Tag, TagGroup } from 'types/graphql'
 import { useSelectContext } from 'src/contexts/select'
 import { useCallback } from 'react'
 
-const APPLY_TAG_ON_SELECTION = gql`
-  mutation ApplyTagOnSelection($input: [TagsOnImageInput!]!) {
+const ADD_TAG_ON_SELECTION = gql`
+  mutation AddTagOnSelection($input: [TagsOnImageInput!]!) {
     createManyTagsOnImage(input: $input) {
       count
     }
   }
 `
-const ApplyTagsModal = ({ isOpen, onClose, tagGroups }) => {
+const REMOVE_TAG_ON_SELECTION = gql`
+  mutation RemoveTagOnSelection($input: [TagsOnImageInput!]!) {
+    deleteManyTagsOnImage(input: $input) {
+      count
+    }
+  }
+`
+
+export enum ApplyTagMode {
+  ADD,
+  REMOVE,
+}
+
+export type ApplyTagsModalProps = {
+  isOpen: boolean
+  onClose?: () => void
+  applyMode: ApplyTagMode
+  tagGroups: TagGroup[]
+}
+
+const LABELS = {
+  successToast: {
+    [ApplyTagMode.ADD]: 'Tag added to selected images',
+    [ApplyTagMode.REMOVE]: 'Tag removed selected images',
+  },
+  errorToast: {
+    [ApplyTagMode.ADD]: 'Error adding tag to selection',
+    [ApplyTagMode.REMOVE]: 'Error removing tag from selection',
+  },
+  actionLabel: {
+    [ApplyTagMode.ADD]: 'Apply tag',
+    [ApplyTagMode.REMOVE]: 'Remove tag',
+  },
+  modalTitle: {
+    [ApplyTagMode.ADD]: 'Apply tag to selected images',
+    [ApplyTagMode.REMOVE]: 'Remove tag from selected images',
+  },
+  loaderLabel: {
+    [ApplyTagMode.ADD]: 'Applying tag on selection...',
+    [ApplyTagMode.REMOVE]: 'Removing tag on selection...',
+  },
+}
+const ApplyTagsModal = ({
+  applyMode,
+  isOpen,
+  onClose,
+  tagGroups,
+}: ApplyTagsModalProps) => {
   const toast = useToast()
-  const applyTagOnSelection = useMutation(APPLY_TAG_ON_SELECTION)
-  const [createManyTagsOnImage, { loading }] = applyTagOnSelection
+  const addTagOnSelection = useMutation(ADD_TAG_ON_SELECTION)
+  const removeTagOnSelection = useMutation(REMOVE_TAG_ON_SELECTION)
+  const [createManyTagsOnImage, { loading: loadingAdd }] = addTagOnSelection
+  const [deleteManyTagsOnImage, { loading: loadingRemove }] =
+    removeTagOnSelection
 
   const { selectedImages } = useSelectContext()
 
@@ -38,13 +88,20 @@ const ApplyTagsModal = ({ isOpen, onClose, tagGroups }) => {
         tagId: tag.id,
       }))
 
-      createManyTagsOnImage({
+      let action
+      if (applyMode === ApplyTagMode.ADD) action = createManyTagsOnImage
+      if (applyMode === ApplyTagMode.REMOVE) action = deleteManyTagsOnImage
+
+      if (!action) throw new Error('invalid ApplyTagMode action')
+
+      action({
         variables: { input },
+        refetchQueries: ['FindImages'],
       })
         .then(() => {
           onClose()
           toast({
-            title: 'Tag applied to selection',
+            title: LABELS.successToast[applyMode],
             status: 'success',
             duration: 9000,
             isClosable: true,
@@ -52,7 +109,7 @@ const ApplyTagsModal = ({ isOpen, onClose, tagGroups }) => {
         })
         .catch((error) => {
           toast({
-            title: 'Error applying tag',
+            title: LABELS.errorToast[applyMode],
             description: error.message,
             status: 'error',
             duration: 9000,
@@ -64,10 +121,10 @@ const ApplyTagsModal = ({ isOpen, onClose, tagGroups }) => {
   )
 
   let content
-  if (loading) {
+  if (loadingAdd || loadingRemove) {
     content = (
       <Center py={2}>
-        <Text>Applying tag on selection...</Text>
+        <Text>{LABELS.loaderLabel[applyMode]}</Text>
         <DefaultSpinner />
       </Center>
     )
@@ -91,7 +148,7 @@ const ApplyTagsModal = ({ isOpen, onClose, tagGroups }) => {
                   <TagItemNew
                     tag={tag}
                     onClick={() => handleApply(tag)}
-                    actionLabel="Apply tag"
+                    actionLabel={LABELS.actionLabel[applyMode]}
                   />
                 </WrapItem>
               ))}
@@ -102,7 +159,11 @@ const ApplyTagsModal = ({ isOpen, onClose, tagGroups }) => {
     )
   }
   return (
-    <BodyModal title="Apply tag on selection" isOpen={isOpen} onClose={onClose}>
+    <BodyModal
+      title={LABELS.modalTitle[applyMode]}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       {content}
     </BodyModal>
   )

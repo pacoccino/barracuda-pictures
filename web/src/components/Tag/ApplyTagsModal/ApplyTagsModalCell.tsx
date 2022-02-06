@@ -1,7 +1,7 @@
 import type { FindTags } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
-import ApplyTagsModal from './ApplyTagsModal'
+import ApplyTagsModal, { ApplyTagMode } from './ApplyTagsModal'
 
 import { QUERY as QQ } from 'src/components/Filter/FilterPanelCell'
 export const QUERY = QQ
@@ -16,6 +16,7 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 type ApplyTagsModalCellProps = {
   isOpen: boolean
+  applyMode: ApplyTagMode
   onClose?: () => void
 }
 
@@ -23,8 +24,14 @@ export const Success = ({
   tagGroups,
   onClose,
   isOpen,
+  applyMode,
 }: CellSuccessProps<FindTags> & ApplyTagsModalCellProps) => {
   return (
-    <ApplyTagsModal tagGroups={tagGroups} isOpen={isOpen} onClose={onClose} />
+    <ApplyTagsModal
+      tagGroups={tagGroups}
+      applyMode={applyMode}
+      isOpen={isOpen}
+      onClose={onClose}
+    />
   )
 }

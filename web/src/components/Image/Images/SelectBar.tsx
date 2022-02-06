@@ -10,6 +10,7 @@ import { MdCheckCircleOutline, MdPlayArrow, MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
 import ApplyTagsModalCell from 'src/components/Tag/ApplyTagsModal/ApplyTagsModalCell'
+import { ApplyTagMode } from 'src/components/Tag/ApplyTagsModal/ApplyTagsModal'
 
 export const SelectBar = () => {
   const {
@@ -63,7 +64,7 @@ export const SelectBar = () => {
             </Button>
             <Button
               variant="solid"
-              onClick={applyTagDisclosure.onOpen}
+              onClick={removeTagDisclosure.onOpen}
               colorScheme="red"
               disabled={selectedImages.length === 0}
             >
@@ -76,6 +77,7 @@ export const SelectBar = () => {
             onClick={clearSelection}
             size="xs"
             ml={2}
+            disabled={selectedImages.length === 0}
           />
           <TooltipIconButton
             label="Select all"
@@ -89,6 +91,12 @@ export const SelectBar = () => {
       <ApplyTagsModalCell
         isOpen={applyTagDisclosure.isOpen}
         onClose={applyTagDisclosure.onClose}
+        applyMode={ApplyTagMode.ADD}
+      />
+      <ApplyTagsModalCell
+        isOpen={removeTagDisclosure.isOpen}
+        onClose={removeTagDisclosure.onClose}
+        applyMode={ApplyTagMode.REMOVE}
       />
     </Flex>
   )

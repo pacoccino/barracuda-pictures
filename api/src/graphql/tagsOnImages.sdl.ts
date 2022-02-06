@@ -20,7 +20,7 @@ export const schema = gql`
     createManyTagsOnImage(input: [TagsOnImageInput!]!): UpdateManyResult!
       @requireAuth
     deleteTagsOnImage(input: TagsOnImageInput!): TagsOnImage! @requireAuth
-    deleteManyTagsOnImage(input: TagsOnImageInput!): UpdateManyResult!
+    deleteManyTagsOnImage(input: [TagsOnImageInput!]!): UpdateManyResult!
       @requireAuth
   }
 
