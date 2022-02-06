@@ -1,8 +1,15 @@
-import { ButtonGroup, Flex, Text, Button } from '@chakra-ui/react'
+import {
+  ButtonGroup,
+  Flex,
+  Text,
+  Button,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { useSelectContext, SelectMode } from 'src/contexts/select'
 import { MdCheckCircleOutline, MdPlayArrow, MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
+import ApplyTagsModalCell from 'src/components/Tag/ApplyTagsModal/ApplyTagsModalCell'
 
 export const SelectBar = () => {
   const {
@@ -12,6 +19,10 @@ export const SelectBar = () => {
     setAllSelected,
     clearSelection,
   } = useSelectContext()
+
+  const applyTagDisclosure = useDisclosure()
+  const removeTagDisclosure = useDisclosure()
+
   return (
     <Flex
       borderColor="black"
@@ -38,13 +49,27 @@ export const SelectBar = () => {
       </ButtonGroup>
       {selectMode !== SelectMode.VIEW && (
         <Flex align="center">
-          <ButtonGroup size="xs" isAttached variant="outline">
-            <Button>Apply tag</Button>
-            <Button>Remove tag</Button>
-          </ButtonGroup>
-          <Text fontSize="sm" ml={2}>
+          <Text fontSize="sm" mr={2}>
             {selectedImages.length} images selected
           </Text>
+          <ButtonGroup size="xs" isAttached variant="outline">
+            <Button
+              variant="solid"
+              onClick={applyTagDisclosure.onOpen}
+              colorScheme="green"
+              disabled={selectedImages.length === 0}
+            >
+              Apply tag
+            </Button>
+            <Button
+              variant="solid"
+              onClick={applyTagDisclosure.onOpen}
+              colorScheme="red"
+              disabled={selectedImages.length === 0}
+            >
+              Remove tag
+            </Button>
+          </ButtonGroup>
           <TooltipIconButton
             label="Deselect all"
             icon={<MdDeselect />}
@@ -61,6 +86,10 @@ export const SelectBar = () => {
           />
         </Flex>
       )}
+      <ApplyTagsModalCell
+        isOpen={applyTagDisclosure.isOpen}
+        onClose={applyTagDisclosure.onClose}
+      />
     </Flex>
   )
 }

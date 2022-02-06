@@ -15,7 +15,7 @@ import ImageTagsModalCell from 'src/components/Tag/ImageTagsModal/ImageTagsModal
 import { CloseIcon } from '@chakra-ui/icons'
 import { ImageDetails } from 'src/components/Image/Image/ImageDetails'
 import { Hud } from 'src/components/Image/Image/HUD'
-import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
+import { DefaultSpinner } from 'src/design-system'
 
 export enum RightPanelOptions {
   DETAILS,

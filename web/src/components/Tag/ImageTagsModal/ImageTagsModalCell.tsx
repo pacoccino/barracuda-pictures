@@ -3,7 +3,7 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import TagsModal from './ImageTagsModal'
 import { useMutation } from '@redwoodjs/web'
-import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
+import { DefaultSpinner } from 'src/design-system'
 
 export const QUERY = gql`
   query ImageAndTags($imageId: String!) {

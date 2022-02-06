@@ -2,7 +2,7 @@ import type { ImageAndTags } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import EditTagsModal from './EditTagsModal'
-import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
+import { DefaultSpinner } from 'src/design-system'
 
 export const QUERY = gql`
   query EditTags {

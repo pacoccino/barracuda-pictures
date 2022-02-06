@@ -55,33 +55,30 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
       isOpen={loading || !!tagGroup}
       onClose={onClose}
       title="Edit tag group"
-      body={
-        <>
-          <Box mb={2}>
-            <TagGroupItem tagGroup={tagGroup} />
-          </Box>
-          <FormLabel>New name:</FormLabel>
-          <Input
-            type="text"
-            placeholder="Tag group name"
-            onChange={(e) => setTagGroupName(e.target.value)}
-            value={tagGroupName}
-          />
-          <Flex justify="end" my={4}>
-            <Button onClick={onClose} mr={2}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => handleUpdateTagGroup(tagGroupName)}
-              isLoading={loading}
-              variant="solid"
-              colorScheme="yellow"
-            >
-              Edit
-            </Button>
-          </Flex>
-        </>
-      }
-    />
+    >
+      <Box mb={2}>
+        <TagGroupItem tagGroup={tagGroup} />
+      </Box>
+      <FormLabel>New name:</FormLabel>
+      <Input
+        type="text"
+        placeholder="Tag group name"
+        onChange={(e) => setTagGroupName(e.target.value)}
+        value={tagGroupName}
+      />
+      <Flex justify="end" my={4}>
+        <Button onClick={onClose} mr={2}>
+          Cancel
+        </Button>
+        <Button
+          onClick={() => handleUpdateTagGroup(tagGroupName)}
+          isLoading={loading}
+          variant="solid"
+          colorScheme="yellow"
+        >
+          Edit
+        </Button>
+      </Flex>
+    </BodyModal>
   )
 }

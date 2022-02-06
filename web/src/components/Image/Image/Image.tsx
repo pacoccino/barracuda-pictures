@@ -11,7 +11,7 @@ import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
 import { RightPanel } from 'src/components/Image/Image/RightPanel'
 import { Hud } from 'src/components/Image/Image/HUD'
-import { DefaultSpinner } from 'src/design-system/components/DefaultSpinner'
+import { DefaultSpinner } from 'src/design-system'
 
 const Image = ({
   image,

@@ -50,28 +50,25 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
       isOpen={loading || isOpen}
       onClose={onClose}
       title="Create tag group"
-      body={
-        <>
-          <Input
-            type="text"
-            placeholder="Tag group name"
-            onChange={(e) => setTagGroupName(e.target.value)}
-          />
-          <Flex justify="end" my={4}>
-            <Button onClick={onClose} mr={2}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => handleCreateTagGroup(tagGroupName)}
-              isLoading={loading}
-              variant="solid"
-              colorScheme="blue"
-            >
-              Create
-            </Button>
-          </Flex>
-        </>
-      }
-    />
+    >
+      <Input
+        type="text"
+        placeholder="Tag group name"
+        onChange={(e) => setTagGroupName(e.target.value)}
+      />
+      <Flex justify="end" my={4}>
+        <Button onClick={onClose} mr={2}>
+          Cancel
+        </Button>
+        <Button
+          onClick={() => handleCreateTagGroup(tagGroupName)}
+          isLoading={loading}
+          variant="solid"
+          colorScheme="blue"
+        >
+          Create
+        </Button>
+      </Flex>
+    </BodyModal>
   )
 }
