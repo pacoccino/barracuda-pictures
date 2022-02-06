@@ -12,7 +12,7 @@ const QUERY = gql`
     $cursor: String
     $skip: Int
   ) {
-    images(
+    imagesInfinite: moreImages(
       filter: $filter
       sorting: { dateTaken: desc }
       take: $take
@@ -25,6 +25,14 @@ const QUERY = gql`
     }
   }
 `
+
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  }
+}
 
 const Loading = () => (
   <Wrap m={2} ml={0} spacing={0.5}>
@@ -57,8 +65,9 @@ const ImagesInfiniteCell = createInfiniteCell({
   Failure,
   Empty,
   Loading,
+  beforeQuery,
   displayName: 'ImagesInfiniteCell',
-  listKey: 'images',
+  listKey: 'imagesInfinite',
   take: 30,
 })
 

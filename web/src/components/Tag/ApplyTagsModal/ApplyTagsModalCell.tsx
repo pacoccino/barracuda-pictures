@@ -6,6 +6,14 @@ import ApplyTagsModal, { ApplyTagMode } from './ApplyTagsModal'
 import { QUERY as QQ } from 'src/components/Filter/FilterPanelCell'
 export const QUERY = QQ
 
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  }
+}
+
 export const Loading = ({ onClose, isOpen }) => (
   <ApplyTagsModal isOpen={isOpen} onClose={onClose} />
 )

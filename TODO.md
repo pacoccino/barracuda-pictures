@@ -2,6 +2,4 @@
 
 add tag to filter > remove tag, tag still in filter so no images ?
 
-infinite scroll use fetchmore
-
-https://www.apollographql.com/docs/react/pagination/core-api/#the-fetchmore-function
+choose filter => select image => remove filter >>> image still into selectio n

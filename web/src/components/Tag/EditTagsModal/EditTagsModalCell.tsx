@@ -20,6 +20,14 @@ export const QUERY = gql`
   }
 `
 
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  }
+}
+
 export const Loading = () => <DefaultSpinner />
 
 export const Empty = () => {

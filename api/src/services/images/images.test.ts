@@ -1,4 +1,4 @@
-import { image, images } from './images'
+import { image, images, moreImages } from './images'
 import type { StandardScenario } from './images.scenarios'
 
 describe('images', () => {
@@ -212,5 +212,8 @@ describe('images', () => {
       expect(result[0]).toEqual(scenario.image.p1)
       expect(result[1]).toEqual(scenario.image.p2)
     })
+  })
+  scenario('images = moreImages', async () => {
+    expect(images).toBe(moreImages)
   })
 })

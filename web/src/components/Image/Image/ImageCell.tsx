@@ -2,7 +2,6 @@ import type { FindImageWithTagsById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Image from './Image'
-import { Flex, Spinner } from '@chakra-ui/react'
 
 export const QUERY = gql`
   query FindImageWithTagsById($id: String!, $filter: ImageFilters!) {
@@ -45,6 +44,13 @@ export const QUERY = gql`
     }
   }
 `
+
+export const beforeQuery = (props) => {
+  return {
+    variables: props,
+    fetchPolicy: 'cache-first',
+  }
+}
 
 export const Loading = ({ ...props }) => <Image {...props} />
 

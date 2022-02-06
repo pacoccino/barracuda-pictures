@@ -13,6 +13,12 @@ export function createInfiniteCell({
   Success,
   Loading,
   Empty,
+  beforeQuery = (props) => ({
+    variables: props,
+    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
+  }),
+  afterQuery = (data) => ({ ...data }),
   displayName,
   listKey,
   take = 10,
@@ -25,22 +31,19 @@ export function createInfiniteCell({
     }, [variables])
 
     const options = useMemo(
-      () => ({
-        variables: {
+      () =>
+        beforeQuery({
           take,
           cursor: null,
           skip: 0,
           ...variables,
-        },
-        fetchPolicy: 'cache-and-network',
-        notifyOnNetworkStatusChange: true,
-      }),
+        }),
       [variables]
     )
 
     const { data, error, loading, fetchMore } = useQuery(QUERY, options)
 
-    const items = data ? data[listKey] : []
+    const items = data ? afterQuery(data)[listKey] : []
 
     const loadMore = useCallback(() => {
       if (hasMore)

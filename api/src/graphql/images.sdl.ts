@@ -17,6 +17,15 @@ export const schema = gql`
       sorting: ImageSorting
       cursor: String
     ): [Image]! @requireAuth
+
+    moreImages(
+      filter: ImageFilters
+      take: Int
+      skip: Int
+      sorting: ImageSorting
+      cursor: String
+    ): [Image]! @requireAuth
+
     image(id: String!): Image @requireAuth
   }
 

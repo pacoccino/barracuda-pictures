@@ -76,3 +76,5 @@ export const images = ({
 
   return db.image.findMany(query)
 }
+
+export const moreImages = images
