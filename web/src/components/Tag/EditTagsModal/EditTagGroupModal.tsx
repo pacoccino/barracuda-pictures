@@ -29,16 +29,8 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
     updateTagGroup({
       variables: { tagGroupId: tagGroup.id, name },
       refetchQueries: QUERIES_TO_REFETCH,
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error editing tag group',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
+    })
+      .then(() => {
         toast({
           title: 'Tag group edited',
           description: name,
@@ -47,8 +39,16 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
           isClosable: true,
         })
         onClose()
-      }
-    })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error editing tag group',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
 
   return (
     <BodyModal

@@ -30,16 +30,8 @@ export const EditTagModal = ({ tag, onClose }) => {
     updateTag({
       variables: { name, tagId: tag.id },
       refetchQueries: QUERIES_TO_REFETCH,
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error editing tag',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
+    })
+      .then(() => {
         toast({
           title: 'Tag edited',
           description: `${tag.tagGroup.name} / ${name}`,
@@ -48,8 +40,16 @@ export const EditTagModal = ({ tag, onClose }) => {
           isClosable: true,
         })
         onClose()
-      }
-    })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error editing tag',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
 
   return (
     <BodyModal isOpen={loading || !!tag} onClose={onClose} title="Edit Tag">

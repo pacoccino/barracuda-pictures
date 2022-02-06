@@ -17,16 +17,8 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
     deleteTagGroup({
       variables: { tagGroupId },
       refetchQueries: QUERIES_TO_REFETCH,
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error deleting tag group',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
+    })
+      .then(() => {
         toast({
           title: 'Tag groud deleted',
           description: `${tagGroup.name}`,
@@ -35,8 +27,16 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
           isClosable: true,
         })
         onClose()
-      }
-    })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error deleting tag group',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
 
   return (
     <AlertModal

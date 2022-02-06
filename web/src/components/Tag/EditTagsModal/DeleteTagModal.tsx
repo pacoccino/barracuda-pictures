@@ -17,16 +17,8 @@ export const DeleteTagModal = ({ tag, onClose }) => {
     deleteTag({
       variables: { tagId },
       refetchQueries: QUERIES_TO_REFETCH,
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error deleting tag',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
+    })
+      .then(() => {
         toast({
           title: 'Tag deleted',
           description: `${tag.tagGroup.name} / ${tag.name}`,
@@ -35,8 +27,16 @@ export const DeleteTagModal = ({ tag, onClose }) => {
           isClosable: true,
         })
         onClose()
-      }
-    })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error deleting tag',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
 
   return (
     <AlertModal

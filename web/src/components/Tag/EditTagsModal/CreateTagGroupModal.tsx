@@ -24,16 +24,8 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
     createTagGroup({
       variables: { name },
       refetchQueries: QUERIES_TO_REFETCH,
-    }).then((res) => {
-      if (res.error) {
-        toast({
-          title: 'Error creating tag group',
-          description: res.error.message,
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        })
-      } else {
+    })
+      .then(() => {
         toast({
           title: 'Tag group created completed',
           description: name,
@@ -42,8 +34,16 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
           isClosable: true,
         })
         onClose()
-      }
-    })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error creating tag group',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
 
   return (
     <BodyModal
