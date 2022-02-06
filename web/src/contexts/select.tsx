@@ -6,9 +6,10 @@ export enum SelectMode {
   MULTI_SELECT,
 }
 interface SelectContextType {
-  addImageToSelection: (i: Image) => void
-  removeImageFromSelection: (i: Image) => void
+  addImageToSelection: (i: { id: string }) => void
+  removeImageFromSelection: (i: { id: string }) => void
   clearSelection: () => void
+  isImageSelected: (i: { id: string }) => boolean
   selectedImages: Image[]
   selectMode: SelectMode
   setSelectMode: (sm: SelectMode) => void
@@ -18,6 +19,7 @@ export const SelectContext = React.createContext<SelectContextType>({
   addImageToSelection: (i: Image) => 0,
   removeImageFromSelection: (i: Image) => 0,
   clearSelection: () => 0,
+  isImageSelected: () => false,
   selectedImages: [],
   selectMode: SelectMode.VIEW,
   setSelectMode: (sm: SelectMode) => 0,
@@ -44,6 +46,13 @@ export const SelectContextProvider = ({ children }) => {
     setSelectedImages([])
   }, [])
 
+  const isImageSelected = useCallback(
+    (image) => {
+      return selectedImages.findIndex((i) => i.id === image.id) !== -1
+    },
+    [selectedImages]
+  )
+
   return (
     <SelectContext.Provider
       value={{
@@ -53,6 +62,7 @@ export const SelectContextProvider = ({ children }) => {
         selectedImages,
         selectMode,
         setSelectMode,
+        isImageSelected,
       }}
     >
       {children}

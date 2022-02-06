@@ -1,12 +1,11 @@
 import moment from 'moment'
-import { Link, routes } from '@redwoodjs/router'
 import { Wrap, WrapItem } from '@chakra-ui/react'
-import { getImageUrl } from 'src/lib/static'
-import { Box, Heading, Image } from '@chakra-ui/react'
+import { Box, Heading } from '@chakra-ui/react'
 import { useEffect, useMemo, useRef } from 'react'
 
 import debounce from 'lodash.debounce'
 import { FindImages } from 'types/graphql'
+import { ImagesItem } from './ImagesItem'
 
 type ImagesProps = {
   images: FindImages['images']
@@ -66,12 +65,7 @@ const Images = ({ images, loadMore }: ImagesProps) => {
           <Wrap m={2} ml={0} spacing={0.5}>
             {group.images.map((image) => (
               <WrapItem key={image.id}>
-                <Link
-                  to={routes.photo({ id: image.id })}
-                  title={'Show image ' + image.id + ' detail'}
-                >
-                  <Image src={getImageUrl(image)} alt={image.path} h={250} />
-                </Link>
+                <ImagesItem image={image} />
               </WrapItem>
             ))}
           </Wrap>
