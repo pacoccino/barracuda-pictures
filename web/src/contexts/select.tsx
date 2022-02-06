@@ -13,6 +13,8 @@ interface SelectContextType {
   selectedImages: Image[]
   selectMode: SelectMode
   setSelectMode: (sm: SelectMode) => void
+  setAllSelected: (b: boolean) => void
+  allSelected: boolean
 }
 
 export const SelectContext = React.createContext<SelectContextType>({
@@ -23,9 +25,12 @@ export const SelectContext = React.createContext<SelectContextType>({
   selectedImages: [],
   selectMode: SelectMode.VIEW,
   setSelectMode: (sm: SelectMode) => 0,
+  setAllSelected: (b: boolean) => 0,
+  allSelected: false,
 })
 
 export const SelectContextProvider = ({ children }) => {
+  const [allSelected, setAllSelected] = useState<boolean>(false)
   const [selectedImages, setSelectedImages] = useState<Image[]>([])
   const [selectMode, setSelectMode] = useState<SelectMode>(SelectMode.VIEW)
 
@@ -44,13 +49,15 @@ export const SelectContextProvider = ({ children }) => {
   )
   const clearSelection = useCallback(() => {
     setSelectedImages([])
+    setAllSelected(false)
   }, [])
 
   const isImageSelected = useCallback(
     (image) => {
+      if (allSelected) return true
       return selectedImages.findIndex((i) => i.id === image.id) !== -1
     },
-    [selectedImages]
+    [selectedImages, allSelected]
   )
 
   return (
@@ -63,6 +70,8 @@ export const SelectContextProvider = ({ children }) => {
         selectMode,
         setSelectMode,
         isImageSelected,
+        allSelected,
+        setAllSelected,
       }}
     >
       {children}

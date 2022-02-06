@@ -32,14 +32,6 @@ const PhotosPage = () => {
         boxShadow="lg"
         height="100%"
       >
-        {/*
-        <Box position="absolute" top={0} right={-100}>
-            <Button size="xs" onClick={() => setFilterPanelOpen(false)}>
-              Close
-            </Button>
-          </Box>
-        */}
-
         <FilterPanelCell />
       </HorizontalCollapse>
 
