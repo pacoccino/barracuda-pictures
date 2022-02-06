@@ -1,6 +1,7 @@
-import type { Prisma } from '@prisma/client'
+import type { Prisma, TagsOnImage as TagsOnImageType } from '@prisma/client'
 import type { ResolverArgs } from '@redwoodjs/graphql-server'
 
+import type { UpdateManyResult } from 'types/graphql'
 import { db } from 'src/lib/db'
 
 export const tagsOnImages = () => {
@@ -20,22 +21,40 @@ export const TagsOnImage = {
     db.tagsOnImage.findUnique({ where: { id: root.id } }).image(),
 }
 
-export const createTagsOnImage = async ({ input: { imageId, tagId } }) => {
+export const createTagsOnImage = async ({
+  input,
+}): Promise<TagsOnImageType> => {
   return db.tagsOnImage.upsert({
-    where: { tagId_imageId: { imageId, tagId } },
-    create: { imageId, tagId },
-    update: { imageId, tagId },
+    where: { tagId_imageId: input },
+    create: input,
+    update: input,
+  })
+}
+export const createManyTagsOnImage = async ({
+  input,
+}): Promise<UpdateManyResult> => {
+  return db.tagsOnImage.createMany({
+    data: input,
+    skipDuplicates: true,
   })
 }
 
-export const deleteTagsOnImage = async ({ input: { imageId, tagId } }) => {
-  try {
-    await db.tagsOnImage.deleteMany({
-      where: { imageId, tagId },
-    })
-    return true
-  } catch (e) {
-    console.error(e)
-    return false
-  }
+export const deleteTagsOnImage = async ({
+  input,
+}): Promise<TagsOnImageType> => {
+  return db.tagsOnImage.delete({
+    where: {
+      tagId_imageId: input,
+    },
+  })
+}
+
+export const deleteManyTagsOnImage = async ({
+  input,
+}): Promise<UpdateManyResult> => {
+  return db.tagsOnImage.deleteMany({
+    where: {
+      OR: input,
+    },
+  })
 }

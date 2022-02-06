@@ -47,7 +47,9 @@ const ADD_TAG_ON_IMAGE = gql`
 `
 const REMOVE_TAG_ON_IMAGE = gql`
   mutation RemoveTagOnImage($input: TagsOnImageInput!) {
-    deleteTagsOnImage(input: $input)
+    deleteTagsOnImage(input: $input) {
+      id
+    }
   }
 `
 export const Loading = () => <DefaultSpinner />

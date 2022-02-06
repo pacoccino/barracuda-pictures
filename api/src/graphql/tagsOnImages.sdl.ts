@@ -7,15 +7,21 @@ export const schema = gql`
     image: Image!
   }
 
+  type UpdateManyResult {
+    count: Int!
+  }
+
   type Query {
     tagsOnImages: [TagsOnImage!]! @requireAuth
   }
 
   type Mutation {
     createTagsOnImage(input: TagsOnImageInput!): TagsOnImage! @requireAuth
-    createManyTagsOnImage(input: [TagsOnImageInput!]!): [TagsOnImage!]!
+    createManyTagsOnImage(input: [TagsOnImageInput!]!): UpdateManyResult!
       @requireAuth
-    deleteTagsOnImage(input: TagsOnImageInput!): Boolean! @requireAuth
+    deleteTagsOnImage(input: TagsOnImageInput!): TagsOnImage! @requireAuth
+    deleteManyTagsOnImage(input: TagsOnImageInput!): UpdateManyResult!
+      @requireAuth
   }
 
   input TagsOnImageInput {
