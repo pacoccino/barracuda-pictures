@@ -1,6 +1,6 @@
-import { Link, routes, useMatch } from '@redwoodjs/router'
-import { Box, IconButton, Text, Flex, Heading, HStack } from '@chakra-ui/react'
-import { SettingsIcon } from '@chakra-ui/icons'
+import { Link, routes } from '@redwoodjs/router'
+import { Box, IconButton, Flex, Heading, HStack } from '@chakra-ui/react'
+import { InfoIcon, SettingsIcon } from '@chakra-ui/icons'
 
 type DashboardLayoutProps = {
   children?: React.ReactNode
@@ -40,7 +40,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             🖼 Barracuda
           </Heading>
         </Link>
-        <HStack as="nav">
+        <HStack as="nav" spacing={2}>
+          <Link to={routes.infos()}>
+            <IconButton aria-label="Infos" icon={<InfoIcon />} size="xs" />
+          </Link>
           <Link to={routes.admin()}>
             <IconButton
               aria-label="Settings"
