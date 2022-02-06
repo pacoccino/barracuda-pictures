@@ -35,9 +35,9 @@ const PhotosPage = () => {
         <FilterPanelCell />
       </HorizontalCollapse>
 
-      <Box flex="1">
-        <VStack h="100%" overflow="hidden">
-          <Flex flex={1} overflow="scroll" w="100%">
+      <Flex flex="1">
+        <VStack flex="1" align="stretch">
+          <Flex flex={1} overflow="hidden">
             <Flex
               align="center"
               onClick={filterPanelDisclosure.onToggle}
@@ -60,7 +60,7 @@ const PhotosPage = () => {
           </Flex>
           <SelectBar />
         </VStack>
-      </Box>
+      </Flex>
     </Flex>
   )
 }

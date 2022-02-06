@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { Wrap, WrapItem } from '@chakra-ui/react'
+import { VStack, Wrap, WrapItem } from '@chakra-ui/react'
 import { Box, Heading } from '@chakra-ui/react'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -50,7 +50,7 @@ const Images = ({ images, loadMore }: ImagesProps) => {
   }, [loadMore])
 
   return (
-    <Box ref={scrollRef}>
+    <VStack ref={scrollRef} align="start" h="100%" overflow="scroll">
       {imageGroups.map((group) => (
         <Box key={group.title}>
           <Heading
@@ -71,7 +71,7 @@ const Images = ({ images, loadMore }: ImagesProps) => {
           </Wrap>
         </Box>
       ))}
-    </Box>
+    </VStack>
   )
 }
 
