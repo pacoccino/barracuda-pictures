@@ -29,8 +29,8 @@ export const RightPanel = ({ image, rightPanel, switchRightPanel }) => {
       height="100%"
       boxShadow="inset 4px 0px 6px 0px rgba(0,0,0,0.6);"
     >
-      <Flex boxShadow="md" py={2} align="center">
-        <Heading textStyle="h2" size="md" flex={1} ml={4}>
+      <Flex boxShadow="md" py={2} align="center" px={4}>
+        <Heading textStyle="h2" size="md" flex={1} ml={2}>
           {rightPanel === RightPanelOptions.EDIT_TAGS && 'Edit'}
           {rightPanel === RightPanelOptions.DETAILS && 'Details'}
         </Heading>
@@ -43,7 +43,7 @@ export const RightPanel = ({ image, rightPanel, switchRightPanel }) => {
         />
       </Flex>
       {image ? (
-        <Box py={2} px={3} mt={2}>
+        <Box py={2} px={4} mt={2}>
           {rightPanel === RightPanelOptions.EDIT_TAGS && (
             <ImageTagsModalCell imageId={image.id} />
           )}

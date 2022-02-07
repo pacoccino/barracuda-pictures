@@ -4,23 +4,23 @@ const textStyles = {
   h1: {
     fontFamily: '"Montserrat", sans-serif',
     fontWeight: 600,
-    fontSize: ['1.3rem', '2rem', '3rem'],
+    fontSize: '1.2rem',
   },
   h2: {
     fontFamily: '"Montserrat", sans-serif',
-    fontWeight: 600,
-    fontSize: ['1.3rem', '2rem', '2.5rem'],
+    fontWeight: 500,
+    fontSize: '1.1rem',
   },
   h3: {
     fontFamily: '"Montserrat", sans-serif',
-    fontWeight: 400,
-    fontSize: ['1.1rem', '1.1rem', '1.2rem'],
+    fontWeight: 300,
+    fontSize: '0.9rem',
     textTransform: 'uppercase',
   },
   h4: {
     fontFamily: "'Montserrat', sans-serif",
     fontWeight: 300,
-    fontSize: ['1rem', '1rem', '1.5rem'],
+    fontSize: '0.8rem',
   },
   semibold: {
     fontFamily: '"Lato", sans-serif',
@@ -100,7 +100,7 @@ export const chakraTheme = extendTheme({
         color: 'textColor',
         overflow: 'initial',
         fontFamily: "'Montserrat', sans-serif",
-        fontSize: '16px',
+        fontSize: '14px',
         fontWeight: '400',
         lineHeight: '1',
       },

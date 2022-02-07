@@ -129,24 +129,24 @@ export const TagNew = ({
         pr={menuItems ? 1 : 1}
         pl={groupName ? 0 : 1}
         borderRadius={4}
-        py={1}
       >
         {groupName && (
-          <Text
+          <Flex
+            bg={groupColor + '.500'}
+            borderRadius={4}
+            align="center"
             px={1}
             mr={1}
-            py={1}
-            borderRadius={4}
-            color="white"
-            bg={groupColor + '.500'}
-            fontSize="0.7rem"
+            height="100%"
           >
-            {groupName}
-          </Text>
+            <Text color="white" fontSize="0.7rem">
+              {groupName}
+            </Text>
+          </Flex>
         )}
         {leftAction && <Center>{leftAction}</Center>}
 
-        <Text color="white" fontSize="0.7rem">
+        <Text color="white" py={1} fontSize="0.7rem">
           {name}
         </Text>
       </Flex>

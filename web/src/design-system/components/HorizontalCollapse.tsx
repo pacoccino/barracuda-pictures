@@ -16,7 +16,7 @@ export function HorizontalCollapse({ isOpen, children, width, ...props }) {
         opacity: isOpen ? 1 : 0,
       }}
     >
-      <Box {...props}>{children}</Box>
+      {children}
     </motion.div>
   )
 }

@@ -10,7 +10,7 @@ generator client {
 
 model Image {
   id            String        @id @default(uuid())
-  path          String
+  path          String        @unique
   dateTaken     DateTime      @default(now())
   metadata      Json          @default("{}")
   takenAtLat    Float?
