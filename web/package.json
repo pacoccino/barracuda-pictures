@@ -21,6 +21,7 @@
     "@redwoodjs/router": "0.41.0",
     "@redwoodjs/web": "0.41.0",
     "@wojtekmaj/react-daterange-picker": "^3.3.2",
+    "decimal.js": "^10.3.1",
     "framer-motion": "^5",
     "lodash": "^4.17.21",
     "prop-types": "15.7.2",

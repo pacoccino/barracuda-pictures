@@ -48,7 +48,7 @@ export const RightPanel = ({ image, rightPanel, switchRightPanel }) => {
             <ImageTagsModalCell imageId={image.id} />
           )}
           {rightPanel === RightPanelOptions.DETAILS && (
-            <ImageDetails image={image} />
+            <ImageDetails image={image} switchRightPanel={switchRightPanel} />
           )}
         </Box>
       ) : (

@@ -52,9 +52,9 @@ export function parseMetadata(metadata: ImageMetadata): ParsedImageMetadata {
   // GPS
 
   if (hasSome(metadata.image, ['Model', 'Make'])) {
-    parsed.camera = `${metadata.image?.Make}${
+    parsed.camera = `${metadata.image?.Make || ''}${
       hasAll(metadata.image, ['Model', 'Make']) ? ' - ' : ''
-    }${metadata.image?.Model}`
+    }${metadata.image?.Model || ''}`
   }
   if (
     hasAll(metadata.gps, [
