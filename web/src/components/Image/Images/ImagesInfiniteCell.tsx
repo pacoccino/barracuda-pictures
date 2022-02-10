@@ -1,5 +1,5 @@
 import type { FindImages } from 'types/graphql'
-import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+import type { CellFailureProps } from '@redwoodjs/web'
 
 import Images from './Images'
 import { Skeleton, Box, Wrap, WrapItem, Center } from '@chakra-ui/react'

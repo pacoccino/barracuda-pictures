@@ -34,13 +34,16 @@ const FilterStatusIcon = ({ color }) => (
 )
 
 const DatePanel = () => {
-  const { dateRange, setDateRange } = useFilterContext()
+  const {
+    filter: { dateRange },
+    setDateRange,
+  } = useFilterContext()
 
   const onChange = (newValue) => {
     if (newValue && newValue[0] && newValue[1])
       setDateRange({
-        from: newValue[0],
-        to: newValue[1],
+        from: newValue[0].toISOString(),
+        to: newValue[1].toISOString(),
       })
     else setDateRange(null)
   }

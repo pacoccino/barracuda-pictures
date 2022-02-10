@@ -10,10 +10,9 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useFilterContext } from 'src/contexts/filter'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { HorizontalCollapse } from 'src/design-system'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { ImagesList } from 'src/components/Image/Images/ImagesList'
 import { SelectBar } from 'src/components/Image/Images/SelectBar'
 
 const PhotosPage = () => {
@@ -21,6 +20,7 @@ const PhotosPage = () => {
   const variables = useMemo(() => ({ filter }), [filter])
   const filterPanelDisclosure = useDisclosure({ defaultIsOpen: true })
 
+  console.log(filter)
   return (
     <Flex h="100%">
       <MetaTags title="Photos" description="Photos page" />

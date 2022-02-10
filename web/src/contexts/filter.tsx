@@ -13,11 +13,11 @@ interface FilterContextType {
   clearFilter: () => void
   filter: {
     tagLists: FilterByTagList[]
+    dateRange: DateRange | null
   }
   selectedTagIds: string[]
   tagListConditions: { [key: string]: TagListCondition }
   setTagListCondition: (s: string, c: TagListCondition) => void
-  dateRange: DateRange | null
   setDateRange: (d: DateRange | null) => void
 }
 
@@ -27,11 +27,11 @@ export const FilterContext = React.createContext<FilterContextType>({
   clearFilter: () => 0,
   filter: {
     tagLists: [],
+    dateRange: null,
   },
   selectedTagIds: [],
   setTagListCondition: () => 0,
   tagListConditions: new Map(),
-  dateRange: null,
   setDateRange: () => 0,
 })
 
@@ -146,7 +146,6 @@ export const FilterContextProvider = ({ children }) => {
         removeTagToFilter,
         filter,
         clearFilter,
-        dateRange,
         setDateRange,
       }}
     >
