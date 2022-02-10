@@ -1,11 +1,11 @@
 import { Link, routes } from '@redwoodjs/router'
 import { getImageUrl } from 'src/lib/static'
-import { Icon, Box, Image } from '@chakra-ui/react'
+import { Box, Center, Icon, Image } from '@chakra-ui/react'
 
 import { FindImages } from 'types/graphql'
 import { SelectMode, useSelectContext } from 'src/contexts/select'
 import { useMemo } from 'react'
-import { MdRadioButtonUnchecked, MdCheckCircle } from 'react-icons/md'
+import { MdCheckCircle, MdRadioButtonUnchecked } from 'react-icons/md'
 
 type ImagesItemProps = {
   image: FindImages['images'][number]
@@ -14,6 +14,7 @@ type ImagesItemProps = {
 export const ImagesItem = ({ image }: ImagesItemProps) => {
   const {
     selectMode,
+    setSelectMode,
     addImageToSelection,
     removeImageFromSelection,
     isImageSelected,
@@ -27,26 +28,47 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
     [image, isImageSelected]
   )
 
+  const toggleSelection = () => {
+    setSelectMode(SelectMode.MULTI_SELECT)
+    if (imageSelected) removeImageFromSelection(image)
+    else addImageToSelection(image)
+  }
+
+  const selectComponent = imageSelected ? (
+    <Icon as={MdCheckCircle} boxSize={6} color="blue.300" />
+  ) : (
+    <Icon as={MdRadioButtonUnchecked} boxSize={6} color="blue.300" />
+  )
+
   if (selectMode === SelectMode.VIEW) {
     return (
-      <Link
-        to={routes.photo({ id: image.id })}
-        title={'Show image ' + image.id + ' detail'}
-      >
-        {imageComponent}
-      </Link>
+      <Box position="relative">
+        <Link
+          to={routes.photo({ id: image.id })}
+          title={'Show image ' + image.id + ' detail'}
+        >
+          {imageComponent}
+        </Link>
+        <Center
+          position="absolute"
+          top={0}
+          right={0}
+          opacity={0}
+          boxSize={14}
+          _hover={{
+            opacity: 1,
+          }}
+          cursor="pointer"
+          onClick={toggleSelection}
+        >
+          {selectComponent}
+        </Center>
+      </Box>
     )
   } else if (selectMode === SelectMode.MULTI_SELECT) {
     return (
-      <Box
-        cursor="pointer"
-        position="relative"
-        onClick={
-          imageSelected
-            ? () => removeImageFromSelection(image)
-            : () => addImageToSelection(image)
-        }
-      >
+      <Box position="relative">
+        {imageComponent}
         <Box
           position="absolute"
           top={0}
@@ -54,17 +76,14 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
           bottom={0}
           right={0}
           borderColor={imageSelected ? 'blue.500' : 'transparent'}
-          borderWidth={3}
+          borderWidth={4}
+          cursor="pointer"
+          onClick={toggleSelection}
         >
-          <Box position="absolute" top={2} right={2}>
-            {imageSelected ? (
-              <Icon as={MdCheckCircle} color="blue.300" />
-            ) : (
-              <Icon as={MdRadioButtonUnchecked} color="blue.300" />
-            )}
-          </Box>
+          <Center position="absolute" top={0} right={0} boxSize={12}>
+            {selectComponent}
+          </Center>
         </Box>
-        {imageComponent}
       </Box>
     )
   }
