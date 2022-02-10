@@ -1,9 +1,10 @@
 import { Button, Input, useToast, BodyModal } from 'src/design-system'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { Flex } from '@chakra-ui/react'
 import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
+import { useForm } from 'react-hook-form'
 
 const CREATE_TAG_GROUP = gql`
   mutation CreateTagGroup($name: String!) {
@@ -16,20 +17,31 @@ const CREATE_TAG_GROUP = gql`
 `
 export const CreateTagGroupModal = ({ isOpen, onClose }) => {
   const createTagGroupMutation = useMutation(CREATE_TAG_GROUP)
-  const [tagGroupName, setTagGroupName] = useState('')
-  const initialRef = useRef()
+  const initialRef = useRef(null)
   const toast = useToast()
 
+  const { register, reset, handleSubmit } = useForm({
+    defaultValues: {
+      tagGroupName: '',
+    },
+  })
+  useEffect(() => {
+    reset({
+      tagGroupName: '',
+    })
+  }, [isOpen, reset])
+  const { ref: registerRef, ...registerRest } = register('tagGroupName')
+
   const [createTagGroup, { loading }] = createTagGroupMutation
-  const handleCreateTagGroup = (name) =>
+  const handleCreateTagGroup = ({ tagGroupName }) =>
     createTagGroup({
-      variables: { name },
+      variables: { name: tagGroupName },
       refetchQueries: QUERIES_TO_REFETCH,
     })
       .then(() => {
         toast({
           title: 'Tag group created completed',
-          description: name,
+          description: tagGroupName,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -53,12 +65,15 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
       onClose={onClose}
       title="Create tag group"
     >
-      <form onSubmit={() => handleCreateTagGroup(tagGroupName)}>
+      <form onSubmit={handleSubmit(handleCreateTagGroup)}>
         <Input
           type="text"
-          ref={initialRef}
           placeholder="Tag group name"
-          onChange={(e) => setTagGroupName(e.target.value)}
+          {...registerRest}
+          ref={(e) => {
+            registerRef(e)
+            initialRef.current = e
+          }}
         />
         <Flex justify="end" my={4}>
           <Button disabled={loading} onClick={onClose} mr={2}>
