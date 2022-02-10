@@ -1,6 +1,6 @@
 import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex } from '@chakra-ui/react'
@@ -20,6 +20,7 @@ export const CreateTagModal = ({ tagGroup, onClose }) => {
   const createTagMutation = useMutation(CREATE_TAG)
   const [tagName, setTagName] = useState('')
   const toast = useToast()
+  const initialRef = useRef()
 
   const [createTag, { loading }] = createTagMutation
   const handleCreateTag = (name) =>
@@ -50,30 +51,34 @@ export const CreateTagModal = ({ tagGroup, onClose }) => {
   return (
     <BodyModal
       isOpen={!!tagGroup}
+      initialFocusRef={initialRef}
       onClose={!loading && onClose}
       title="Create Tag"
     >
       <Box mb={2}>
         <TagGroupItem tagGroup={tagGroup} />
       </Box>
-      <Input
-        type="text"
-        placeholder="Tag name"
-        onChange={(e) => setTagName(e.target.value)}
-      />
-      <Flex justify="end" my={4}>
-        <Button disabled={loading} onClick={onClose} mr={2}>
-          Cancel
-        </Button>
-        <Button
-          onClick={() => handleCreateTag(tagName)}
-          isLoading={loading}
-          variant="solid"
-          colorScheme="blue"
-        >
-          Create
-        </Button>
-      </Flex>
+      <form onSubmit={() => handleCreateTag(tagName)}>
+        <Input
+          type="text"
+          ref={initialRef}
+          placeholder="Tag name"
+          onChange={(e) => setTagName(e.target.value)}
+        />
+        <Flex justify="end" my={4}>
+          <Button disabled={loading} onClick={onClose} mr={2}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            isLoading={loading}
+            variant="solid"
+            colorScheme="blue"
+          >
+            Create
+          </Button>
+        </Flex>
+      </form>
     </BodyModal>
   )
 }

@@ -1,6 +1,6 @@
 import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
@@ -19,6 +19,7 @@ const UPDATE_TAG = gql`
 export const EditTagModal = ({ tag, onClose }) => {
   const updateTagMutation = useMutation(UPDATE_TAG)
   const [tagName, setTagName] = useState('')
+  const initialRef = useRef()
   const toast = useToast()
 
   useEffect(() => {
@@ -52,30 +53,38 @@ export const EditTagModal = ({ tag, onClose }) => {
       })
 
   return (
-    <BodyModal isOpen={loading || !!tag} onClose={onClose} title="Edit Tag">
+    <BodyModal
+      isOpen={loading || !!tag}
+      onClose={onClose}
+      initialFocusRef={initialRef}
+      title="Edit Tag"
+    >
       <Box mb={2}>
         <TagItemWithGroup tag={tag} />
       </Box>
-      <FormLabel>New name:</FormLabel>
-      <Input
-        type="text"
-        placeholder="Tag name"
-        onChange={(e) => setTagName(e.target.value)}
-        value={tagName}
-      />
-      <Flex justify="end" my={4}>
-        <Button onClick={onClose} mr={2}>
-          Cancel
-        </Button>
-        <Button
-          onClick={() => handleUpdateTag(tagName)}
-          isLoading={loading}
-          variant="solid"
-          colorScheme="yellow"
-        >
-          Edit
-        </Button>
-      </Flex>
+      <form onSubmit={() => handleUpdateTag(tagName)}>
+        <FormLabel>New name:</FormLabel>
+        <Input
+          type="text"
+          placeholder="Tag name"
+          ref={initialRef}
+          onChange={(e) => setTagName(e.target.value)}
+          value={tagName}
+        />
+        <Flex justify="end" my={4}>
+          <Button disabled={loading} onClick={onClose} mr={2}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            isLoading={loading}
+            variant="solid"
+            colorScheme="yellow"
+          >
+            Edit
+          </Button>
+        </Flex>
+      </form>
     </BodyModal>
   )
 }

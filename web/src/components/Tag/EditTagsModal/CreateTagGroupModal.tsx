@@ -1,6 +1,6 @@
 import { Button, Input, useToast, BodyModal } from 'src/design-system'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { Flex } from '@chakra-ui/react'
 import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
@@ -17,6 +17,7 @@ const CREATE_TAG_GROUP = gql`
 export const CreateTagGroupModal = ({ isOpen, onClose }) => {
   const createTagGroupMutation = useMutation(CREATE_TAG_GROUP)
   const [tagGroupName, setTagGroupName] = useState('')
+  const initialRef = useRef()
   const toast = useToast()
 
   const [createTagGroup, { loading }] = createTagGroupMutation
@@ -48,27 +49,31 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
   return (
     <BodyModal
       isOpen={loading || isOpen}
+      initialFocusRef={initialRef}
       onClose={onClose}
       title="Create tag group"
     >
-      <Input
-        type="text"
-        placeholder="Tag group name"
-        onChange={(e) => setTagGroupName(e.target.value)}
-      />
-      <Flex justify="end" my={4}>
-        <Button onClick={onClose} mr={2}>
-          Cancel
-        </Button>
-        <Button
-          onClick={() => handleCreateTagGroup(tagGroupName)}
-          isLoading={loading}
-          variant="solid"
-          colorScheme="blue"
-        >
-          Create
-        </Button>
-      </Flex>
+      <form onSubmit={() => handleCreateTagGroup(tagGroupName)}>
+        <Input
+          type="text"
+          ref={initialRef}
+          placeholder="Tag group name"
+          onChange={(e) => setTagGroupName(e.target.value)}
+        />
+        <Flex justify="end" my={4}>
+          <Button disabled={loading} onClick={onClose} mr={2}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            isLoading={loading}
+            variant="solid"
+            colorScheme="blue"
+          >
+            Create
+          </Button>
+        </Flex>
+      </form>
     </BodyModal>
   )
 }

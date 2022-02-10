@@ -1,6 +1,6 @@
 import { Box, Button, Input, useToast, BodyModal } from 'src/design-system'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
@@ -19,6 +19,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
   const updagteTagGroupMutation = useMutation(UPDATE_TAG_GROUP)
   const [tagGroupName, setTagGroupName] = useState('')
   const toast = useToast()
+  const initialRef = useRef()
 
   useEffect(() => {
     tagGroup && setTagGroupName(tagGroup.name)
@@ -54,31 +55,35 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
     <BodyModal
       isOpen={loading || !!tagGroup}
       onClose={onClose}
+      initialFocusRef={initialRef}
       title="Edit tag group"
     >
       <Box mb={2}>
         <TagGroupItem tagGroup={tagGroup} />
       </Box>
-      <FormLabel>New name:</FormLabel>
-      <Input
-        type="text"
-        placeholder="Tag group name"
-        onChange={(e) => setTagGroupName(e.target.value)}
-        value={tagGroupName}
-      />
-      <Flex justify="end" my={4}>
-        <Button onClick={onClose} mr={2}>
-          Cancel
-        </Button>
-        <Button
-          onClick={() => handleUpdateTagGroup(tagGroupName)}
-          isLoading={loading}
-          variant="solid"
-          colorScheme="yellow"
-        >
-          Edit
-        </Button>
-      </Flex>
+      <form onSubmit={() => handleUpdateTagGroup(tagGroupName)}>
+        <FormLabel>New name:</FormLabel>
+        <Input
+          type="text"
+          placeholder="Tag group name"
+          ref={initialRef}
+          onChange={(e) => setTagGroupName(e.target.value)}
+          value={tagGroupName}
+        />
+        <Flex justify="end" my={4}>
+          <Button disabled={loading} onClick={onClose} mr={2}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleUpdateTagGroup(tagGroupName)}
+            isLoading={loading}
+            variant="solid"
+            colorScheme="yellow"
+          >
+            Edit
+          </Button>
+        </Flex>
+      </form>
     </BodyModal>
   )
 }
