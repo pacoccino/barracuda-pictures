@@ -18,6 +18,7 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
     let timeout
 
     function handleKeyDown(e) {
+      if (e.target.constructor === HTMLInputElement) return
       switch (e.code) {
         case 'KeyE':
           switchRightPanel(RightPanelOptions.EDIT_TAGS)

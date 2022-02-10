@@ -11,7 +11,7 @@ import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
 import ApplyTagsModalCell from 'src/components/Tag/ApplyTagsModal/ApplyTagsModalCell'
 import { ApplyTagMode } from 'src/components/Tag/ApplyTagsModal/ApplyTagsModal'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 export const SelectBar = () => {
   const {
@@ -21,12 +21,14 @@ export const SelectBar = () => {
     setAllSelected,
     clearSelection,
   } = useSelectContext()
+  const ref = useRef(null)
 
   const applyTagDisclosure = useDisclosure()
   const removeTagDisclosure = useDisclosure()
 
   useEffect(() => {
     function handleKeyDown(e) {
+      if (e.target.constructor === HTMLInputElement) return
       switch (e.code) {
         case 'KeyV':
           setSelectMode(SelectMode.VIEW)
@@ -60,6 +62,7 @@ export const SelectBar = () => {
       align="center"
       px={4}
       justify="space-between"
+      ref={ref}
     >
       <ButtonGroup size="xs" isAttached variant="outline">
         <TooltipIconButton

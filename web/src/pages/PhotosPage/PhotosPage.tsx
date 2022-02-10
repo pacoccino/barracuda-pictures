@@ -20,7 +20,6 @@ const PhotosPage = () => {
   const variables = useMemo(() => ({ filter }), [filter])
   const filterPanelDisclosure = useDisclosure({ defaultIsOpen: true })
 
-  console.log(filter)
   return (
     <Flex h="100%">
       <MetaTags title="Photos" description="Photos page" />

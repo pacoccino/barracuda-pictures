@@ -7,9 +7,9 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react'
 
-export const BodyModal = ({ children, title, isOpen, onClose }) => {
+export const BodyModal = ({ children, title, ...props }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal {...props}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>

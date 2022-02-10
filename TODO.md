@@ -1,7 +1,5 @@
 ### BUGS
 
-keypress in form
-
 add tag to filter > remove tag, tag still in filter so no images ?
 
 choose filter => select image => remove filter >>> image still into selectio n
@@ -19,7 +17,6 @@ scroll, when add tag it moves back to top
 
 - Miniatures
 - better forms (focus/enter)
-- keypress when in input
 - select range
 - select all
 - full text search / path

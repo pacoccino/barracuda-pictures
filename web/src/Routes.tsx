@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 const Routes = () => {
   useEffect(() => {
     function handleKeyDown(e) {
+      if (e.target.constructor === HTMLInputElement) return
       switch (e.code) {
         case 'KeyG':
           navigate(routes.photos())
