@@ -78,6 +78,40 @@ async function createImageTags(image: Image, imageMetadata: ImageMetadata) {
       },
     },
   })
+
+  // keywords
+
+  if (imageMetadata.parsed.keywords) {
+    const tagGroup_keywordsInput = {
+      name: 'Keywords',
+    }
+    const tagGroup_keywords = await db.tagGroup.upsert({
+      where: tagGroup_keywordsInput,
+      update: tagGroup_keywordsInput,
+      create: tagGroup_keywordsInput,
+    })
+
+    for (const i in imageMetadata.parsed.keywords) {
+      const keyword = imageMetadata.parsed.keywords[i]
+      const tag_keywordInput = {
+        name: keyword,
+        tagGroupId: tagGroup_keywords.id,
+      }
+      const tag_keyword = await db.tag.upsert({
+        where: {
+          name_tagGroupId: tag_keywordInput,
+        },
+        update: tag_keywordInput,
+        create: tag_keywordInput,
+      })
+      await db.tagsOnImage.create({
+        data: {
+          tagId: tag_keyword.id,
+          imageId: image.id,
+        },
+      })
+    }
+  }
 }
 async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   console.log('- scanning image', imagePath)
@@ -160,5 +194,5 @@ export async function scanFiles() {
   console.log(
     `${scanResult.successes.length} success, ${scanResult.errors.length} errors`
   )
-  console.log(scanResult.errors)
+  if (scanResult.errors) console.log('errors:', scanResult.errors)
 }

@@ -31,6 +31,7 @@ export type ImageParsedMetadata = {
   edition?: {
     software?: string
   }
+  keywords?: string[]
 }
 
 export function parseMetadata_exifr(
@@ -46,6 +47,9 @@ export function parseMetadata_exifr(
         .toDate(),
     }
   }
+
+  // keywords
+  parsed.keywords = rawMD.iptc?.Keywords
 
   // camera
   if (hasSome(rawMD.ifd0, ['Model', 'Make'])) {
