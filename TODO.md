@@ -16,21 +16,23 @@ scroll, when add tag it moves back to top
 ### TODO
 
 - Miniatures
-- better forms (focus/enter)
+- Edit date
+  - read modified ?
+- sync metadata in both ways
+  - read tags from lightroom?
+  - update date
+
+- detect people
+
+- upload images
+- delete images
+
 - select range
 - select all
 - full text search / path
 - rename tag group => category
 - change path
 
---
-
-- Edit date
-- sync metadata in both ways
-- tags in exif / iptc ?
-- detect people
 - tag colors
-- upload images
-- delete images
 - auth
-- download image / zip of filter (hash filter)
+- download zip of filter (hash filter)

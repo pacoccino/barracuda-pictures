@@ -38,10 +38,9 @@ const Image = ({
           )}
 
           <Hud
-            image={image}
+            imageUrl={imageUrl}
             imagesBefore={imagesBefore}
             imagesAfter={imagesAfter}
-            rightPanel={rightPanel}
             switchRightPanel={switchRightPanel}
           />
         </Center>

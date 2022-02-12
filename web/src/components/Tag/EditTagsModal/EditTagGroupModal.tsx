@@ -16,6 +16,7 @@ const UPDATE_TAG_GROUP = gql`
     }
   }
 `
+
 export const EditTagGroupModal = ({ tagGroup, onClose }) => {
   const updateTagGroupMutation = useMutation(UPDATE_TAG_GROUP)
   const initialRef = useRef(null)

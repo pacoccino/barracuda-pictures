@@ -1,4 +1,11 @@
-import { Box, Center, Icon, Fade } from 'src/design-system'
+import {
+  Box,
+  Link as CLink,
+  Center,
+  Icon,
+  Fade,
+  HStack,
+} from 'src/design-system'
 import { useEffect, useState } from 'react'
 import {
   EditIcon,
@@ -6,12 +13,18 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   InfoIcon,
+  DownloadIcon,
 } from '@chakra-ui/icons'
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { RightPanelOptions } from 'src/components/Image/Image/RightPanel'
 
 const HUD_TIMEOUT = 2000
-export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
+export const Hud = ({
+  imagesAfter,
+  imagesBefore,
+  switchRightPanel,
+  imageUrl,
+}) => {
   const [hudVisible, setHUDVisible] = useState(false)
 
   useEffect(() => {
@@ -63,8 +76,8 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
             position="absolute"
             top={0}
             left={0}
-            width={100}
-            height={100}
+            mt={8}
+            ml={8}
             opacity={0.7}
             cursor="pointer"
           >
@@ -81,12 +94,12 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
               position="absolute"
               left={0}
               bottom={0}
-              width={100}
-              height={100}
+              mb={8}
+              ml={8}
               opacity={0.7}
               cursor="pointer"
             >
-              <Icon as={ChevronLeftIcon} color="white" boxSize={8} />
+              <Icon as={ChevronLeftIcon} color="white" boxSize={10} />
             </Center>
           </Link>
         )}
@@ -100,31 +113,36 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
               position="absolute"
               right={0}
               bottom={0}
-              width={100}
-              height={100}
+              mb={8}
+              mr={8}
               opacity={0.7}
               cursor="pointer"
             >
-              <Icon as={ChevronRightIcon} color="white" boxSize={8} />
+              <Icon as={ChevronRightIcon} color="white" boxSize={10} />
             </Center>
           </Link>
         )}
 
-        <Center
+        <HStack
           position="absolute"
           right={0}
           top={0}
-          width={120}
-          height={100}
           opacity={0.7}
           cursor="pointer"
+          spacing={4}
+          align="center"
+          justify="center"
+          mt={8}
+          mr={8}
         >
+          <CLink href={imageUrl} download>
+            <Icon as={DownloadIcon} color="white" boxSize={8} />
+          </CLink>
           <Icon
             as={InfoIcon}
             color="white"
             boxSize={8}
             onClick={() => switchRightPanel(RightPanelOptions.DETAILS)}
-            mr={2}
           />
           <Icon
             as={EditIcon}
@@ -132,7 +150,7 @@ export const Hud = ({ imagesAfter, imagesBefore, switchRightPanel }) => {
             boxSize={8}
             onClick={() => switchRightPanel(RightPanelOptions.EDIT_TAGS)}
           />
-        </Center>
+        </HStack>
       </Box>
     </Fade>
   )
