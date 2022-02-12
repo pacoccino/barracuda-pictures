@@ -29,6 +29,7 @@
     "stop-and-clean": "docker-compose down -v",
     "reset-migrations": "docker-compose down -v && rm -rf ./api/db/migrations && yarn dockers && yarn rw prisma migrate dev --name init",
     "scan": "yarn rw exec scan",
+    "upload": "yarn rw exec upload",
     "static": "yarn rw exec static-server",
     "migrate": "yarn rw prisma migrate dev",
     "studio": "yarn rw prisma studio"

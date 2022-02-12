@@ -84,7 +84,7 @@ const TagsPanel = ({ tagGroups }) => {
   )
   return (
     <VStack flex={1} overflow="hidden" align="stretch">
-      <Flex>
+      <Flex align="center">
         <Heading textStyle="h3" size="sm" mb={2} flex="1">
           Tags
         </Heading>

@@ -1,11 +1,11 @@
 import type { Prisma, Image } from '@prisma/client'
 
-import async from 'async'
 import { db } from 'src/lib/db'
 import ft from 'file-type'
 
 import { getMetadata, ImageMetadata, joinString } from 'src/lib/images/metadata'
 import { S3Lib } from 'src/lib/files/s3'
+import { parallel } from 'src/lib/async'
 
 const PARALLEL_SCANS = 5
 const BYTES_RANGE = 50000
@@ -113,6 +113,26 @@ async function createImageTags(image: Image, imageMetadata: ImageMetadata) {
     }
   }
 }
+
+function getFileInceptionDate(head: Record<string, any>) {
+  let inceptionDate = new Date()
+  if (+head.LastModified < +inceptionDate) inceptionDate = head.LastModified
+
+  if (
+    head.Metadata?.created_at &&
+    +new Date(head.Metadata.created_at) < +inceptionDate
+  )
+    inceptionDate = new Date(head.Metadata.created_at)
+
+  if (
+    head.Metadata?.modified_at &&
+    +new Date(head.Metadata.modified_at) < +inceptionDate
+  )
+    inceptionDate = new Date(head.Metadata.modified_at)
+
+  return inceptionDate
+}
+
 async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   console.log('- scanning image', imagePath)
 
@@ -130,11 +150,12 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   }
 
   const imageMetadata = await getMetadata(imageBuffer)
+  const inceptionDate = getFileInceptionDate(head)
 
   const image = await db.image.create({
     data: {
       path: imagePath,
-      dateTaken: imageMetadata.parsed.date?.capture || new Date(),
+      dateTaken: imageMetadata.parsed.date?.capture || inceptionDate,
       metadata: imageMetadata.raw,
     },
   })
@@ -142,39 +163,7 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   await createImageTags(image, imageMetadata)
 
   console.log('added image', image.path)
-  return true
-}
-
-function reflect(fn) {
-  return async (task) => {
-    try {
-      const success = await fn(task)
-      return {
-        task,
-        success,
-      }
-    } catch (error) {
-      return {
-        task,
-        error,
-      }
-    }
-  }
-}
-async function iterateOverFiles(files, fn) {
-  const results = await async.mapLimit(files, PARALLEL_SCANS, reflect(fn))
-  const errors = results.reduce(
-    (acc, curr) => (curr.error ? acc.concat(curr) : acc),
-    []
-  )
-  const successes = results.reduce(
-    (acc, curr) => (curr.success ? acc.concat(curr) : acc),
-    []
-  )
-  return {
-    errors,
-    successes,
-  }
+  return imagePath
 }
 
 export async function scanFiles() {
@@ -185,14 +174,14 @@ export async function scanFiles() {
   await db.tagGroup.deleteMany({})
 
   console.log('Getting file list from S3...')
-  const files = await S3Lib.list('test_meta')
+  const files = await S3Lib.list('test_upload')
   console.log('importing files from s3', files.length)
 
-  const scanResult = await iterateOverFiles(files, scanImage)
+  const scanResult = await parallel(files, PARALLEL_SCANS, scanImage)
 
-  console.log('Finished scanning')
+  console.log('Finished script')
   console.log(
     `${scanResult.successes.length} success, ${scanResult.errors.length} errors`
   )
-  if (scanResult.errors) console.log('errors:', scanResult.errors)
+  if (scanResult.errors.length) console.log('errors:', scanResult.errors)
 }

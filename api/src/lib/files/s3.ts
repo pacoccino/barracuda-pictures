@@ -1,4 +1,5 @@
 import { S3 } from 'aws-sdk'
+import { ReadStream } from 'fs'
 
 const s3 = new S3({
   region: 'local',
@@ -57,11 +58,27 @@ export const S3Lib = {
     }
     await promisify(s3.deleteObject)(params)
   },
-  async put(Key: string, Object: string): Promise<void> {
+  async deletePrefix(Prefix: string): Promise<void> {
+    const list = await S3Lib.list(Prefix)
+    if (list.length === 0) return
+    const params = {
+      Bucket: process.env['S3_BUCKET_NAME'],
+      Delete: {
+        Objects: list.map((i) => ({ Key: i })),
+      },
+    }
+    await promisify(s3.deleteObjects)(params)
+  },
+  async put(
+    Key: string,
+    Body: string | Buffer | ReadStream,
+    Metadata?: Record<string, string>
+  ): Promise<void> {
     const params = {
       Bucket: process.env['S3_BUCKET_NAME'],
       Key,
-      Object,
+      Body,
+      Metadata,
     }
     await promisify(s3.putObject)(params)
   },

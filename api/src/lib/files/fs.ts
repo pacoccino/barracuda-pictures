@@ -1,7 +1,11 @@
-import fs from 'fs/promises'
+import fsPromise, { FileHandle } from 'fs/promises'
+
+export async function open(path: string, flags = 'r'): Promise<FileHandle> {
+  return fsPromise.open(path, flags)
+}
 
 export async function listDir(path: string): Promise<Array<string>> {
-  return fs.readdir(path)
+  return fsPromise.readdir(path)
 }
 
 export async function listDirRecursive(
@@ -10,7 +14,7 @@ export async function listDirRecursive(
 ): Promise<Array<string>> {
   let files = []
 
-  const dir = await fs.opendir(`${path}${subPath ? '/' : ''}${subPath}`)
+  const dir = await fsPromise.opendir(`${path}${subPath ? '/' : ''}${subPath}`)
   for await (const dirent of dir) {
     if (dirent.isFile()) {
       files = files.concat(`${subPath}${subPath ? '/' : ''}${dirent.name}`)
@@ -42,7 +46,7 @@ while (b) {
 export async function listDirRecursiveIter(
   rootPath: string
 ): Promise<RecursiveFileIterator> {
-  const rootDir = await fs.opendir(rootPath)
+  const rootDir = await fsPromise.opendir(rootPath)
 
   const subPaths = [rootPath]
   const subDirs = [rootDir]
@@ -62,7 +66,7 @@ export async function listDirRecursiveIter(
       }
     } else if (dirent.isDirectory()) {
       subPaths.push(dirent.name)
-      const subDir = await fs.opendir(subPaths.join('/'))
+      const subDir = await fsPromise.opendir(subPaths.join('/'))
       subDirs.push(subDir)
       return next()
     } else if (dirent.isFile()) {
