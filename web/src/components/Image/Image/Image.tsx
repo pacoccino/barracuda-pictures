@@ -5,7 +5,7 @@ import {
   Image as ImageChakra,
   HorizontalCollapse,
 } from 'src/design-system'
-import { getImageUrl } from 'src/lib/static'
+import { getImageUrl, getMiniatureUrl } from 'src/lib/static'
 import { useMemo } from 'react'
 import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
@@ -21,21 +21,34 @@ const Image = ({
   switchRightPanel,
 }: CellSuccessProps<FindImageWithTagsById>) => {
   const imageUrl = useMemo(() => image && getImageUrl(image), [image])
+  const miniatureUrl = useMemo(() => image && getMiniatureUrl(image), [image])
 
   return (
     <Box>
       <Flex h="100vh" justify="stretch" align="stretch">
-        <Center flex="1" bg="black" position="relative">
-          {image ? (
+        <Box flex="1" bg="black" position="relative">
+          <Center position="absolute" top={0} bottom={0} left={0} right={0}>
+            <ImageChakra
+              objectFit="contain"
+              src={miniatureUrl}
+              alt={image?.path}
+              h="100%"
+            />
+          </Center>
+
+          <Center position="absolute" top={0} bottom={0} left={0} right={0}>
+            <DefaultSpinner size="xl" color="gray.300" />
+          </Center>
+
+          <Center position="absolute" top={0} bottom={0} left={0} right={0}>
             <ImageChakra
               objectFit="contain"
               src={imageUrl}
-              alt={image.path}
+              fallback={<Box />}
+              alt={image?.path}
               h="100%"
             />
-          ) : (
-            <DefaultSpinner size="xl" color="gray.500" />
-          )}
+          </Center>
 
           <Hud
             imageUrl={imageUrl}
@@ -43,7 +56,7 @@ const Image = ({
             imagesAfter={imagesAfter}
             switchRightPanel={switchRightPanel}
           />
-        </Center>
+        </Box>
 
         <HorizontalCollapse isOpen={rightPanel !== null} width={400}>
           <RightPanel
