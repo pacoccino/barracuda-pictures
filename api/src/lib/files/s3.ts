@@ -9,14 +9,6 @@ const s3 = new S3({
   signatureVersion: 'v4',
 })
 
-const promiseSimple = (resolve, reject) => (err, res) => {
-  if (err) {
-    reject(err)
-  } else {
-    resolve(res)
-  }
-}
-
 const promisify =
   (fn) =>
   (params): ReturnType<typeof fn> => {

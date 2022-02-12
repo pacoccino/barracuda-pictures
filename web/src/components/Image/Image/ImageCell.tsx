@@ -10,8 +10,6 @@ export const QUERY = gql`
       path
       dateTaken
       metadata
-      takenAtLng
-      takenAtLat
       tagsOnImages {
         id
         tag {

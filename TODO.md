@@ -21,6 +21,7 @@ scroll, when add tag it moves back to top
 - sync metadata in both ways
   - read tags from lightroom?
   - update date
+- move tag to other group
 
 - detect people
 

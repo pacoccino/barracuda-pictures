@@ -4,8 +4,6 @@ export const schema = gql`
     path: String!
     dateTaken: DateTime!
     metadata: JSONObject!
-    takenAtLng: Float
-    takenAtLat: Float
     tagsOnImages: [TagsOnImage]!
   }
 

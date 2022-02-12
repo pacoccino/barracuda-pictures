@@ -1,6 +1,5 @@
 import { Box, Flex, Text, WrapItem, Wrap } from 'src/design-system'
 import { TagItemNew } from 'src/components/Tag/TagItem/TagItem'
-import Decimal from 'decimal.js'
 import {
   Modal,
   ModalOverlay,
@@ -18,74 +17,7 @@ import { CopyIcon, CheckIcon } from '@chakra-ui/icons'
 import { RightPanelOptions } from 'src/components/Image/Image/RightPanel'
 import moment from 'moment'
 
-type ParsedMetadata = {
-  ISO?: number
-  FocalLength?: number
-  ExposureTime?: number
-  ApertureValue?: number
-  camera?: string
-  lens?: string
-  software?: string
-}
-
-const parseMetadata = (metadata?: any): ParsedMetadata => {
-  if (!metadata) return
-  const parsed: ParsedMetadata = {}
-
-  const { exif, image } = metadata
-  if (image) {
-    if (hasSome(image, ['Model', 'Make'])) {
-      parsed.camera = `${image.Make || ''}${
-        hasAll(metadata.image, ['Model', 'Make']) ? ' - ' : ''
-      }${image.Model || ''}`
-    }
-    if (image.Software) {
-      parsed.software = image.Software
-    }
-  }
-
-  if (exif) {
-    if (hasSome(exif, ['LensMake', 'LensModel'])) {
-      parsed.lens = `${exif.LensMake || ''}${
-        hasAll(exif, ['LensMake', 'LensModel']) ? ' - ' : ''
-      }${exif.LensModel || ''}`
-    }
-
-    if (exif.ISO) {
-      parsed.ISO = new Decimal(exif.ISO).toDP(0).toNumber()
-    }
-    if (exif.FocalLength) {
-      parsed.FocalLength = new Decimal(exif.FocalLength).toDP(2).toNumber()
-    }
-    if (exif.FocalLengthIn35mmFormat) {
-      parsed.FocalLength = new Decimal(exif.FocalLengthIn35mmFormat)
-        .toDP(2)
-        .toNumber()
-    }
-    if (exif.ExposureTime) {
-      if (exif.ExposureTime >= 1) {
-        parsed.ExposureTime = new Decimal(exif.ExposureTime).toDP(2).toNumber()
-      } else {
-        parsed.ExposureTime = new Decimal(-1)
-          .div(exif.ExposureTime)
-          .toDP(2)
-          .toNumber()
-      }
-    }
-    if (exif.ApertureValue) {
-      parsed.ApertureValue = new Decimal(exif.ApertureValue).toDP(2).toNumber()
-    }
-  }
-
-  return parsed
-}
-
-function hasAll(obj: any, props: string[]) {
-  return obj && props.reduce((acc, curr) => acc && !!obj[curr], true)
-}
-function hasSome(obj: any, props: string[]) {
-  return obj && props.reduce((acc, curr) => acc || !!obj[curr], true)
-}
+import { parseMetadata_exifr } from 'src/lib/metadata_parser'
 
 const RowTitle = ({ children, rightItem = null }) => (
   <Flex mb={3} align="center">
@@ -111,7 +43,10 @@ const RowSubContent = ({ children }) => <Text fontSize="sm">{children}</Text>
 export const ImageDetails = ({ image, switchRightPanel }) => {
   const metadataDisclosure = useDisclosure()
 
-  const parsedMetadata = useMemo(() => parseMetadata(image.metadata), [image])
+  const parsedMetadata = useMemo(
+    () => parseMetadata_exifr(image.metadata),
+    [image]
+  )
 
   const gps = useMemo(() => `${image.takenAtLat}, ${image.takenAtLng}`, [image])
   const { hasCopied, onCopy } = useClipboard(gps)
@@ -170,7 +105,7 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
             <WrapItem>
               <Box>
                 <RowSubTitle>Camera</RowSubTitle>
-                <RowSubContent>{parsedMetadata.camera}</RowSubContent>
+                <RowSubContent>{parsedMetadata.camera.full}</RowSubContent>
               </Box>
             </WrapItem>
           )}
@@ -178,63 +113,65 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
             <WrapItem>
               <Box>
                 <RowSubTitle>Lens</RowSubTitle>
-                <RowSubContent>{parsedMetadata.lens}</RowSubContent>
+                <RowSubContent>{parsedMetadata.lens.full}</RowSubContent>
               </Box>
             </WrapItem>
           )}
-          {parsedMetadata.ISO && (
+          {parsedMetadata.settings?.ISO && (
             <WrapItem>
               <Box>
                 <RowSubTitle>ISO</RowSubTitle>
-                <RowSubContent>{parsedMetadata.ISO} ISO</RowSubContent>
+                <RowSubContent>{parsedMetadata.settings.ISO} ISO</RowSubContent>
               </Box>
             </WrapItem>
           )}
-          {parsedMetadata.ApertureValue && (
+          {parsedMetadata.settings?.ApertureValue && (
             <WrapItem>
               <Box>
                 <RowSubTitle>Aperture</RowSubTitle>
                 <RowSubContent>
-                  <i>f</i>/{parsedMetadata.ApertureValue}
+                  <i>f</i>/{parsedMetadata.settings.ApertureValue}
                 </RowSubContent>
               </Box>
             </WrapItem>
           )}
-          {parsedMetadata.FocalLength && (
+          {parsedMetadata.settings?.FocalLength && (
             <WrapItem>
               <Box>
                 <RowSubTitle>Focal Length</RowSubTitle>
-                <RowSubContent>{parsedMetadata.FocalLength} mm</RowSubContent>
+                <RowSubContent>
+                  {parsedMetadata.settings?.FocalLength} mm
+                </RowSubContent>
               </Box>
             </WrapItem>
           )}
-          {parsedMetadata.ExposureTime && (
+          {parsedMetadata.settings?.ExposureTime && (
             <WrapItem>
               <Box>
                 <RowSubTitle>Exposure Time</RowSubTitle>
 
                 <RowSubContent>
-                  {parsedMetadata.ExposureTime < 0
-                    ? `1/${-parsedMetadata.ExposureTime}`
-                    : parsedMetadata.ExposureTime}
+                  {parsedMetadata.settings?.ExposureTime < 0
+                    ? `1/${-parsedMetadata.settings?.ExposureTime}`
+                    : parsedMetadata.settings?.ExposureTime}
                   s
                 </RowSubContent>
               </Box>
             </WrapItem>
           )}
-          {parsedMetadata.software && (
+          {parsedMetadata.edition?.software && (
             <WrapItem>
               <Box>
                 <RowSubTitle>Software</RowSubTitle>
 
-                <RowSubContent>{parsedMetadata.software}</RowSubContent>
+                <RowSubContent>{parsedMetadata.edition.software}</RowSubContent>
               </Box>
             </WrapItem>
           )}
         </Wrap>
       </RowContent>
 
-      {hasAll(image, ['takenAtLat', 'takenAtLng']) && (
+      {parsedMetadata.gps && (
         <>
           <RowTitle
             rightItem={
@@ -253,13 +190,13 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
               <WrapItem>
                 <Box>
                   <RowSubTitle>LAT</RowSubTitle>
-                  <RowSubContent>{image.takenAtLat} </RowSubContent>
+                  <RowSubContent>{parsedMetadata.gps.lat} </RowSubContent>
                 </Box>
               </WrapItem>
               <WrapItem>
                 <Box>
                   <RowSubTitle>LONG</RowSubTitle>
-                  <RowSubContent>{image.takenAtLng}</RowSubContent>
+                  <RowSubContent>{parsedMetadata.gps.lng}</RowSubContent>
                 </Box>
               </WrapItem>
             </Wrap>
@@ -271,7 +208,7 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
                   width="100%"
                   height="250"
                   frameBorder="0"
-                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.GMAPS_API_KEY}&q=${image.takenAtLat}+${image.takenAtLng}`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.GMAPS_API_KEY}&q=${parsedMetadata.gps.lat}+${parsedMetadata.gps.lng}`}
                   allowFullScreen
                 />
               </Box>

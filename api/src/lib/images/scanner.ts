@@ -1,50 +1,19 @@
-import type { Prisma } from '@prisma/client'
+import type { Prisma, Image } from '@prisma/client'
 
 import async from 'async'
 import { db } from 'src/lib/db'
 import ft from 'file-type'
 
-import { getMetadata, parseMetadata } from 'src/lib/images/metadata'
+import { getMetadata, ImageMetadata, joinString } from 'src/lib/images/metadata'
 import { S3Lib } from 'src/lib/files/s3'
 
 const PARALLEL_SCANS = 5
 const BYTES_RANGE = 50000
 const ACCEPTED_EXTENSIONS = ['jpg', 'png', 'webp', 'tif']
 
-async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
-  console.log('- scanning image', imagePath)
-
-  const head = await S3Lib.head(imagePath)
-  if (head.ContentLength === 0) {
-    throw new Error('Zero byte file')
-  }
-  const imageBuffer = await S3Lib.get(imagePath, `bytes=0-${BYTES_RANGE}`)
-
-  const fileType = await ft.fromBuffer(imageBuffer)
-  if (!fileType || ACCEPTED_EXTENSIONS.indexOf(fileType.ext) === -1) {
-    throw new Error(
-      `Unsupported file type for ${imagePath} ${fileType?.ext || ''}`
-    )
-  }
-
-  const metadata = await getMetadata(imageBuffer, fileType)
-  const parsedMetadata = parseMetadata(metadata)
-
-  // Create Image
-
-  const image = await db.image.create({
-    data: {
-      path: imagePath,
-      dateTaken: parsedMetadata.dateTaken,
-      takenAtLng: parsedMetadata.takenAtLng,
-      takenAtLat: parsedMetadata.takenAtLat,
-      metadata,
-    },
-  })
-
-  // Create Tags
-
+async function createImageTags(image: Image, imageMetadata: ImageMetadata) {
   // Year
+
   const tagGroup_dateInput = {
     name: 'Year',
   }
@@ -54,8 +23,8 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
     create: tagGroup_dateInput,
   })
   const tag_dateInput = {
-    name: parsedMetadata.dateTaken
-      ? parsedMetadata.dateTaken.getFullYear().toString()
+    name: imageMetadata.parsed.date?.capture
+      ? imageMetadata.parsed.date.capture.getFullYear().toString()
       : 'Unknown',
     tagGroupId: tagGroup_date.id,
   }
@@ -84,7 +53,12 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
     create: tagGroup_cameraInput,
   })
   const tagInput = {
-    name: parsedMetadata.camera || 'Unknown',
+    name: imageMetadata.parsed.camera
+      ? joinString([
+          imageMetadata.parsed.camera.make,
+          imageMetadata.parsed.camera.model,
+        ])
+      : 'Unknown',
     tagGroupId: tagGroup_camera.id,
   }
   await db.tagsOnImage.create({
@@ -104,6 +78,35 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
       },
     },
   })
+}
+async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
+  console.log('- scanning image', imagePath)
+
+  const head = await S3Lib.head(imagePath)
+  if (head.ContentLength === 0) {
+    throw new Error('Zero byte file')
+  }
+  const imageBuffer = await S3Lib.get(imagePath, `bytes=0-${BYTES_RANGE}`)
+
+  const fileType = await ft.fromBuffer(imageBuffer)
+  if (!fileType || ACCEPTED_EXTENSIONS.indexOf(fileType.ext) === -1) {
+    throw new Error(
+      `Unsupported file type for ${imagePath} ${fileType?.ext || ''}`
+    )
+  }
+
+  const imageMetadata = await getMetadata(imageBuffer)
+
+  const image = await db.image.create({
+    data: {
+      path: imagePath,
+      dateTaken: imageMetadata.parsed.date?.capture || new Date(),
+      metadata: imageMetadata.raw,
+    },
+  })
+
+  await createImageTags(image, imageMetadata)
+
   console.log('added image', image.path)
   return true
 }
@@ -148,7 +151,7 @@ export async function scanFiles() {
   await db.tagGroup.deleteMany({})
 
   console.log('Getting file list from S3...')
-  const files = await S3Lib.list()
+  const files = await S3Lib.list('test_meta')
   console.log('importing files from s3', files.length)
 
   const scanResult = await iterateOverFiles(files, scanImage)
