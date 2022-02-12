@@ -6,10 +6,10 @@ import ft from 'file-type'
 import { getMetadata, ImageMetadata, joinString } from 'src/lib/images/metadata'
 import { S3Lib } from 'src/lib/files/s3'
 import { parallel } from 'src/lib/async'
+import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 
 const PARALLEL_SCANS = 5
 const BYTES_RANGE = 50000
-const ACCEPTED_EXTENSIONS = ['jpg', 'png', 'webp', 'tif']
 
 async function createImageTags(image: Image, imageMetadata: ImageMetadata) {
   // Year

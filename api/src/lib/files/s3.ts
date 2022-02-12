@@ -72,13 +72,15 @@ export const S3Lib = {
   async put(
     Key: string,
     Body: string | Buffer | ReadStream,
-    Metadata?: Record<string, string>
+    Metadata?: Record<string, string>,
+    ContentType?: string
   ): Promise<void> {
     const params = {
       Bucket: process.env['S3_BUCKET_NAME'],
       Key,
       Body,
       Metadata,
+      ContentType,
     }
     await promisify(s3.putObject)(params)
   },
