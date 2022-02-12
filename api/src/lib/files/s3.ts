@@ -1,20 +1,11 @@
 import { S3 } from 'aws-sdk'
 import { ReadStream } from 'fs'
 
-const s3 = new S3({
-  region: 'local',
-  endpoint: process.env['S3_URL'],
-  accessKeyId: process.env['S3_ACCESS_KEY'],
-  secretAccessKey: process.env['S3_SECRET_KEY'],
-  s3ForcePathStyle: true, // needed with minio?
-  signatureVersion: 'v4',
-})
-
 const promisify =
-  (fn) =>
-  (params): ReturnType<typeof fn> => {
+  (lib, fnName) =>
+  (params): ReturnType<typeof lib['fnName']> => {
     return new Promise((resolve, reject) => {
-      fn.bind(s3)(params, (err, res) => {
+      lib[fnName].bind(lib)(params, (err, res) => {
         if (err) {
           reject(err)
         } else {
@@ -24,51 +15,70 @@ const promisify =
     })
   }
 
-export const S3Lib = {
+export class S3Lib {
+  bucket: string
+  client: S3
+
+  constructor(bucket: string) {
+    this.client = new S3({
+      region: 'local',
+      endpoint: process.env['S3_URL'],
+      accessKeyId: process.env['S3_ACCESS_KEY'],
+      secretAccessKey: process.env['S3_SECRET_KEY'],
+      s3ForcePathStyle: true, // needed with minio?
+      signatureVersion: 'v4',
+    })
+    this.bucket = bucket
+  }
+
   async list(Prefix?: string): Promise<string[]> {
     const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
+      Bucket: this.bucket,
       Prefix,
     }
-    const res = await promisify(s3.listObjects)(params)
+    const res = await promisify(this.client, 'listObjects')(params)
     return res.Contents.map((c) => c.Key)
-  },
+  }
 
   async get(Key: string, Range?: string): Promise<Buffer> {
     const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
+      Bucket: this.bucket,
       Key,
       Range,
     }
-    const res = await promisify(s3.getObject)(params)
+    const res = await promisify(this.client, 'getObject')(params)
     return res.Body
-  },
+  }
+
   async head(Key: string): Promise<S3.Types.HeadObjectOutput> {
     const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
+      Bucket: this.bucket,
       Key,
     }
-    const res = await promisify(s3.headObject)(params)
+    const res = await promisify(this.client, 'headObject')(params)
     return res
-  },
+  }
+
   async delete(Key: string): Promise<void> {
     const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
+      Bucket: this.bucket,
       Key,
     }
-    await promisify(s3.deleteObject)(params)
-  },
+    await promisify(this.client, 'deleteObject')(params)
+  }
+
   async deletePrefix(Prefix: string): Promise<void> {
-    const list = await S3Lib.list(Prefix)
+    const list = await this.list(Prefix)
     if (list.length === 0) return
     const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
+      Bucket: this.bucket,
       Delete: {
         Objects: list.map((i) => ({ Key: i })),
       },
     }
-    await promisify(s3.deleteObjects)(params)
-  },
+    await promisify(this.client, 'deleteObjects')(params)
+  }
+
   async put(
     Key: string,
     Body: string | Buffer | ReadStream,
@@ -76,22 +86,14 @@ export const S3Lib = {
     ContentType?: string
   ): Promise<void> {
     const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
+      Bucket: this.bucket,
       Key,
       Body,
       Metadata,
       ContentType,
     }
-    await promisify(s3.putObject)(params)
-  },
-  async update(Key: string, Object: string): Promise<void> {
-    const params = {
-      Bucket: process.env['S3_BUCKET_NAME'],
-      Key,
-      Object,
-    }
-    await promisify(s3.putObject)(params)
-  },
+    await promisify(this.client, 'putObject')(params)
+  }
 }
 
 /*
@@ -108,7 +110,7 @@ export const minioClient = new Client({
 export function listS3(prefix) {
   return new Promise((resolve, reject) => {
     const stream = minioClient.extensions.listObjectsV2WithMetadata(
-      process.env['S3_BUCKET_NAME'],
+      this.bucket,
       prefix,
       true
     )
@@ -116,11 +118,11 @@ export function listS3(prefix) {
     stream.on('error', reject)
   })
 }
-import { S3Client, ListObjectsCommand } from '@aws-sdk/client-s3' // ES Modules import
+import { S3Client, ListObjectsCommand } from '@aws-sdk/client-this.client' // ES Modules import
 import type {
   S3ClientConfig,
   ListObjectsCommandInput,
-} from '@aws-sdk/client-s3'
+} from '@aws-sdk/client-this.client'
 
 const config: S3ClientConfig = {
   region: 'local',
@@ -134,7 +136,7 @@ const client = new S3Client(config)
 
 export async function listS3(prefix) {
   const input: ListObjectsCommandInput = {
-    Bucket: process.env['S3_BUCKET_NAME'],
+    Bucket: this.bucket,
     Prefix: prefix,
   }
   const command = new ListObjectsCommand(input)

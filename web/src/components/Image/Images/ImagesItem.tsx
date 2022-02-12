@@ -1,5 +1,5 @@
 import { Link, routes } from '@redwoodjs/router'
-import { getImageUrl } from 'src/lib/static'
+import { getMiniatureUrl } from 'src/lib/static'
 import { Box, Center, Icon, Image } from '@chakra-ui/react'
 
 import { FindImages } from 'types/graphql'
@@ -21,7 +21,7 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
   } = useSelectContext()
 
   const imageComponent = (
-    <Image src={getImageUrl(image)} alt={image.path} h={250} />
+    <Image src={getMiniatureUrl(image)} alt={image.path} h={250} />
   )
   const imageSelected = useMemo(
     () => isImageSelected(image),

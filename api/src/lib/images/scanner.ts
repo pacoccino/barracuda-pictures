@@ -7,9 +7,12 @@ import { getMetadata, ImageMetadata, joinString } from 'src/lib/images/metadata'
 import { S3Lib } from 'src/lib/files/s3'
 import { parallel } from 'src/lib/async'
 import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
+import { getMiniature } from 'src/lib/images/miniature'
 
 const PARALLEL_SCANS = 5
-const BYTES_RANGE = 50000
+
+const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
+const s3miniatures = new S3Lib(process.env['S3_BUCKET_MINIATURES'])
 
 async function createImageTags(
   image: Image,
@@ -137,14 +140,19 @@ function getFileInceptionDate(head: Record<string, any>) {
   return inceptionDate
 }
 
+async function createMiniature(imageBuffer: Buffer, path: string) {
+  const miniature = await getMiniature(imageBuffer)
+  await s3miniatures.put(path, miniature.buffer, null, miniature.mime)
+}
+
 async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   console.log('- scanning image', imagePath)
 
-  const head = await S3Lib.head(imagePath)
+  const head = await s3photos.head(imagePath)
   if (head.ContentLength === 0) {
     throw new Error('Zero byte file')
   }
-  const imageBuffer = await S3Lib.get(imagePath, `bytes=0-${BYTES_RANGE}`)
+  const imageBuffer = await s3photos.get(imagePath)
 
   const fileType = await ft.fromBuffer(imageBuffer)
   if (!fileType || ACCEPTED_EXTENSIONS.indexOf(fileType.ext) === -1) {
@@ -165,6 +173,7 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   })
 
   await createImageTags(image, imageMetadata, inceptionDate)
+  await createMiniature(imageBuffer, imagePath)
 
   console.log('added image', image.path)
   return imagePath
@@ -178,14 +187,14 @@ export async function scanFiles() {
   await db.tagGroup.deleteMany({})
 
   console.log('Getting file list from S3...')
-  const files = await S3Lib.list('test_upload')
+  const files = await s3photos.list('test_upload')
   console.log('importing files from s3', files.length)
 
   const scanResult = await parallel(files, PARALLEL_SCANS, scanImage)
 
-  console.log('Finished script')
+  if (scanResult.errors.length) console.log('errors:', scanResult.errors)
   console.log(
     `${scanResult.successes.length} success, ${scanResult.errors.length} errors`
   )
-  if (scanResult.errors.length) console.log('errors:', scanResult.errors)
+  console.log('Finished script')
 }

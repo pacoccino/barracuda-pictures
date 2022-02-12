@@ -9,6 +9,8 @@ const PARALLEL_UPLOAD = 5
 
 const dir = process.env['FILESYSTEM_FOLDER']
 
+const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
+
 async function uploadFile(path: string) {
   let fd
   try {
@@ -30,7 +32,7 @@ async function uploadFile(path: string) {
       modified_at: stat.mtime.toISOString(),
     }
 
-    await S3Lib.put(`test_upload/${path}`, buffer, metadata, fileType.mime)
+    await s3photos.put(`test_upload/${path}`, buffer, metadata, fileType.mime)
 
     return path
   } finally {
@@ -42,7 +44,7 @@ export async function upload() {
   console.log('Uploader script started')
 
   console.log('Emptying bucket...')
-  await S3Lib.deletePrefix('test_upload')
+  await s3photos.deletePrefix('test_upload')
 
   console.log('Getting file list from file system...')
   const files = await listDirRecursive(dir)
