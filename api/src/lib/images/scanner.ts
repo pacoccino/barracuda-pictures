@@ -11,7 +11,11 @@ import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 const PARALLEL_SCANS = 5
 const BYTES_RANGE = 50000
 
-async function createImageTags(image: Image, imageMetadata: ImageMetadata) {
+async function createImageTags(
+  image: Image,
+  imageMetadata: ImageMetadata,
+  inceptionDate: Date
+) {
   // Year
 
   const tagGroup_dateInput = {
@@ -23,9 +27,9 @@ async function createImageTags(image: Image, imageMetadata: ImageMetadata) {
     create: tagGroup_dateInput,
   })
   const tag_dateInput = {
-    name: imageMetadata.parsed.date?.capture
-      ? imageMetadata.parsed.date.capture.getFullYear().toString()
-      : 'Unknown',
+    name: (imageMetadata.parsed.date?.capture || inceptionDate)
+      .getFullYear()
+      .toString(),
     tagGroupId: tagGroup_date.id,
   }
   const tag_date = await db.tag.upsert({
@@ -160,7 +164,7 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
     },
   })
 
-  await createImageTags(image, imageMetadata)
+  await createImageTags(image, imageMetadata, inceptionDate)
 
   console.log('added image', image.path)
   return imagePath
