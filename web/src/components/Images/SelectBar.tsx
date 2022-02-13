@@ -6,7 +6,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { SelectMode, useSelectContext } from 'src/contexts/select'
-import { MdCheckCircleOutline, MdPlayArrow, MdSelectAll } from 'react-icons/md'
+import { MdPlayArrow, MdSelectAll } from 'react-icons/md'
+import { GrSelect } from 'react-icons/gr'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
 import ApplyTagsModal from 'src/components/Tag/ApplyTags/ApplyTagsModal'
@@ -66,18 +67,22 @@ export const SelectBar = () => {
       ref={ref}
     >
       <ButtonGroup size="xs" isAttached variant="outline">
-        <TooltipIconButton
-          label="View mode"
-          icon={<MdPlayArrow />}
+        <Button
+          leftIcon={<MdPlayArrow />}
           variant={selectMode === SelectMode.VIEW ? 'solid' : 'outline'}
           onClick={() => setSelectMode(SelectMode.VIEW)}
-        />
-        <TooltipIconButton
-          icon={<MdCheckCircleOutline />}
-          label="Select mode"
+          colorScheme="green"
+        >
+          View Mode
+        </Button>
+        <Button
+          leftIcon={<GrSelect />}
           variant={selectMode === SelectMode.MULTI_SELECT ? 'solid' : 'outline'}
           onClick={() => setSelectMode(SelectMode.MULTI_SELECT)}
-        />
+          colorScheme="yellow"
+        >
+          Select Mode
+        </Button>
       </ButtonGroup>
       {selectMode !== SelectMode.VIEW && (
         <Flex align="center">

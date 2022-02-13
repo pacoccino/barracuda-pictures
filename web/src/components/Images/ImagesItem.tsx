@@ -37,9 +37,15 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
   }
 
   const selectComponent = imageSelected ? (
-    <Icon as={MdCheckCircle} boxSize={6} color="blue.300" />
+    <Icon
+      as={MdCheckCircle}
+      boxSize={6}
+      color="#157ff7"
+      bg="rgba(255,255,255,0.9)"
+      borderRadius="full"
+    />
   ) : (
-    <Icon as={MdRadioButtonUnchecked} boxSize={6} color="blue.300" />
+    <Icon as={MdRadioButtonUnchecked} boxSize={6} color="#157ff7" />
   )
 
   if (selectMode === SelectMode.VIEW) {
@@ -77,8 +83,8 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
           left={0}
           bottom={0}
           right={0}
-          borderColor={imageSelected ? 'blue.500' : 'transparent'}
-          borderWidth={4}
+          borderColor={imageSelected ? '#157ff7' : 'transparent'}
+          borderWidth={5}
           cursor="pointer"
           onClick={toggleSelection}
         >

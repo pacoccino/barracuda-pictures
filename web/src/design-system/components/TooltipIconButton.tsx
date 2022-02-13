@@ -1,4 +1,4 @@
-import { forwardRef, Tooltip, IconButton } from '@chakra-ui/react'
+import { forwardRef, Tooltip, Button, IconButton } from '@chakra-ui/react'
 
 export const TooltipIconButton = forwardRef(
   ({ children, label, tooltipProps, ...props }, ref) => (
