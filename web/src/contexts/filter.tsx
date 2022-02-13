@@ -12,13 +12,15 @@ interface FilterContextType {
   removeTagToFilter: (t: Tag, tg: TagGroup) => void
   clearFilter: () => void
   filter: {
-    tagLists: FilterByTagList[]
-    dateRange: DateRange | null
+    tagLists?: FilterByTagList[]
+    dateRange?: DateRange
+    path?: string
   }
   selectedTagIds: string[]
   tagListConditions: { [key: string]: TagListCondition }
   setTagListCondition: (s: string, c: TagListCondition) => void
-  setDateRange: (d: DateRange | null) => void
+  setDateRange: (d?: DateRange) => void
+  setPath: (s?: string) => void
 }
 
 export const FilterContext = React.createContext<FilterContextType>({
@@ -28,23 +30,27 @@ export const FilterContext = React.createContext<FilterContextType>({
   filter: {
     tagLists: [],
     dateRange: null,
+    path: null,
   },
   selectedTagIds: [],
   setTagListCondition: () => 0,
   tagListConditions: new Map(),
   setDateRange: () => 0,
+  setPath: () => 0,
 })
 
 export const FilterContextProvider = ({ children }) => {
+  const [path, setPath] = useState<string | null>(null)
   const [tagLists, setTagLists] = useState<FilterByTagList[]>([])
   const [dateRange, setDateRange] = useState<DateRange | null>(null)
 
   const filter = useMemo(() => {
     return {
+      path,
       tagLists,
       dateRange,
     }
-  }, [tagLists, dateRange])
+  }, [tagLists, dateRange, path])
 
   const selectedTagIds = useMemo(
     () => tagLists.reduce((acc, tagList) => acc.concat(tagList.tagIds), []),
@@ -147,6 +153,7 @@ export const FilterContextProvider = ({ children }) => {
         filter,
         clearFilter,
         setDateRange,
+        setPath,
       }}
     >
       {children}

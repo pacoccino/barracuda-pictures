@@ -22,8 +22,6 @@ scroll, when add tag it moves back to top
 - sync db to image metadata (and test reverse)
 
 - select range
-- select all
-- full text search / path
 - rename tag group => category
 - change path
 

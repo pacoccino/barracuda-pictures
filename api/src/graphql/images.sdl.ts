@@ -30,6 +30,7 @@ export const schema = gql`
   input ImageFilters {
     tagLists: [FilterByTagList!]
     dateRange: DateRange
+    path: String
   }
 
   input FilterByTagList {

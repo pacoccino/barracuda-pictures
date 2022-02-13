@@ -212,6 +212,17 @@ describe('images', () => {
       expect(result[0]).toEqual(scenario.image.p1)
       expect(result[1]).toEqual(scenario.image.p2)
     })
+    scenario('path', async (scenario: StandardScenario) => {
+      const result = await images({
+        filter: {
+          path: 'ath1',
+        },
+      })
+
+      expect(result.length).toEqual(2)
+      expect(result).toContainEqual(scenario.image.p2)
+      expect(result).toContainEqual(scenario.image.p3)
+    })
   })
   scenario('images = moreImages', async () => {
     expect(images).toBe(moreImages)

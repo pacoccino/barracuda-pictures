@@ -78,6 +78,12 @@ export const images = ({
         query.where.dateTaken.lte = filter.dateRange.to
       }
     }
+
+    if (filter.path && filter.path.length > 0) {
+      query.where.path = {
+        contains: filter.path,
+      }
+    }
   }
 
   return db.image.findMany(query)

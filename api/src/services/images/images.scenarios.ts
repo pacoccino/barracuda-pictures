@@ -69,7 +69,7 @@ export const standard = defineScenario({
     }),
     p2: (scenario) => ({
       data: {
-        path: 'p2.jpg',
+        path: 'ath1/p2.jpg',
         dateTaken: '2022-01-01T00:02:00Z',
         tagsOnImages: {
           create: [
@@ -85,7 +85,7 @@ export const standard = defineScenario({
     }),
     p3: (scenario) => ({
       data: {
-        path: 'p3.jpg',
+        path: 'ath1/ath2/p3.jpg',
         dateTaken: '2022-01-01T00:03:00Z',
         tagsOnImages: {
           create: [
@@ -101,7 +101,7 @@ export const standard = defineScenario({
     }),
     p4: (scenario) => ({
       data: {
-        path: 'p4.jpg',
+        path: 'ath3/p4.jpg',
         dateTaken: '2022-01-01T00:04:00Z',
         tagsOnImages: {
           create: [

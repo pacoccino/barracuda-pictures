@@ -12,8 +12,11 @@ import {
   VStack,
   Wrap,
   WrapItem,
+  Input,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react'
-import { useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
 import { TagStatus } from 'src/design-system/components/Tag'
 import {
@@ -24,6 +27,8 @@ import {
 import { AddIcon } from '@chakra-ui/icons'
 import { useTagContext } from 'src/contexts/tags'
 import { DefaultSpinner } from 'src/design-system'
+import { useForm } from 'react-hook-form'
+import { MdClear, MdSearch } from 'react-icons/md'
 
 const FilterStatusIcon = ({ color }) => (
   <Icon viewBox="25 25 150 150" color={color} boxSize={2} mr={1}>
@@ -33,6 +38,56 @@ const FilterStatusIcon = ({ color }) => (
     />
   </Icon>
 )
+
+const PathPanel = () => {
+  const {
+    filter: { path: filterPath },
+    setPath,
+  } = useFilterContext()
+
+  const { register, handleSubmit, reset, watch } = useForm({
+    defaultValues: {
+      path: filterPath || '',
+    },
+  })
+  const path = watch('path')
+
+  const onSubmit = ({ path }) => {
+    setPath(path)
+  }
+
+  return (
+    <Box>
+      <Heading textStyle="h3" size="sm" mb={2} flex="1">
+        Path
+      </Heading>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputGroup>
+          <Input
+            placeholder="argentique/2021/"
+            type="text"
+            {...register('path')}
+          />
+          <InputRightElement>
+            {path.length > 0 ? (
+              <IconButton
+                aria-label="clear"
+                variant="ghost"
+                icon={<MdClear />}
+                onClick={() => {
+                  reset({ path: '' })
+                  handleSubmit(onSubmit)()
+                }}
+              />
+            ) : (
+              <MdSearch />
+            )}
+          </InputRightElement>
+        </InputGroup>
+      </form>
+    </Box>
+  )
+}
 
 const DatePanel = () => {
   const {
@@ -231,6 +286,7 @@ const FilterPanel = () => {
       ) : (
         <>
           <TagsPanel tagGroups={tagsQuery.data.tagGroups} />
+          <PathPanel />
           <DatePanel />
           <SelectedTagsPanel tagGroups={tagsQuery.data.tagGroups} />
         </>
