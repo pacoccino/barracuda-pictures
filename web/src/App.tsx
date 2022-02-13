@@ -1,3 +1,5 @@
+import { AuthProvider } from '@redwoodjs/auth'
+
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
 import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 import { ChakraProvider } from '@chakra-ui/react'
@@ -20,15 +22,17 @@ const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <ChakraProvider theme={chakraTheme}>
       <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
-        <RedwoodApolloProvider graphQLClientConfig={graphQLClientConfig}>
-          <FilterContextProvider>
-            <TagContextProvider>
-              <SelectContextProvider>
-                <Routes />
-              </SelectContextProvider>
-            </TagContextProvider>
-          </FilterContextProvider>
-        </RedwoodApolloProvider>
+        <AuthProvider type="dbAuth">
+          <RedwoodApolloProvider graphQLClientConfig={graphQLClientConfig}>
+            <FilterContextProvider>
+              <TagContextProvider>
+                <SelectContextProvider>
+                  <Routes />
+                </SelectContextProvider>
+              </TagContextProvider>
+            </FilterContextProvider>
+          </RedwoodApolloProvider>
+        </AuthProvider>
       </RedwoodProvider>
     </ChakraProvider>
   </FatalErrorBoundary>

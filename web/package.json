@@ -17,6 +17,7 @@
     "@chakra-ui/react": "^1.7.4",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@redwoodjs/auth": "0.41.0",
     "@redwoodjs/forms": "0.41.0",
     "@redwoodjs/router": "0.41.0",
     "@redwoodjs/web": "0.41.0",
