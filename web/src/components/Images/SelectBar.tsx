@@ -20,6 +20,7 @@ export const SelectBar = () => {
     setSelectMode,
     setAllSelected,
     clearSelection,
+    allSelected,
   } = useSelectContext()
   const ref = useRef(null)
 
@@ -81,14 +82,16 @@ export const SelectBar = () => {
       {selectMode !== SelectMode.VIEW && (
         <Flex align="center">
           <Text fontSize="sm" mr={2}>
-            {selectedImages.length} images selected
+            {allSelected
+              ? 'All images selected'
+              : `${selectedImages.length} images selected`}
           </Text>
           <ButtonGroup size="xs" isAttached variant="outline">
             <Button
               variant="solid"
               onClick={applyTagDisclosure.onOpen}
               colorScheme="green"
-              disabled={selectedImages.length === 0}
+              disabled={!allSelected && selectedImages.length === 0}
             >
               Apply tag
             </Button>
@@ -96,7 +99,7 @@ export const SelectBar = () => {
               variant="solid"
               onClick={removeTagDisclosure.onOpen}
               colorScheme="red"
-              disabled={selectedImages.length === 0}
+              disabled={!allSelected && selectedImages.length === 0}
             >
               Remove tag
             </Button>
@@ -107,12 +110,13 @@ export const SelectBar = () => {
             onClick={clearSelection}
             size="xs"
             ml={2}
-            disabled={selectedImages.length === 0}
+            disabled={!allSelected && selectedImages.length === 0}
           />
           <TooltipIconButton
             label="Select all"
             icon={<MdSelectAll />}
             onClick={() => setAllSelected(true)}
+            disabled={allSelected}
             size="xs"
             ml={2}
           />

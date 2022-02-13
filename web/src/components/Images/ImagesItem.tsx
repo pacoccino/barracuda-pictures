@@ -18,6 +18,7 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
     addImageToSelection,
     removeImageFromSelection,
     isImageSelected,
+    allSelected,
   } = useSelectContext()
 
   const imageComponent = (
@@ -29,6 +30,7 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
   )
 
   const toggleSelection = () => {
+    if (allSelected) return
     setSelectMode(SelectMode.MULTI_SELECT)
     if (imageSelected) removeImageFromSelection(image)
     else addImageToSelection(image)
