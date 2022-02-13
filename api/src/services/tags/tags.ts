@@ -29,7 +29,7 @@ export const createTag = async ({ input: { name, tagGroupId } }) => {
 export const updateTag = async ({ id, input }) => {
   return db.tag.update({
     where: { id },
-    data: { name: input.name },
+    data: { name: input.name, tagGroupId: input.tagGroupId },
   })
 }
 

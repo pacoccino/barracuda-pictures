@@ -4,16 +4,37 @@ import { CreateTagGroupModal } from 'src/components/Tag/EditTagsModal/CreateTagG
 import { CreateTagModal } from 'src/components/Tag/EditTagsModal/CreateTagModal'
 import { DeleteTagModal } from 'src/components/Tag/EditTagsModal/DeleteTagModal'
 import { DeleteTagGroupModal } from 'src/components/Tag/EditTagsModal/DeleteTagGroupModal'
+import { MoveTagModal } from 'src/components/Tag/EditTagsModal/MoveTagModal'
 import { EditTagModal } from 'src/components/Tag/EditTagsModal/EditTagModal'
 import { EditTagGroupModal } from 'src/components/Tag/EditTagsModal/EditTagGroupModal'
+import { useQuery } from '@redwoodjs/web'
+
+export const QUERY = gql`
+  query FindTags {
+    tagGroups {
+      id
+      name
+      tags {
+        id
+        name
+        tagGroup {
+          id
+          name
+        }
+      }
+    }
+  }
+`
 
 interface TagContextType {
   setTagGroupCreateOpen: (b: boolean) => void
   setTagGroupForDelete: (tg: TagGroup) => void
   setTagGroupForEdit: (tg: TagGroup) => void
   setTagCreateTagGroup: (tg: TagGroup) => void
+  setTagForMove: (t: Tag) => void
   setTagForDelete: (t: Tag) => void
   setTagForEdit: (t: Tag) => void
+  tagsQuery: QueryOperationResult<{ tagGroups: TagGroup[] }>
 }
 
 export const TagContext = React.createContext<TagContextType>({
@@ -21,8 +42,10 @@ export const TagContext = React.createContext<TagContextType>({
   setTagGroupForDelete: () => 0,
   setTagGroupForEdit: () => 0,
   setTagCreateTagGroup: () => 0,
+  setTagForMove: () => 0,
   setTagForDelete: () => 0,
   setTagForEdit: () => 0,
+  tagsQuery: { loading: false, data: null },
 })
 
 export const TagContextProvider = ({ children }) => {
@@ -35,8 +58,14 @@ export const TagContextProvider = ({ children }) => {
   const [tagCreateTagGroup, setTagCreateTagGroup] = useState<TagGroup | null>(
     null
   )
+  const [tagForMove, setTagForMove] = useState<Tag | null>(null)
   const [tagForDelete, setTagForDelete] = useState<Tag | null>(null)
   const [tagForEdit, setTagForEdit] = useState<Tag | null>(null)
+
+  const tagsQuery = useQuery(QUERY, {
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  })
 
   return (
     <TagContext.Provider
@@ -46,7 +75,9 @@ export const TagContextProvider = ({ children }) => {
         setTagGroupForEdit,
         setTagCreateTagGroup,
         setTagForDelete,
+        setTagForMove,
         setTagForEdit,
+        tagsQuery,
       }}
     >
       {children}
@@ -67,6 +98,7 @@ export const TagContextProvider = ({ children }) => {
         tagGroup={tagGroupForDelete}
         onClose={() => setTagGroupForDelete(null)}
       />
+      <MoveTagModal tag={tagForMove} onClose={() => setTagForMove(null)} />
       <EditTagModal tag={tagForEdit} onClose={() => setTagForEdit(null)} />
       <EditTagGroupModal
         tagGroup={tagGroupForEdit}

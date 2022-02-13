@@ -37,7 +37,7 @@ const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
 }
 
 export const TagItemNew = ({ tag, showGroup, showMenu, ...args }) => {
-  const { setTagForDelete, setTagForEdit } = useTagContext()
+  const { setTagForDelete, setTagForEdit, setTagForMove } = useTagContext()
   return (
     <TagNew
       menuItems={
@@ -46,6 +46,11 @@ export const TagItemNew = ({ tag, showGroup, showMenu, ...args }) => {
             icon: <EditIcon />,
             onClick: () => setTagForEdit(tag),
             label: 'Edit tag',
+          },
+          {
+            icon: <EditIcon />,
+            onClick: () => setTagForMove(tag),
+            label: 'Move to other group',
           },
           {
             icon: <DeleteIcon />,

@@ -24,5 +24,6 @@ export const schema = gql`
 
   input UpdateTagInput {
     name: String
+    tagGroupId: String!
   }
 `
