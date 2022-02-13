@@ -17,25 +17,30 @@ import { Tag, TagGroup } from 'types/graphql'
 import { useSelectContext } from 'src/contexts/select'
 import { useCallback, useEffect } from 'react'
 import { useTagContext } from 'src/contexts/tags'
+import {
+  MutationapplyManyTagsOnImageArgs,
+  MutationapplyTagOnFilterArgs,
+} from 'api/types/graphql'
+import { useFilterContext } from 'src/contexts/filter'
 
-const ADD_TAG_ON_SELECTION = gql`
-  mutation AddTagOnSelection($input: [TagsOnImageInput!]!) {
-    createManyTagsOnImage(input: $input) {
+const APPLY_TAG_ON_SELECTION = gql`
+  mutation ApplyTagOnSelection($input: ApplyManyTagsOnImageInput!) {
+    applyManyTagsOnImage(input: $input) {
       count
     }
   }
 `
-const REMOVE_TAG_ON_SELECTION = gql`
-  mutation RemoveTagOnSelection($input: [TagsOnImageInput!]!) {
-    deleteManyTagsOnImage(input: $input) {
+const APPLY_TAG_ON_FILTER = gql`
+  mutation ApplyTagOnFilter($input: ApplyTagOnFilterInput!) {
+    applyTagOnFilter(input: $input) {
       count
     }
   }
 `
 
 export enum ApplyTagMode {
-  ADD,
-  REMOVE,
+  ADD = 'ADD',
+  REMOVE = 'REMOVE',
 }
 
 export type ApplyTagsModalProps = {
@@ -48,18 +53,18 @@ export type ApplyTagsModalProps = {
 const LABELS = {
   successToast: {
     [ApplyTagMode.ADD]: 'Tag added to selected images',
-    [ApplyTagMode.REMOVE]: 'Tag removed selected images',
+    [ApplyTagMode.REMOVE]: 'Tag removed from selected images',
   },
   errorToast: {
     [ApplyTagMode.ADD]: 'Error adding tag to selection',
     [ApplyTagMode.REMOVE]: 'Error removing tag from selection',
   },
   actionLabel: {
-    [ApplyTagMode.ADD]: 'Apply tag',
+    [ApplyTagMode.ADD]: 'Add tag',
     [ApplyTagMode.REMOVE]: 'Remove tag',
   },
   modalTitle: {
-    [ApplyTagMode.ADD]: 'Apply tag to selected images',
+    [ApplyTagMode.ADD]: 'Add tag to selected images',
     [ApplyTagMode.REMOVE]: 'Remove tag from selected images',
   },
   loaderLabel: {
@@ -73,36 +78,54 @@ const ApplyTagsModal = ({
   onClose,
 }: ApplyTagsModalProps) => {
   const toast = useToast()
-  const addTagOnSelection = useMutation(ADD_TAG_ON_SELECTION)
-  const removeTagOnSelection = useMutation(REMOVE_TAG_ON_SELECTION)
-  const [createManyTagsOnImage, { loading: loadingAdd }] = addTagOnSelection
-  const [deleteManyTagsOnImage, { loading: loadingRemove }] =
-    removeTagOnSelection
 
-  const { selectedImages } = useSelectContext()
+  const applyTagOnSelectionMutation = useMutation(APPLY_TAG_ON_SELECTION)
+  const applyTagOnFilterMutation = useMutation(APPLY_TAG_ON_FILTER)
+  const [applyManyTagsOnImage, { loading: loadingApplySelection }] =
+    applyTagOnSelectionMutation
+  const [applyTagOnFilter, { loading: loadingApplyFilter }] =
+    applyTagOnFilterMutation
+
+  const { selectedImages, allSelected } = useSelectContext()
+  const { filter } = useFilterContext()
   const { tagsQuery } = useTagContext()
 
   useEffect(() => {
-    isOpen && selectedImages.length === 0 && onClose()
+    isOpen && !allSelected && selectedImages.length === 0 && onClose()
   }, [isOpen, selectedImages])
 
   const handleApply = useCallback(
     (tag: Tag) => {
-      const input = selectedImages.map((image) => ({
-        imageId: image.id,
-        tagId: tag.id,
-      }))
+      let promise
+      if (allSelected) {
+        const input: MutationapplyTagOnFilterArgs['input'] = {
+          filter,
+          applyMode: applyMode,
+          tagId: tag.id,
+        }
 
-      let action
-      if (applyMode === ApplyTagMode.ADD) action = createManyTagsOnImage
-      if (applyMode === ApplyTagMode.REMOVE) action = deleteManyTagsOnImage
+        promise = applyTagOnFilter({
+          variables: { input },
+          refetchQueries: ['FindImages'],
+        })
+      } else {
+        const tagsOnImages = selectedImages.map((image) => ({
+          imageId: image.id,
+          tagId: tag.id,
+        }))
 
-      if (!action) throw new Error('invalid ApplyTagMode action')
+        const input: MutationapplyManyTagsOnImageArgs['input'] = {
+          tagsOnImages,
+          applyMode: applyMode,
+        }
 
-      action({
-        variables: { input },
-        refetchQueries: ['FindImages'],
-      })
+        promise = applyManyTagsOnImage({
+          variables: { input },
+          refetchQueries: ['FindImages'],
+        })
+      }
+
+      promise
         .then(() => {
           onClose()
           toast({
@@ -127,13 +150,17 @@ const ApplyTagsModal = ({
       onClose,
       applyMode,
       selectedImages,
-      createManyTagsOnImage,
-      deleteManyTagsOnImage,
+      applyTagOnFilter,
+      applyManyTagsOnImage,
+      allSelected,
+      filter,
     ]
   )
 
+  const loadingApply = loadingApplySelection || loadingApplyFilter
+
   let content
-  if (tagsQuery.loading || loadingAdd || loadingRemove) {
+  if (tagsQuery.loading || loadingApply) {
     content = (
       <Center py={2}>
         <Text>{LABELS.loaderLabel[applyMode]}</Text>

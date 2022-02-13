@@ -39,14 +39,6 @@ export const createTagsOnImage = async ({
     update: input,
   })
 }
-export const createManyTagsOnImage = async ({
-  input,
-}: MutationcreateManyTagsOnImageArgs): Promise<UpdateManyResult> => {
-  return db.tagsOnImage.createMany({
-    data: input,
-    skipDuplicates: true,
-  })
-}
 
 export const deleteTagsOnImage = async ({
   input,
@@ -58,28 +50,18 @@ export const deleteTagsOnImage = async ({
   })
 }
 
-export const deleteManyTagsOnImage = async ({
-  input,
-}: MutationdeleteManyTagsOnImageArgs): Promise<UpdateManyResult> => {
-  return db.tagsOnImage.deleteMany({
-    where: {
-      OR: input,
-    },
-  })
-}
-
 export const applyManyTagsOnImage = async ({
   input,
 }: MutationapplyManyTagsOnImage): Promise<UpdateManyResult> => {
   if (input.applyMode === 'ADD') {
     return db.tagsOnImage.createMany({
-      data: input.tagsOnImage,
+      data: input.tagsOnImages,
       skipDuplicates: true,
     })
   } else if (input.applyMode === 'REMOVE') {
     return db.tagsOnImage.deleteMany({
       where: {
-        OR: input.tagsOnImage,
+        OR: input.tagsOnImages,
       },
     })
   }

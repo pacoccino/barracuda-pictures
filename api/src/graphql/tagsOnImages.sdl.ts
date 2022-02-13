@@ -39,7 +39,7 @@ export const schema = gql`
   }
 
   input ApplyManyTagsOnImageInput {
-    tagsOnImage: [TagsOnImageInput!]!
+    tagsOnImages: [TagsOnImageInput!]!
     applyMode: ApplyTagMode!
   }
 

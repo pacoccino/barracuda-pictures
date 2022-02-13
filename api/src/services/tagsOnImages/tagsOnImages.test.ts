@@ -27,21 +27,6 @@ describe('tagsOnImages', () => {
 
     expect(result).toEqual(expect.objectContaining(input))
   })
-  scenario('create many tagsOnImages', async (scenario: StandardScenario) => {
-    const image = scenario.image.p1
-    const tag = scenario.tag.g1t2
-    const tag2 = scenario.tag.g2t2
-
-    const input = [
-      { imageId: image.id, tagId: tag.id },
-      { imageId: image.id, tagId: tag2.id },
-    ]
-    const result = await createManyTagsOnImage({
-      input,
-    })
-
-    expect(result.count).toEqual(2)
-  })
 
   scenario('delete one tagsOnImages', async (scenario: StandardScenario) => {
     const image = scenario.image.p1
@@ -55,22 +40,6 @@ describe('tagsOnImages', () => {
     expect(result).toEqual(expect.objectContaining(input))
   })
 
-  scenario('delete many tagsOnImages', async (scenario: StandardScenario) => {
-    const image = scenario.image.p1
-    const tag = scenario.tag.g1t1
-    const tag2 = scenario.tag.g2t1
-
-    const input = [
-      { imageId: image.id, tagId: tag.id },
-      { imageId: image.id, tagId: tag2.id },
-    ]
-    const result = await deleteManyTagsOnImage({
-      input,
-    })
-
-    expect(result.count).toEqual(2)
-  })
-
   scenario(
     'apply many tagsOnImages ADD',
     async (scenario: StandardScenario) => {
@@ -80,7 +49,7 @@ describe('tagsOnImages', () => {
 
       const input = {
         applyMode: 'ADD',
-        tagsOnImage: [
+        tagsOnImages: [
           { imageId: image.id, tagId: tag.id },
           { imageId: image.id, tagId: tag2.id },
         ],
@@ -102,7 +71,7 @@ describe('tagsOnImages', () => {
 
       const input = {
         applyMode: 'REMOVE',
-        tagsOnImage: [
+        tagsOnImages: [
           { imageId: image.id, tagId: tag.id },
           { imageId: image.id, tagId: tag2.id },
         ],
