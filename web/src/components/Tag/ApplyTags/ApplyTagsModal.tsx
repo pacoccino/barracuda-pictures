@@ -16,6 +16,7 @@ import { useMutation } from '@redwoodjs/web'
 import { Tag, TagGroup } from 'types/graphql'
 import { useSelectContext } from 'src/contexts/select'
 import { useCallback, useEffect } from 'react'
+import { useTagContext } from 'src/contexts/tags'
 
 const ADD_TAG_ON_SELECTION = gql`
   mutation AddTagOnSelection($input: [TagsOnImageInput!]!) {
@@ -70,7 +71,6 @@ const ApplyTagsModal = ({
   applyMode,
   isOpen,
   onClose,
-  tagGroups,
 }: ApplyTagsModalProps) => {
   const toast = useToast()
   const addTagOnSelection = useMutation(ADD_TAG_ON_SELECTION)
@@ -80,6 +80,7 @@ const ApplyTagsModal = ({
     removeTagOnSelection
 
   const { selectedImages } = useSelectContext()
+  const { tagsQuery } = useTagContext()
 
   useEffect(() => {
     isOpen && selectedImages.length === 0 && onClose()
@@ -132,14 +133,14 @@ const ApplyTagsModal = ({
   )
 
   let content
-  if (loadingAdd || loadingRemove) {
+  if (tagsQuery.loading || loadingAdd || loadingRemove) {
     content = (
       <Center py={2}>
         <Text>{LABELS.loaderLabel[applyMode]}</Text>
         <DefaultSpinner />
       </Center>
     )
-  } else if (!tagGroups) {
+  } else if (tagsQuery.data.tagGroups.length === 0) {
     content = (
       <Center py={2}>
         <Text>No tags</Text>
@@ -148,7 +149,7 @@ const ApplyTagsModal = ({
   } else {
     content = (
       <VStack align="start" py={2}>
-        {tagGroups.map((tagGroup) => (
+        {tagsQuery.data.tagGroups.map((tagGroup) => (
           <Box key={tagGroup.id}>
             <Flex mb={2} justify="start">
               <TagGroupItemNew tagGroup={tagGroup} />

@@ -1,14 +1,7 @@
 import { MetaTags } from '@redwoodjs/web'
 import ImagesInfiniteCell from 'src/components/Images/ImagesInfiniteCell'
-import FilterPanelCell from 'src/components/Filter/FilterPanelCell'
-import {
-  Box,
-  Button,
-  Flex,
-  IconButton,
-  useDisclosure,
-  VStack,
-} from '@chakra-ui/react'
+import FilterPanel from 'src/components/Filter/FilterPanel'
+import { Box, Flex, useDisclosure, VStack } from '@chakra-ui/react'
 import { useFilterContext } from 'src/contexts/filter'
 import { useMemo } from 'react'
 import { HorizontalCollapse } from 'src/design-system'
@@ -31,7 +24,7 @@ const PhotosPage = () => {
         boxShadow="lg"
         height="100%"
       >
-        <FilterPanelCell />
+        <FilterPanel />
       </HorizontalCollapse>
 
       <Flex flex="1">

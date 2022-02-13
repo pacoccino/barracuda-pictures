@@ -9,8 +9,8 @@ import { SelectMode, useSelectContext } from 'src/contexts/select'
 import { MdCheckCircleOutline, MdPlayArrow, MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
-import ApplyTagsModalCell from 'src/components/Tag/ApplyTagsModal/ApplyTagsModalCell'
-import { ApplyTagMode } from 'src/components/Tag/ApplyTagsModal/ApplyTagsModal'
+import ApplyTagsModal from 'src/components/Tag/ApplyTags/ApplyTagsModal'
+import { ApplyTagMode } from 'src/components/Tag/ApplyTags/ApplyTagsModal'
 import { useEffect, useRef } from 'react'
 
 export const SelectBar = () => {
@@ -118,12 +118,12 @@ export const SelectBar = () => {
           />
         </Flex>
       )}
-      <ApplyTagsModalCell
+      <ApplyTagsModal
         isOpen={applyTagDisclosure.isOpen}
         onClose={applyTagDisclosure.onClose}
         applyMode={ApplyTagMode.ADD}
       />
-      <ApplyTagsModalCell
+      <ApplyTagsModal
         isOpen={removeTagDisclosure.isOpen}
         onClose={removeTagDisclosure.onClose}
         applyMode={ApplyTagMode.REMOVE}

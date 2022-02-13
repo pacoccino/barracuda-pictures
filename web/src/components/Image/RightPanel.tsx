@@ -1,20 +1,7 @@
-import {
-  Box,
-  Flex,
-  Center,
-  Heading,
-  IconButton,
-  Image as ImageChakra,
-  HorizontalCollapse,
-} from 'src/design-system'
-import { getImageUrl } from 'src/lib/static'
-import { useCallback, useMemo, useState } from 'react'
-import { CellSuccessProps } from '@redwoodjs/web'
-import { FindImageWithTagsById } from 'types/graphql'
-import ImageTagsModalCell from 'src/components/Tag/ImageTagsModal/ImageTagsModalCell'
+import { Box, Flex, Heading, IconButton } from 'src/design-system'
+import ImageTagsModal from 'src/components/Tag/ImageTags/ImageTagsModal'
 import { CloseIcon } from '@chakra-ui/icons'
 import { ImageDetails } from 'src/components/Image/ImageDetails'
-import { Hud } from 'src/components/Image/HUD'
 import { DefaultSpinner } from 'src/design-system'
 
 export enum RightPanelOptions {
@@ -45,7 +32,7 @@ export const RightPanel = ({ image, rightPanel, switchRightPanel }) => {
       {image ? (
         <Box py={2} px={4} mt={2}>
           {rightPanel === RightPanelOptions.EDIT_TAGS && (
-            <ImageTagsModalCell imageId={image.id} />
+            <ImageTagsModal image={image} />
           )}
           {rightPanel === RightPanelOptions.DETAILS && (
             <ImageDetails image={image} switchRightPanel={switchRightPanel} />

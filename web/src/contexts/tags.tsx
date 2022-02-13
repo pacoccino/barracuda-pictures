@@ -1,12 +1,12 @@
 import type { Tag, TagGroup } from 'types/graphql'
 import { useContext, useState } from 'react'
-import { CreateTagGroupModal } from 'src/components/Tag/EditTagsModal/CreateTagGroupModal'
-import { CreateTagModal } from 'src/components/Tag/EditTagsModal/CreateTagModal'
-import { DeleteTagModal } from 'src/components/Tag/EditTagsModal/DeleteTagModal'
-import { DeleteTagGroupModal } from 'src/components/Tag/EditTagsModal/DeleteTagGroupModal'
-import { MoveTagModal } from 'src/components/Tag/EditTagsModal/MoveTagModal'
-import { EditTagModal } from 'src/components/Tag/EditTagsModal/EditTagModal'
-import { EditTagGroupModal } from 'src/components/Tag/EditTagsModal/EditTagGroupModal'
+import { CreateTagGroupModal } from 'src/components/Tag/EditTags/CreateTagGroupModal'
+import { CreateTagModal } from 'src/components/Tag/EditTags/CreateTagModal'
+import { DeleteTagModal } from 'src/components/Tag/EditTags/DeleteTagModal'
+import { DeleteTagGroupModal } from 'src/components/Tag/EditTags/DeleteTagGroupModal'
+import { MoveTagModal } from 'src/components/Tag/EditTags/MoveTagModal'
+import { EditTagModal } from 'src/components/Tag/EditTags/EditTagModal'
+import { EditTagGroupModal } from 'src/components/Tag/EditTags/EditTagGroupModal'
 import { useQuery } from '@redwoodjs/web'
 
 export const QUERY = gql`
@@ -25,6 +25,8 @@ export const QUERY = gql`
     }
   }
 `
+
+export const QUERIES_TO_REFETCH = ['FindTags']
 
 interface TagContextType {
   setTagGroupCreateOpen: (b: boolean) => void

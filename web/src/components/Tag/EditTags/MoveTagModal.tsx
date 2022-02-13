@@ -1,10 +1,17 @@
-import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
+import {
+  Button,
+  Input,
+  useToast,
+  BodyModal,
+  Box,
+  DefaultSpinner,
+} from 'src/design-system'
 
 import { useEffect, useRef } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel, Select } from '@chakra-ui/react'
-import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
+import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 import { useForm } from 'react-hook-form'
 import { useTagContext } from 'src/contexts/tags'
 
@@ -72,34 +79,38 @@ export const MoveTagModal = ({ tag, onClose }) => {
       isOpen={loading || !!tag}
       onClose={onClose}
       initialFocusRef={initialRef}
-      title="Edit Tag"
+      title="Move tag to other group"
     >
       <Box mb={2}>
         <TagItemWithGroup tag={tag} />
       </Box>
-      <form onSubmit={handleSubmit(handleUpdateTag)}>
-        <FormLabel>Tag Group:</FormLabel>
-        <Select {...register('tagGroupId')}>
-          {tagsQuery.data?.tagGroups?.map((tg) => (
-            <option key={tg.id} value={tg.id}>
-              {tg.name}
-            </option>
-          ))}
-        </Select>
-        <Flex justify="end" my={4}>
-          <Button disabled={loading} onClick={onClose} mr={2}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            isLoading={loading}
-            variant="solid"
-            colorScheme="yellow"
-          >
-            Move
-          </Button>
-        </Flex>
-      </form>
+      {!tagsQuery.loading ? (
+        <form onSubmit={handleSubmit(handleUpdateTag)}>
+          <FormLabel>Tag Group:</FormLabel>
+          <Select {...register('tagGroupId')}>
+            {tagsQuery.data?.tagGroups?.map((tg) => (
+              <option key={tg.id} value={tg.id}>
+                {tg.name}
+              </option>
+            ))}
+          </Select>
+          <Flex justify="end" my={4}>
+            <Button disabled={loading} onClick={onClose} mr={2}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              isLoading={loading}
+              variant="solid"
+              colorScheme="yellow"
+            >
+              Move
+            </Button>
+          </Flex>
+        </form>
+      ) : (
+        <DefaultSpinner />
+      )}
     </BodyModal>
   )
 }

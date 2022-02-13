@@ -1,51 +1,51 @@
-import { Box, Button, Input, useToast, BodyModal } from 'src/design-system'
+import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
 import { useEffect, useRef } from 'react'
 import { useMutation } from '@redwoodjs/web'
-import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
+import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
-import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
+import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 import { useForm } from 'react-hook-form'
 
-const UPDATE_TAG_GROUP = gql`
-  mutation UpdateTagGroup($name: String!, $tagGroupId: String!) {
-    updateTagGroup(id: $tagGroupId, input: { name: $name }) {
+const UPDATE_TAG = gql`
+  mutation UpdateTag($name: String!, $tagId: String!) {
+    updateTag(id: $tagId, input: { name: $name }) {
       id
       name
+      tagGroupId
       __typename
     }
   }
 `
-
-export const EditTagGroupModal = ({ tagGroup, onClose }) => {
-  const updateTagGroupMutation = useMutation(UPDATE_TAG_GROUP)
+export const EditTagModal = ({ tag, onClose }) => {
+  const updateTagMutation = useMutation(UPDATE_TAG)
   const initialRef = useRef(null)
   const toast = useToast()
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {
-      tagGroupName: '',
+      tagName: '',
     },
   })
   useEffect(() => {
-    if (tagGroup) {
+    if (tag) {
       reset({
-        tagGroupName: tagGroup.name,
+        tagName: tag.name,
       })
     }
-  }, [tagGroup, reset])
-  const { ref: registerRef, ...registerRest } = register('tagGroupName')
+  }, [reset, tag])
+  const { ref: registerRef, ...registerRest } = register('tagName')
 
-  const [updateTagGroup, { loading }] = updateTagGroupMutation
-  const handleUpdateTagGroup = ({ tagGroupName }) =>
-    updateTagGroup({
-      variables: { tagGroupId: tagGroup.id, name: tagGroupName },
+  const [updateTag, { loading }] = updateTagMutation
+  const handleUpdateTag = ({ tagName }) =>
+    updateTag({
+      variables: { name: tagName, tagId: tag.id },
       refetchQueries: QUERIES_TO_REFETCH,
     })
       .then(() => {
         toast({
-          title: 'Tag group edited',
-          description: tagGroupName,
+          title: 'Tag edited',
+          description: `${tag.tagGroup.name} / ${tagName}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -54,7 +54,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
       })
       .catch((error) => {
         toast({
-          title: 'Error editing tag group',
+          title: 'Error editing tag',
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -64,19 +64,19 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
 
   return (
     <BodyModal
-      isOpen={loading || !!tagGroup}
+      isOpen={loading || !!tag}
       onClose={onClose}
       initialFocusRef={initialRef}
-      title="Edit tag group"
+      title="Edit Tag"
     >
       <Box mb={2}>
-        <TagGroupItem tagGroup={tagGroup} />
+        <TagItemWithGroup tag={tag} />
       </Box>
-      <form onSubmit={handleSubmit(handleUpdateTagGroup)}>
+      <form onSubmit={handleSubmit(handleUpdateTag)}>
         <FormLabel>New name:</FormLabel>
         <Input
           type="text"
-          placeholder="Tag group name"
+          placeholder="Tag name"
           {...registerRest}
           ref={(e) => {
             registerRef(e)

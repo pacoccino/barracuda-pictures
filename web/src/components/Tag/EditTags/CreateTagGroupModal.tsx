@@ -3,7 +3,7 @@ import { Button, Input, useToast, BodyModal } from 'src/design-system'
 import { useEffect, useRef } from 'react'
 import { useMutation } from '@redwoodjs/web'
 import { Flex } from '@chakra-ui/react'
-import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
+import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 import { useForm } from 'react-hook-form'
 
 const CREATE_TAG_GROUP = gql`

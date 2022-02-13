@@ -2,7 +2,7 @@ import { Box, Text, useToast, AlertModal } from 'src/design-system'
 
 import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
 import { useMutation } from '@redwoodjs/web'
-import { QUERIES_TO_REFETCH } from 'src/components/Tag/EditTagsModal/EditTagsModal'
+import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 
 const DELETE_TAG = gql`
   mutation DeleteTag($tagId: String!) {

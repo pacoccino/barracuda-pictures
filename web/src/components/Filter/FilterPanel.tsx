@@ -23,6 +23,7 @@ import {
 } from 'src/components/Tag/TagItem/TagItem'
 import { AddIcon } from '@chakra-ui/icons'
 import { useTagContext } from 'src/contexts/tags'
+import { DefaultSpinner } from 'src/design-system'
 
 const FilterStatusIcon = ({ color }) => (
   <Icon viewBox="25 25 150 150" color={color} boxSize={2} mr={1}>
@@ -220,12 +221,20 @@ const SelectedTagsPanel = ({ tagGroups }) => {
   )
 }
 
-const FilterPanel = ({ tagGroups }) => {
+const FilterPanel = () => {
+  const { tagsQuery } = useTagContext()
+
   return (
     <VStack py={4} px={2} align="stretch" h="100%">
-      <TagsPanel tagGroups={tagGroups} />
-      <DatePanel />
-      <SelectedTagsPanel tagGroups={tagGroups} />
+      {tagsQuery.loading ? (
+        <DefaultSpinner />
+      ) : (
+        <>
+          <TagsPanel tagGroups={tagsQuery.data.tagGroups} />
+          <DatePanel />
+          <SelectedTagsPanel tagGroups={tagsQuery.data.tagGroups} />
+        </>
+      )}
     </VStack>
   )
 }
