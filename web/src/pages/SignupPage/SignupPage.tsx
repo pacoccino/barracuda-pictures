@@ -98,6 +98,26 @@ const SignupPage = () => {
                   />
                   <FieldError name="password" className="rw-field-error" />
 
+                  <Label
+                    name="secret"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Secret
+                  </Label>
+                  <PasswordField
+                    name="secret"
+                    className="rw-input"
+                    errorClassName="rw-input rw-input-error"
+                    validation={{
+                      required: {
+                        value: true,
+                        message: 'Secret is required',
+                      },
+                    }}
+                  />
+                  <FieldError name="secret" className="rw-field-error" />
+
                   <div className="rw-button-group">
                     <Submit className="rw-button rw-button-blue">
                       Sign Up

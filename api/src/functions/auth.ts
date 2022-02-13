@@ -16,7 +16,9 @@ export const handler = async (event, context) => {
     // address in a toast message so the user will know it worked and where
     // to look for the email.
     handler: (user) => {
-      return user.email
+      return {
+        username: user.username,
+      }
     },
 
     // How long the resetToken is valid for, in seconds (default is 24 hours)
@@ -67,7 +69,7 @@ export const handler = async (event, context) => {
     // in. Return `false` otherwise, and in the Reset Password page redirect the
     // user to the login page.
     handler: (user) => {
-      return user.email
+      return user.username
     },
 
     // If `false` then the new password MUST be different than the current one
@@ -102,12 +104,14 @@ export const handler = async (event, context) => {
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
     handler: ({ username, hashedPassword, salt, userAttributes }) => {
+      if (userAttributes.secret !== process.env['SIGNUP_SECRET'])
+        throw new Error('Invalid secret')
+
       return db.user.create({
         data: {
           username: username,
           hashedPassword: hashedPassword,
           salt: salt,
-          // name: userAttributes.name
         },
       })
     },
