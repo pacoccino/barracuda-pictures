@@ -43,7 +43,7 @@ export function createInfiniteCell({
 
     const { data, error, loading, fetchMore } = useQuery(QUERY, options)
 
-    const items = data ? afterQuery(data)[listKey] : []
+    const items = useMemo(() => (data ? afterQuery(data)[listKey] : []), [data])
 
     const loadMore = useCallback(() => {
       if (hasMore)
