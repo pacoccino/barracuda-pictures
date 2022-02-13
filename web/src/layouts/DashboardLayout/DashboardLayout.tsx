@@ -1,6 +1,8 @@
 import { Link, routes } from '@redwoodjs/router'
 import { Box, IconButton, Flex, Heading, HStack } from '@chakra-ui/react'
 import { InfoIcon, SettingsIcon } from '@chakra-ui/icons'
+import { useAuth } from '@redwoodjs/auth'
+import { MdLogout } from 'react-icons/md'
 
 type DashboardLayoutProps = {
   children?: React.ReactNode
@@ -18,6 +20,8 @@ const CustomNavLink = ({ to, name }) => {
 }
  */
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const { currentUser, logOut } = useAuth()
+  console.log(currentUser)
   return (
     <Flex direction="column" height="100vh">
       <HStack
@@ -41,6 +45,13 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </Heading>
         </Link>
         <HStack as="nav" spacing={2}>
+          <Box>{currentUser.username}</Box>
+          <IconButton
+            aria-label="Infos"
+            icon={<MdLogout />}
+            size="xs"
+            onClick={logOut}
+          />
           <Link to={routes.infos()}>
             <IconButton aria-label="Infos" icon={<InfoIcon />} size="xs" />
           </Link>

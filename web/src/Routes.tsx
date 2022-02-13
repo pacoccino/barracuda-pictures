@@ -1,6 +1,10 @@
-import { Set, Router, Route, navigate, routes } from '@redwoodjs/router'
+import { Set, Router, Private, Route, navigate, routes } from '@redwoodjs/router'
 import DashboardLayout from 'src/layouts/DashboardLayout'
 import { useEffect } from 'react'
+
+import { FilterContextProvider } from 'src/contexts/filter'
+import { TagContextProvider } from 'src/contexts/tags'
+import { SelectContextProvider } from 'src/contexts/select'
 
 const Routes = () => {
   useEffect(() => {
@@ -20,12 +24,21 @@ const Routes = () => {
 
   return (
     <Router>
-      <Set wrap={DashboardLayout}>
-        <Route path="/photos" page={PhotosPage} name="photos" />
-        <Route path="/admin" page={AdminPage} name="admin" />
-        <Route path="/infos" page={InfoPage} name="infos" />
-      </Set>
-      <Route path="/photos/{id:String}" page={PhotoPage} name="photo" />
+      <Route path="/login" page={LoginPage} name="login" />
+      <Route path="/signup" page={SignupPage} name="signup" />
+      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+
+      <Private unauthenticated="login">
+        <Set wrap={[FilterContextProvider, TagContextProvider, SelectContextProvider, DashboardLayout]}>
+          <Route path="/photos" page={PhotosPage} name="photos" />
+          <Route path="/admin" page={AdminPage} name="admin" />
+          <Route path="/infos" page={InfoPage} name="infos" />
+        </Set>
+        <Route path="/photos/{id:String}" page={PhotoPage} name="photo" />
+        <Route path="/" page={RedirectPage} name="home" />
+      </Private>
+
       <Route path="/" page={NotFoundPage} name="index" />
       <Route notfound page={NotFoundPage} />
     </Router>

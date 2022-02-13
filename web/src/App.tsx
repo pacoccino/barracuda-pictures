@@ -13,10 +13,6 @@ import './index.css'
 
 import './lib/locale'
 
-import { FilterContextProvider } from 'src/contexts/filter'
-import { TagContextProvider } from 'src/contexts/tags'
-import { SelectContextProvider } from 'src/contexts/select'
-
 import { graphQLClientConfig } from 'src/lib/apollo'
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
@@ -24,13 +20,7 @@ const App = () => (
       <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
         <AuthProvider type="dbAuth">
           <RedwoodApolloProvider graphQLClientConfig={graphQLClientConfig}>
-            <FilterContextProvider>
-              <TagContextProvider>
-                <SelectContextProvider>
-                  <Routes />
-                </SelectContextProvider>
-              </TagContextProvider>
-            </FilterContextProvider>
+            <Routes />
           </RedwoodApolloProvider>
         </AuthProvider>
       </RedwoodProvider>
