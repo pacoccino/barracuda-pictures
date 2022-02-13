@@ -15,18 +15,16 @@ scroll, when add tag it moves back to top
 
 ### TODO
 
-- Miniatures
 - Edit date
-  - read modified ?
-- sync metadata in both ways
-  - read tags from lightroom?
-  - update date
+
 - move tag to other group
 
 - detect people
 
 - upload images
 - delete images
+
+- sync db to image metadata (and test reverse)
 
 - select range
 - select all

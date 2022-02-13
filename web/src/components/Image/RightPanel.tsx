@@ -13,8 +13,8 @@ import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
 import ImageTagsModalCell from 'src/components/Tag/ImageTagsModal/ImageTagsModalCell'
 import { CloseIcon } from '@chakra-ui/icons'
-import { ImageDetails } from 'src/components/Image/Image/ImageDetails'
-import { Hud } from 'src/components/Image/Image/HUD'
+import { ImageDetails } from 'src/components/Image/ImageDetails'
+import { Hud } from 'src/components/Image/HUD'
 import { DefaultSpinner } from 'src/design-system'
 
 export enum RightPanelOptions {

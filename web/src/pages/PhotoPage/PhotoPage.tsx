@@ -1,8 +1,8 @@
 import { MetaTags } from '@redwoodjs/web'
-import ImageCell from 'src/components/Image/Image/ImageCell'
+import ImageCell from 'src/components/Image/ImageCell'
 import { useFilterContext } from 'src/contexts/filter'
 import { useCallback, useState } from 'react'
-import { RightPanelOptions } from 'src/components/Image/Image/RightPanel'
+import { RightPanelOptions } from 'src/components/Image/RightPanel'
 
 type PhotoPageProps = {
   id: string

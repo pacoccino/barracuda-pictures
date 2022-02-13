@@ -9,8 +9,8 @@ import { getImageUrl, getMiniatureUrl } from 'src/lib/static'
 import { useMemo } from 'react'
 import { CellSuccessProps } from '@redwoodjs/web'
 import { FindImageWithTagsById } from 'types/graphql'
-import { RightPanel } from 'src/components/Image/Image/RightPanel'
-import { Hud } from 'src/components/Image/Image/HUD'
+import { RightPanel } from 'src/components/Image/RightPanel'
+import { Hud } from 'src/components/Image/HUD'
 import { DefaultSpinner } from 'src/design-system'
 
 const Image = ({

@@ -16,7 +16,7 @@ import {
   DownloadIcon,
 } from '@chakra-ui/icons'
 import { Link, routes, navigate } from '@redwoodjs/router'
-import { RightPanelOptions } from 'src/components/Image/Image/RightPanel'
+import { RightPanelOptions } from 'src/components/Image/RightPanel'
 
 const HUD_TIMEOUT = 2000
 export const Hud = ({

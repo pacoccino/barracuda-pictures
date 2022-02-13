@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { CopyIcon, CheckIcon } from '@chakra-ui/icons'
-import { RightPanelOptions } from 'src/components/Image/Image/RightPanel'
+import { RightPanelOptions } from 'src/components/Image/RightPanel'
 import moment from 'moment'
 
 import { parseMetadata_exifr } from 'src/lib/metadata_parser'

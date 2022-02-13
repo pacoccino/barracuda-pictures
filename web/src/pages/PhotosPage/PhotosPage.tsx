@@ -1,5 +1,5 @@
 import { MetaTags } from '@redwoodjs/web'
-import ImagesInfiniteCell from 'src/components/Image/Images/ImagesInfiniteCell'
+import ImagesInfiniteCell from 'src/components/Images/ImagesInfiniteCell'
 import FilterPanelCell from 'src/components/Filter/FilterPanelCell'
 import {
   Box,
@@ -13,7 +13,7 @@ import { useFilterContext } from 'src/contexts/filter'
 import { useMemo } from 'react'
 import { HorizontalCollapse } from 'src/design-system'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { SelectBar } from 'src/components/Image/Images/SelectBar'
+import { SelectBar } from 'src/components/Images/SelectBar'
 
 const PhotosPage = () => {
   const { filter } = useFilterContext()
