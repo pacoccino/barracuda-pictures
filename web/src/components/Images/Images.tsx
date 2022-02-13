@@ -50,19 +50,26 @@ const Images = ({ images, loadMore }: ImagesProps) => {
   }, [loadMore])
 
   return (
-    <VStack ref={scrollRef} align="start" h="100%" overflow="scroll">
+    <VStack
+      ref={scrollRef}
+      align="start"
+      h="100%"
+      overflow="scroll"
+      pt={4}
+      pb={4}
+      spacing={4}
+    >
       {imageGroups.map((group) => (
         <Box key={group.title}>
           <Heading
             textStyle="h4"
             size="sm"
-            mt={6}
             borderBottomColor="gray.300"
             borderBottomWidth={1}
           >
             {group.title}
           </Heading>
-          <Wrap m={2} ml={0} spacing={0.5}>
+          <Wrap mt={2} spacing={0.5}>
             {group.images.map((image) => (
               <WrapItem key={image.id}>
                 <ImagesItem image={image} />

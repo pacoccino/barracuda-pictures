@@ -1,14 +1,53 @@
 import { Link, routes } from '@redwoodjs/router'
 import { getMiniatureUrl } from 'src/lib/static'
-import { Box, Center, Icon, Image } from '@chakra-ui/react'
+import { Box, Center, Icon, IconButton, Image } from '@chakra-ui/react'
 
 import { FindImages } from 'types/graphql'
 import { SelectMode, useSelectContext } from 'src/contexts/select'
-import { useMemo } from 'react'
-import { MdCheckCircle, MdRadioButtonUnchecked } from 'react-icons/md'
+import { useCallback, useMemo } from 'react'
+import {
+  MdCheckCircle,
+  MdMoreVert,
+  MdRadioButtonUnchecked,
+  MdSearch,
+} from 'react-icons/md'
+import { Menu, MenuButton, MenuItem, MenuList } from 'src/design-system'
+import { useFilterContext } from 'src/contexts/filter'
 
 type ImagesItemProps = {
   image: FindImages['images'][number]
+}
+
+const ItemMenu = ({ image }) => {
+  const { setPath } = useFilterContext()
+
+  const setPathFilter = useCallback(() => {
+    const imagePath = image.path
+
+    const filterPath = imagePath.split('/').slice(0, -1).join('/')
+    setPath(filterPath)
+  }, [image])
+
+  return (
+    <Menu>
+      <MenuButton
+        as={IconButton}
+        icon={<MdMoreVert />}
+        aria-label="Options"
+        color="black"
+        bg="white"
+        variant="ghost"
+        _hover={{ bg: 'gray.100' }}
+        borderRadius="full"
+        size="xs"
+      />
+      <MenuList>
+        <MenuItem icon={<MdSearch />} onClick={setPathFilter}>
+          Filter same path
+        </MenuItem>
+      </MenuList>
+    </Menu>
+  )
 }
 
 export const ImagesItem = ({ image }: ImagesItemProps) => {
@@ -70,6 +109,18 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
           onClick={toggleSelection}
         >
           {selectComponent}
+        </Center>
+        <Center
+          position="absolute"
+          top={0}
+          left={0}
+          opacity={0}
+          boxSize={14}
+          _hover={{
+            opacity: 1,
+          }}
+        >
+          <ItemMenu image={image} />
         </Center>
       </Box>
     )

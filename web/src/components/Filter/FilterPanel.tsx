@@ -47,13 +47,21 @@ const PathPanel = () => {
 
   const { register, handleSubmit, reset, watch } = useForm({
     defaultValues: {
-      path: filterPath || '',
+      path: '',
     },
   })
   const path = watch('path')
 
+  useEffect(() => {
+    reset({ path: filterPath || '' })
+  }, [reset, filterPath])
+
   const onSubmit = ({ path }) => {
     setPath(path)
+  }
+  const clear = () => {
+    reset({ path: '' })
+    handleSubmit(onSubmit)()
   }
 
   return (
@@ -66,6 +74,7 @@ const PathPanel = () => {
           <Input
             placeholder="argentique/2021/"
             type="text"
+            onKeyDown={(e) => e.code === 'Escape' && clear()}
             {...register('path')}
           />
           <InputRightElement>
@@ -74,10 +83,7 @@ const PathPanel = () => {
                 aria-label="clear"
                 variant="ghost"
                 icon={<MdClear />}
-                onClick={() => {
-                  reset({ path: '' })
-                  handleSubmit(onSubmit)()
-                }}
+                onClick={clear}
               />
             ) : (
               <MdSearch />
@@ -110,6 +116,7 @@ const DatePanel = () => {
         Date Range
       </Heading>
       <DateRangePicker
+        width="100%"
         calendarIcon={null}
         onChange={onChange}
         value={dateRange && [dateRange.from, dateRange.to]}
@@ -280,14 +287,15 @@ const FilterPanel = () => {
   const { tagsQuery } = useTagContext()
 
   return (
-    <VStack py={4} px={2} align="stretch" h="100%">
+    <VStack py={4} px={2} spacing={4} align="stretch" h="100%">
+      <Text align="center">Search</Text>
       {tagsQuery.loading ? (
         <DefaultSpinner />
       ) : (
         <>
-          <TagsPanel tagGroups={tagsQuery.data.tagGroups} />
           <PathPanel />
           <DatePanel />
+          <TagsPanel tagGroups={tagsQuery.data.tagGroups} />
           <SelectedTagsPanel tagGroups={tagsQuery.data.tagGroups} />
         </>
       )}

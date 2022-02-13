@@ -28,17 +28,20 @@ const PhotosPage = () => {
       </HorizontalCollapse>
 
       <Flex flex="1">
-        <VStack flex="1" align="stretch">
+        <VStack flex="1" align="stretch" spacing={0}>
           <Flex flex={1} overflow="hidden">
             <Flex
               align="center"
               onClick={filterPanelDisclosure.onToggle}
+              bg={
+                'linear-gradient(90deg, rgb(0 0 0 / 9%) 0%, rgb(255 255 255 / 0%) 30%);'
+              }
               _hover={{
-                bg: 'linear-gradient(90deg, rgb(0 0 0 / 34%) 0%, rgb(255 255 255 / 0%) 63%);',
+                bg: 'linear-gradient(90deg, rgb(0 0 0 / 25%) 0%, rgb(255 255 255 / 0%) 50%);',
               }}
               cursor="pointer"
               w={6}
-              pl={1}
+              pl={0.5}
             >
               {filterPanelDisclosure.isOpen ? (
                 <ChevronLeftIcon />
