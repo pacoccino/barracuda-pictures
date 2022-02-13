@@ -8,16 +8,11 @@ image page => gallery >>> should go on image
 
 tags in selected filters and on image edit tags
 
-cache add tag in edit image tag
-cache general on update tags
-
 scroll, when add tag it moves back to top
 
 ### TODO
 
 - Edit date
-
-- move tag to other group
 
 - detect people
 

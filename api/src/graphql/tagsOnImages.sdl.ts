@@ -22,10 +22,30 @@ export const schema = gql`
     deleteTagsOnImage(input: TagsOnImageInput!): TagsOnImage! @requireAuth
     deleteManyTagsOnImage(input: [TagsOnImageInput!]!): UpdateManyResult!
       @requireAuth
+    applyManyTagsOnImage(input: ApplyManyTagsOnImageInput!): UpdateManyResult!
+      @requireAuth
+    applyTagOnFilter(input: ApplyTagOnFilterInput!): UpdateManyResult!
+      @requireAuth
   }
 
   input TagsOnImageInput {
     imageId: String!
     tagId: String!
+  }
+
+  enum ApplyTagMode {
+    ADD
+    REMOVE
+  }
+
+  input ApplyManyTagsOnImageInput {
+    tagsOnImage: [TagsOnImageInput!]!
+    applyMode: ApplyTagMode!
+  }
+
+  input ApplyTagOnFilterInput {
+    filter: ImageFilters!
+    tagId: String!
+    applyMode: ApplyTagMode!
   }
 `

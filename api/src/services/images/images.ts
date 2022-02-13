@@ -17,15 +17,21 @@ export const Image = {
 
 export const images = ({
   filter,
-  take = 10,
+  take,
   skip,
   sorting,
   cursor,
 }: QueryimagesArgs) => {
   const query: Prisma.ImageFindManyArgs = {
-    take,
     orderBy: [],
   }
+
+  if (take === undefined) {
+    query.take = 10
+  } else if (take > 0) {
+    query.take = take
+  }
+
   if (skip !== undefined) {
     query.skip = skip
   }

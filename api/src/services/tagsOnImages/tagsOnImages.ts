@@ -5,10 +5,13 @@ import type {
   MutationcreateManyTagsOnImageArgs,
   MutationcreateTagsOnImageArgs,
   MutationdeleteTagsOnImageArgs,
+  MutationdeleteManyTagsOnImageArgs,
   UpdateManyResult,
+  MutationapplyTagOnFilterArgs,
+  MutationapplyManyTagsOnImage,
 } from 'types/graphql'
 import { db } from 'src/lib/db'
-import { MutationdeleteManyTagsOnImageArgs } from 'types/graphql'
+import { images } from 'src/services/images/images'
 
 export const tagsOnImages = () => {
   return db.tagsOnImage.findMany()
@@ -63,4 +66,48 @@ export const deleteManyTagsOnImage = async ({
       OR: input,
     },
   })
+}
+
+export const applyManyTagsOnImage = async ({
+  input,
+}: MutationapplyManyTagsOnImage): Promise<UpdateManyResult> => {
+  if (input.applyMode === 'ADD') {
+    return db.tagsOnImage.createMany({
+      data: input.tagsOnImage,
+      skipDuplicates: true,
+    })
+  } else if (input.applyMode === 'REMOVE') {
+    return db.tagsOnImage.deleteMany({
+      where: {
+        OR: input.tagsOnImage,
+      },
+    })
+  }
+}
+
+export const applyTagOnFilter = async ({
+  input,
+}: MutationapplyTagOnFilterArgs): Promise<UpdateManyResult> => {
+  const imagesToApply = await images({
+    filter: input.filter,
+    take: 0,
+  })
+
+  const manyInput = imagesToApply.map((i) => ({
+    imageId: i.id,
+    tagId: input.tagId,
+  }))
+
+  if (input.applyMode === 'ADD') {
+    return db.tagsOnImage.createMany({
+      data: manyInput,
+      skipDuplicates: true,
+    })
+  } else if (input.applyMode === 'REMOVE') {
+    return db.tagsOnImage.deleteMany({
+      where: {
+        OR: manyInput,
+      },
+    })
+  }
 }
