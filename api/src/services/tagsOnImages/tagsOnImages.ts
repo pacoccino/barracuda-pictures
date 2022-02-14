@@ -2,13 +2,11 @@ import type { Prisma, TagsOnImage as TagsOnImageType } from '@prisma/client'
 import type { ResolverArgs } from '@redwoodjs/graphql-server'
 
 import type {
-  MutationcreateManyTagsOnImageArgs,
   MutationcreateTagsOnImageArgs,
   MutationdeleteTagsOnImageArgs,
-  MutationdeleteManyTagsOnImageArgs,
   UpdateManyResult,
   MutationapplyTagOnFilterArgs,
-  MutationapplyManyTagsOnImage,
+  MutationapplyManyTagsOnImageArgs,
 } from 'types/graphql'
 import { db } from 'src/lib/db'
 import { images } from 'src/services/images/images'
@@ -52,7 +50,7 @@ export const deleteTagsOnImage = async ({
 
 export const applyManyTagsOnImage = async ({
   input,
-}: MutationapplyManyTagsOnImage): Promise<UpdateManyResult> => {
+}: MutationapplyManyTagsOnImageArgs): Promise<UpdateManyResult> => {
   if (input.applyMode === 'ADD') {
     return db.tagsOnImage.createMany({
       data: input.tagsOnImages,

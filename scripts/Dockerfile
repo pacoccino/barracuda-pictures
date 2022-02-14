@@ -11,10 +11,10 @@ RUN yarn install --frozen-lockfile
 RUN yarn add react react-dom --ignore-workspace-root-check
 
 COPY api api
-RUN yarn rw prisma generate
-
 COPY scripts scripts
 COPY graphql.config.js .
 COPY redwood.toml .
+
+RUN yarn rw prisma generate
 
 ENTRYPOINT [ "yarn", "rw", "exec", "--prisma", "false" ]

@@ -6,14 +6,17 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - database:/var/lib/postgresql/data
+      - ./data/prod/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
 
   minio:
-    command: server /data
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
-      - ./minio_data:/data
+      - ./data/prod/minio:/data
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
@@ -53,6 +56,11 @@ services:
       - "8100:8100"
 
   faktory:
+    volumes:
+      - ./data/prod/faktory:/var/lib/faktory
+    environment:
+      - production
+      - FAKTORY_PASSWORD=${FAKTORY_PASSWORD}
     ports:
       - "7419:7419"
       - "7420:7420"
@@ -66,7 +74,3 @@ services:
       S3_BUCKET_PHOTOS: ${S3_BUCKET_PHOTOS}
       S3_BUCKET_MINIATURES: ${S3_BUCKET_MINIATURES}
       FAKTORY_URL: http://faktory:7419
-
-
-volumes:
-  database:

@@ -6,41 +6,26 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - database:/var/lib/postgresql/data
+      - ./data/dev/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
 
   minio:
-    command: server --console-address ":9001" /data
     volumes:
-      - ./minio_data:/data
-    expose:
-      - "9001"
+      - ./data/dev/minio:/data
     ports:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
-      MINIO_SITE_REGION: local
-
-  createbuckets:
-    image: quay.io/minio/mc
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minio minio123;
-      /usr/bin/mc admin user add myminio minio_client minio_secret;
-      /usr/bin/mc mb myminio/photos;
-      /usr/bin/mc mb myminio/miniatures;
-      /usr/bin/mc policy set public myminio/photos;
-      /usr/bin/mc policy set public myminio/miniatures;
-      exit 0;
-      "
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio123}
+      MINIO_SITE_REGION: ${MINIO_SITE_REGION:-local}
 
   faktory:
+    volumes:
+      - ./data/dev/faktory:/var/lib/faktory
     ports:
       - "7419:7419"
       - "7420:7420"
 
-volumes:
-  database:

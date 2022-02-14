@@ -14,8 +14,8 @@ const AdminPage = () => {
   const [scan, { loading }] = useMutation(SCAN_MUTATION, {
     onCompleted: () => {
       toast({
-        title: 'Scan completed',
-        description: "We've scanned the pictures.",
+        title: 'Scan started',
+        description: 'Scanning in background',
         status: 'success',
         duration: 9000,
         isClosable: true,
