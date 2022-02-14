@@ -31,7 +31,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/redwood_prod?connection_limit=1
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_DB}?connection_limit=1
       S3_URL: http://minio:9000
       SESSION_SECRET: ${SESSION_SECRET}
       SIGNUP_SECRET: ${SIGNUP_SECRET}
@@ -67,8 +67,15 @@ services:
       - "7420:7420"
 
   worker:
+    build:
+      context: .
+      dockerfile: ./scripts/Dockerfile
+    command: [ "worker" ]
+    depends_on:
+      - db
+      - faktory
     environment:
-      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/redwood_prod?connection_limit=1
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_DB}?connection_limit=1
       S3_URL: http://minio:9000
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
       S3_SECRET_KEY: ${S3_SECRET_KEY}

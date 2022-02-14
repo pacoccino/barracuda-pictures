@@ -27,4 +27,4 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/redwood_prod?connection_limit=1
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_DB}?connection_limit=1

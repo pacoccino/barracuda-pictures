@@ -12,10 +12,6 @@ services:
     expose:
       - "9000"
       - "9001"
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
-      MINIO_SITE_REGION: local
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -25,11 +21,3 @@ services:
   faktory:
     image: contribsys/faktory:latest
 
-  worker:
-    build:
-      context: .
-      dockerfile: ./scripts/Dockerfile
-    command: [ "worker" ]
-    depends_on:
-      - db
-      - faktory
