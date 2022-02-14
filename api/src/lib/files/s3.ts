@@ -67,7 +67,7 @@ export class S3Lib {
     await promisify(this.client, 'deleteObject')(params)
   }
 
-  async deletePrefix(Prefix: string): Promise<void> {
+  async deletePrefix(Prefix?: string): Promise<void> {
     const list = await this.list(Prefix)
     if (list.length === 0) return
     const params = {

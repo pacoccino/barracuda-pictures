@@ -25,6 +25,8 @@ services:
   faktory:
     volumes:
       - ./data/dev/faktory:/var/lib/faktory
+    environment:
+      - FAKTORY_PASSWORD=${FAKTORY_PASSWORD:-password}
     ports:
       - "7419:7419"
       - "7420:7420"

@@ -25,6 +25,4 @@ FROM nginx as runner
 COPY --from=builder /app/web/dist /usr/share/nginx/html
 COPY ./web/nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN ls -lA /usr/share/nginx/html
-
 EXPOSE 8910

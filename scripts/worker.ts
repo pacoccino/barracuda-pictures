@@ -12,7 +12,7 @@ faktory.register('scan', async (taskArgs) => {
 export default async ({ _args }) => {
   try {
     const worker = await faktory.work({
-      url: process.env.FAKTORY_URL,
+      password: process.env.FAKTORY_PASSWORD,
     })
     logger.info('logger started')
 

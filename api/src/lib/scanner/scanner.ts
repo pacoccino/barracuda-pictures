@@ -187,7 +187,7 @@ export async function scanFiles(args = {}) {
   await db.tagGroup.deleteMany({})
 
   console.log('Getting file list from S3...')
-  const files = await s3photos.list('test_upload')
+  const files = await s3photos.list()
   console.log('importing files from s3', files.length)
 
   const scanResult = await parallel(files, PARALLEL_SCANS, scanImage)

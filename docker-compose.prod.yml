@@ -40,6 +40,7 @@ services:
       S3_BUCKET_PHOTOS: ${S3_BUCKET_PHOTOS}
       S3_BUCKET_MINIATURES: ${S3_BUCKET_MINIATURES}
       FAKTORY_URL: http://faktory:7419
+      FAKTORY_PASSWORD: ${FAKTORY_PASSWORD}
 
   web:
     build:
@@ -59,8 +60,8 @@ services:
     volumes:
       - ./data/prod/faktory:/var/lib/faktory
     environment:
-      - production
       - FAKTORY_PASSWORD=${FAKTORY_PASSWORD}
+    command: "/faktory -b :7419 -w :7420 -e production"
     ports:
       - "7419:7419"
       - "7420:7420"
@@ -74,3 +75,4 @@ services:
       S3_BUCKET_PHOTOS: ${S3_BUCKET_PHOTOS}
       S3_BUCKET_MINIATURES: ${S3_BUCKET_MINIATURES}
       FAKTORY_URL: http://faktory:7419
+      FAKTORY_PASSWORD: ${FAKTORY_PASSWORD}

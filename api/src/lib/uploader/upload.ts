@@ -7,14 +7,12 @@ import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 
 const PARALLEL_UPLOAD = 5
 
-const dir = process.env['FILESYSTEM_FOLDER']
-
 const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
 
-async function uploadFile(path: string) {
+async function uploadFile({ rootDir, path }) {
   let fd
   try {
-    const fullPath = `${dir}/${path}`
+    const fullPath = `${rootDir}/${path}`
     fd = await open(fullPath, 'r')
     //const stream = fd.createReadStream()
 
@@ -32,7 +30,7 @@ async function uploadFile(path: string) {
       modified_at: stat.mtime.toISOString(),
     }
 
-    await s3photos.put(`test_upload/${path}`, buffer, metadata, fileType.mime)
+    await s3photos.put(path, buffer, metadata, fileType.mime)
 
     return path
   } finally {
@@ -40,17 +38,18 @@ async function uploadFile(path: string) {
   }
 }
 
-export async function upload() {
+export async function upload({ rootDir }) {
   console.log('Uploader script started')
 
   console.log('Emptying bucket...')
-  await s3photos.deletePrefix('test_upload')
+  await s3photos.deletePrefix()
 
   console.log('Getting file list from file system...')
-  const files = await listDirRecursive(dir)
+  const files = await listDirRecursive(rootDir)
+  const tasks = files.map((path) => ({ rootDir, path }))
 
   console.log('uploading files to S3', files.length)
-  const uploadResult = await parallel(files, PARALLEL_UPLOAD, uploadFile)
+  const uploadResult = await parallel(tasks, PARALLEL_UPLOAD, uploadFile)
 
   console.log('Finished script')
   console.log(
