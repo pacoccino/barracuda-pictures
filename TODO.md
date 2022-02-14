@@ -14,6 +14,8 @@ scroll, when add tag it moves back to top
 
 - Edit date
 
+- auth S3
+
 - detect people
 
 - upload images
@@ -26,5 +28,4 @@ scroll, when add tag it moves back to top
 - change path
 
 - tag colors
-- auth
 - download zip of filter (hash filter)

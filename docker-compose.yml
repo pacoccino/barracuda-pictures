@@ -8,22 +8,11 @@ services:
     environment:
       POSTGRES_USER: ${DATABASE_USER:-postgres}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
-    ports:
-      - "5432:5432"
-    volumes:
-      - database:/var/lib/postgresql/data
 
   minio:
     image: quay.io/minio/minio
-    command: server --console-address ":9001" /data
-    volumes:
-      - ./minio_data:/data
     expose:
       - "9000"
-      - "9001"
-    ports:
-      - "9000:9000"
-      - "9001:9001"
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
@@ -34,20 +23,23 @@ services:
       timeout: 20s
       retries: 3
 
-  createbuckets:
-    image: quay.io/minio/mc
+  worker:
+    image: contribsys/faktory:latest
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
     depends_on:
+      - db
+
+  web:
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    depends_on:
+      - api
       - minio
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://minio:9000 minio minio123;
-      /usr/bin/mc admin user add myminio minio_client minio_secret;
-      /usr/bin/mc mb myminio/photos;
-      /usr/bin/mc mb myminio/miniatures;
-      /usr/bin/mc policy set public myminio/photos;
-      /usr/bin/mc policy set public myminio/miniatures;
-      exit 0;
-      "
 
 volumes:
   database:

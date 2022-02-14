@@ -1,7 +1,7 @@
 [web]
   title = "Barracuda Photos"
   port = 8910
-  apiUrl = "/.redwood/functions"
+  apiUrl = "/api"
   includeEnvironmentVariables = ['PHOTOS_URL', 'MINIATURES_URL', 'GMAPS_API_KEY']
 [api]
   port = 8911
