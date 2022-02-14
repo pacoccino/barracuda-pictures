@@ -23,23 +23,17 @@ services:
       timeout: 20s
       retries: 3
 
-  worker:
+  faktory:
     image: contribsys/faktory:latest
 
-  api:
+  worker:
     build:
       context: .
-      dockerfile: ./api/Dockerfile
+      dockerfile: ./scripts/Dockerfile
+    command: [ "worker" ]
     depends_on:
       - db
-
-  web:
-    build:
-      context: .
-      dockerfile: ./web/Dockerfile
-    depends_on:
-      - api
-      - minio
+      - faktory
 
 volumes:
   database:

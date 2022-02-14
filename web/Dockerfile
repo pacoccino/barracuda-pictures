@@ -13,6 +13,10 @@ COPY web web
 COPY graphql.config.js .
 COPY redwood.toml .
 
+ARG PHOTOS_URL
+ARG MINIATURES_URL
+ARG GMAPS_API_KEY
+
 RUN yarn rw build web
 RUN rm -rf ./web/src
 

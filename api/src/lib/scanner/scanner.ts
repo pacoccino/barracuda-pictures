@@ -179,7 +179,7 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   return imagePath
 }
 
-export async function scanFiles() {
+export async function scanFiles(args = {}) {
   console.log('Scanner script started')
 
   console.log('emptying db')

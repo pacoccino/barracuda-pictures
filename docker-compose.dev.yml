@@ -37,7 +37,7 @@ services:
       exit 0;
       "
 
-  worker:
+  faktory:
     ports:
       - "7419:7419"
       - "7420:7420"

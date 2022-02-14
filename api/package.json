@@ -9,6 +9,7 @@
     "aws-sdk": "^2.1062.0",
     "decimal.js": "^10.3.1",
     "exifr": "^7.1.3",
+    "faktory-worker": "^4.2.1",
     "file-type": "16.5.3",
     "moment": "^2.29.1",
     "node-static": "^0.7.11",
