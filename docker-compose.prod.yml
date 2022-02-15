@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/prod/postgres:/var/lib/postgresql/data
+      - ${DATA_FOLDER_DB:-./data/prod/postgres}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -16,7 +16,7 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - ./data/prod/minio:/data
+      - ${DATA_FOLDER_MINIO:-./data/prod/minio}:/data
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
@@ -24,7 +24,7 @@ services:
 
   faktory:
     volumes:
-      - ./data/prod/faktory:/var/lib/faktory
+      - ${DATA_FOLDER_FAKTORY:-./data/prod/faktory}:/var/lib/faktory
     environment:
       - FAKTORY_PASSWORD=${FAKTORY_PASSWORD}
     ports:
