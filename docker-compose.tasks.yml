@@ -17,14 +17,3 @@ services:
       /usr/bin/mc policy set public myminio/miniatures;
       exit 0;
       "
-
-  migrate:
-    build:
-      context: .
-      dockerfile: ./scripts/Dockerfile
-    entrypoint: ["yarn", "rw", "prisma", "migrate", "deploy"]
-    command: []
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL

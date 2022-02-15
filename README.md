@@ -2,67 +2,106 @@
 
 Yet another photo library app
 
-
 ## Architecture
 
-Build on top of the amazing [RedwoodJS](https://redwoodjs.com/docs/introduction)
+Built on top of the amazing [RedwoodJS](https://redwoodjs.com/docs/introduction)
 
 - Database: PostgreSQL
 - Image storing: S3 via minio
+- Background jobs: Faktory
 
-## Development
+## Run
 
 ### Dependencies
 
-- Node.js
+- Node.js _(for development)_
 - docker
 - docker-compose
 
-### Setup
+### Development mode
 
+#### Setup
+
+Install dependencies and copy environment file
 ```terminal
 yarn
+cp .env.default .env
 ```
+Adjust .env as you like
 
-### Run dependencies
+#### Run dependencies
 
-Run docker containers
+Start docker containers
 ```terminal
-yarn dockers
+yarn dc:dev up -d
 ```
+Start worker
+```terminal
+yarn worker
+```
+
+-- Only on fresh setup:
+
 
 Prepare database
 ```terminal
-yarn migrate
+yarn rw prisma migrate deploy
+```
+Prepare S3
+```terminal
+yarn dc:dev:tasks up createbuckets
 ```
 
-### Fire it up
+#### Fire it up
 
 ```terminal
 yarn start
 ```
 
-Your browser should open automatically to `http://localhost:8910` to see the web app. Lambda functions run on `http://localhost:8911` and are also proxied to `http://localhost:8910/.redwood/functions/*`.
+Now you can go on `http://localhost:8910` to see the web app.
 
-### Add images
+Lambda functions run on `http://localhost:8911` and are also proxied to `http://localhost:8910/api/*`.
 
-You need to manually add images on S3, you can do it in the Minio console at [http://localhost:9000](http://localhost:9000)
+#### Add images
 
-Then scan files
-
+Upload images to S3
 ```terminal
-yarn scan
+yarn upload -d ./data/images
 ```
 
-### Reset
+Then, go on the admin panel and click "scan" or run `yarn scan`
 
-Stop docker containers, clean their volumes
+#### Reset
+
+Stop docker containers, clean volumes/networks
 ```terminal
-yarn stop-and-clean
+yarn dc:dev:clean
 ```
 
-Reset S3 server
+To clean DB/S3/Faktory, remove folders in ./data/dev/...
+
+
+### Production mode
+
+#### Setup
+
 ```terminal
-rm -rf ./minio_data
+cp .env.default .env.prod
+```
+Adjust .env.prod as you like
+
+#### Start services
+
+Start docker containers
+```terminal
+yarn dc:prod up -d
 ```
 
+Prepare database
+```terminal
+yarn dc:prod up migrate
+```
+
+Setup your Minio users and policies
+
+Upload and scan images
