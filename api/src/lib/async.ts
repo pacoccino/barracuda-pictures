@@ -1,12 +1,19 @@
 import async from 'async'
 
-function reflect(fn) {
-  return async (task) => {
+type ExecFn<T, R> = (task: T) => Promise<R>
+type ExecResult<T, R> = {
+  task: T
+  result?: R
+  error?: Error
+}
+
+function reflect<T, R>(fn: ExecFn<T, R>) {
+  return async (task: T): Promise<ExecResult<T, R>> => {
     try {
-      const success = await fn(task)
+      const result = await fn(task)
       return {
         task,
-        success,
+        result,
       }
     } catch (error) {
       return {
@@ -17,14 +24,18 @@ function reflect(fn) {
   }
 }
 
-export async function parallel(files, limit, fn) {
-  const results = await async.mapLimit(files, limit, reflect(fn))
+export async function parallel<T, R>(
+  tasks: T[],
+  limit: number,
+  fn: ExecFn<T, R>
+) {
+  const results = await async.mapLimit(tasks, limit, reflect(fn))
   const errors = results.reduce(
     (acc, curr) => (curr.error ? acc.concat(curr) : acc),
     []
   )
   const successes = results.reduce(
-    (acc, curr) => (curr.success ? acc.concat(curr) : acc),
+    (acc, curr) => (curr.result ? acc.concat(curr) : acc),
     []
   )
   return {

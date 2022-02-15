@@ -9,12 +9,30 @@ const PARALLEL_UPLOAD = 5
 
 const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
 
+enum TaskResult {
+  EXISTING = 'EXISTING',
+  UPLOADED = 'UPLOADED',
+}
+
+type Task = {
+  rootDir: string
+  path: string
+}
+
 async function uploadFile({ rootDir, path }) {
   let fd
   try {
     const fullPath = `${rootDir}/${path}`
     fd = await open(fullPath, 'r')
     //const stream = fd.createReadStream()
+
+    const head = await s3photos.head(path).catch((error) => {
+      if (error.code === 'NotFound') {
+        return null
+      } else throw error
+    })
+
+    if (head) return TaskResult.EXISTING
 
     const buffer = await fd.readFile()
     const fileType = await ft.fromBuffer(buffer)
@@ -32,7 +50,7 @@ async function uploadFile({ rootDir, path }) {
 
     await s3photos.put(path, buffer, metadata, fileType.mime)
 
-    return path
+    return TaskResult.UPLOADED
   } finally {
     await fd?.close()
   }
@@ -41,19 +59,28 @@ async function uploadFile({ rootDir, path }) {
 export async function upload({ rootDir }) {
   console.log('Uploader script started')
 
-  console.log('Emptying bucket...')
-  await s3photos.deletePrefix()
-
   console.log('Getting file list from file system...')
   const files = await listDirRecursive(rootDir)
   const tasks = files.map((path) => ({ rootDir, path }))
 
   console.log('uploading files to S3', files.length)
-  const uploadResult = await parallel(tasks, PARALLEL_UPLOAD, uploadFile)
+  const uploadResult = await parallel<Task, TaskResult>(
+    tasks,
+    PARALLEL_UPLOAD,
+    uploadFile
+  )
 
   console.log('Finished script')
   console.log(
     `${uploadResult.successes.length} success, ${uploadResult.errors.length} errors`
   )
+  const uploaded = uploadResult.successes.filter(
+    (s) => s.result === TaskResult.UPLOADED
+  ).length
+  const existing = uploadResult.successes.filter(
+    (s) => s.result === TaskResult.EXISTING
+  ).length
+  console.log(`${uploaded} uploaded, ${existing} existing`)
+
   if (uploadResult.errors.length) console.log('errors:', uploadResult.errors)
 }
