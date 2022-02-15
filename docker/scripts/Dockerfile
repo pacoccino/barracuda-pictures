@@ -9,6 +9,7 @@ COPY api/package.json api/package.json
 
 RUN yarn install --frozen-lockfile
 RUN yarn add react react-dom --ignore-workspace-root-check
+RUN yarn cache clean
 
 COPY api api
 COPY scripts scripts

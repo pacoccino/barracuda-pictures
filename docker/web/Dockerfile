@@ -23,6 +23,6 @@ RUN rm -rf ./web/src
 FROM nginx as runner
 
 COPY --from=builder /app/web/dist /usr/share/nginx/html
-COPY ./web/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/web/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 8100
