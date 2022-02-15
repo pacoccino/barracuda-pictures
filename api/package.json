@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@redwoodjs/api": "0.41.0",
-    "@redwoodjs/graphql-server": "0.41.0",
+    "@redwoodjs/api": "^0.45.0",
+    "@redwoodjs/graphql-server": "^0.45.0",
     "async": "^3.2.3",
     "aws-sdk": "^2.1062.0",
     "decimal.js": "^10.3.1",
