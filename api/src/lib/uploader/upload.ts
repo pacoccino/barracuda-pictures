@@ -2,8 +2,11 @@ import { listDirRecursive, open } from 'src/lib/files/fs'
 import { S3Lib } from 'src/lib/files/s3'
 import { parallel } from 'src/lib/async'
 import ft from 'file-type'
+import { logger as parentLogger } from 'src/lib/logger'
 
 import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
+
+const logger = parentLogger.child({ module: 'SCANNER' })
 
 const PARALLEL_UPLOAD = 5
 
@@ -23,6 +26,8 @@ async function uploadFile({ rootDir, path }) {
   let fd
   try {
     const fullPath = `${rootDir}/${path}`
+    logger.debug(`uploading image ${fullPath}`)
+
     fd = await open(fullPath, 'r')
     //const stream = fd.createReadStream()
 
@@ -50,6 +55,8 @@ async function uploadFile({ rootDir, path }) {
 
     await s3photos.put(path, buffer, metadata, fileType.mime)
 
+    logger.debug(`uploaded image ${fullPath}`)
+
     return TaskResult.UPLOADED
   } finally {
     await fd?.close()
@@ -57,30 +64,28 @@ async function uploadFile({ rootDir, path }) {
 }
 
 export async function upload({ rootDir }) {
-  console.log('Uploader script started')
+  logger.info('Uploader script started')
 
-  console.log('Getting file list from file system...')
+  logger.debug('Getting file list from file system...')
   const files = await listDirRecursive(rootDir)
   const tasks = files.map((path) => ({ rootDir, path }))
 
-  console.log('uploading files to S3', files.length)
+  logger.debug('uploading files to S3', files.length)
   const uploadResult = await parallel<Task, TaskResult>(
     tasks,
     PARALLEL_UPLOAD,
     uploadFile
   )
 
-  console.log('Finished script')
-  console.log(
-    `${uploadResult.successes.length} success, ${uploadResult.errors.length} errors`
-  )
+  if (uploadResult.errors.length) logger.error(uploadResult.errors, 'errors:')
+
   const uploaded = uploadResult.successes.filter(
     (s) => s.result === TaskResult.UPLOADED
   ).length
   const existing = uploadResult.successes.filter(
     (s) => s.result === TaskResult.EXISTING
   ).length
-  console.log(`${uploaded} uploaded, ${existing} existing`)
-
-  if (uploadResult.errors.length) console.log('errors:', uploadResult.errors)
+  logger.info(
+    `Upload finished: ${uploaded} uploaded, ${existing} existing, ${uploadResult.errors.length} errors`
+  )
 }

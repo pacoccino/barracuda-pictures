@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-
+import { logger as parentLogger } from 'src/lib/logger'
 import { db } from 'src/lib/db'
 import ft from 'file-type'
 
@@ -10,6 +10,8 @@ import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 import { getMiniature } from 'src/lib/images/miniature'
 import { createImageTags, getFileInceptionDate } from './tagger'
 
+const logger = parentLogger.child({ module: 'SCANNER' })
+
 const PARALLEL_SCANS = 5
 
 const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
@@ -17,13 +19,14 @@ const s3miniatures = new S3Lib(process.env['S3_BUCKET_MINIATURES'])
 
 enum TaskResult {
   EXISTING = 'EXISTING',
+  UNSUPPORTED = 'UNSUPPORTED',
   UPLOADED = 'UPLOADED',
 }
 
 type Task = string
 
 async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
-  console.log('- scanning image', imagePath)
+  logger.debug(`scanning image ${imagePath}`)
 
   const imageExisting = await db.image.findUnique({
     where: {
@@ -40,9 +43,10 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
 
   const fileType = await ft.fromBuffer(imageBuffer)
   if (!fileType || ACCEPTED_EXTENSIONS.indexOf(fileType.ext) === -1) {
-    throw new Error(
-      `Unsupported file type for ${imagePath} ${fileType?.ext || ''}`
-    )
+    return TaskResult.UNSUPPORTED
+    // throw new Error(
+    //   `Unsupported file type for ${imagePath} ${fileType?.ext || ''}`
+    // )
   }
 
   const imageMetadata = await getMetadata(imageBuffer)
@@ -61,17 +65,17 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   const miniature = await getMiniature(imageBuffer)
   await s3miniatures.put(imagePath, miniature.buffer, null, miniature.mime)
 
-  console.log('added image', image.path)
+  logger.debug(`added image ${image.path} ${image.id}`)
 
   return TaskResult.UPLOADED
 }
 
 export async function scanFiles(_args = {}) {
-  console.log('Scanner script started')
+  logger.info('Scanner script started')
 
-  console.log('Getting file list from S3...')
+  logger.debug('Getting file list from S3...')
   const files = await s3photos.list()
-  console.log('importing files from s3', files.length)
+  logger.debug('importing files from s3', files.length)
 
   const scanResult = await parallel<Task, TaskResult>(
     files,
@@ -79,17 +83,18 @@ export async function scanFiles(_args = {}) {
     scanImage
   )
 
-  if (scanResult.errors.length) console.log('errors:', scanResult.errors)
-  console.log(
-    `${scanResult.successes.length} success, ${scanResult.errors.length} errors`
-  )
+  if (scanResult.errors.length) logger.error('errors:', scanResult.errors)
+
   const uploaded = scanResult.successes.filter(
     (s) => s.result === TaskResult.UPLOADED
   ).length
   const existing = scanResult.successes.filter(
     (s) => s.result === TaskResult.EXISTING
   ).length
-  console.log(`${uploaded} uploaded, ${existing} existing`)
-
-  console.log('Finished script')
+  const unsupported = scanResult.successes.filter(
+    (s) => s.result === TaskResult.UNSUPPORTED
+  ).length
+  logger.info(
+    `Scan finished: ${uploaded} uploaded, ${existing} existing, ${unsupported} unsupported, ${scanResult.errors.length} errors`
+  )
 }

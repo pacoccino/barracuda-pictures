@@ -31,8 +31,8 @@
     "dc:prod": "docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml",
     "dc:prod:tasks": "yarn dc:prod -f docker-compose.tasks.yml ",
     "worker": "yarn rw exec worker",
-    "scan": "yarn rw exec scan",
-    "upload": "yarn rw exec upload",
+    "scan": "yarn rw exec scan | yarn rw-log-formatter",
+    "upload": "sh -c 'yarn rw exec upload $0 $1 | yarn rw-log-formatter'",
     "migrate": "yarn rw prisma migrate dev",
     "studio": "yarn rw prisma studio"
   }

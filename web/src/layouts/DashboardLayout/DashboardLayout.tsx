@@ -21,7 +21,6 @@ const CustomNavLink = ({ to, name }) => {
  */
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { currentUser, logOut } = useAuth()
-  console.log(currentUser)
   return (
     <Flex direction="column" height="100vh">
       <HStack
