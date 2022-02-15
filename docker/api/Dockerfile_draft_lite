@@ -1,0 +1,36 @@
+FROM node:14-alpine as builder
+
+WORKDIR /app
+
+COPY .nvmrc .
+COPY package.json .
+COPY yarn.lock .
+COPY api/package.json api/package.json
+
+RUN yarn install --frozen-lockfile
+RUN yarn add react react-dom --ignore-workspace-root-check
+
+COPY api api
+COPY graphql.config.js .
+COPY redwood.toml .
+
+RUN yarn rw build api
+
+FROM node:14-alpine as runner
+
+WORKDIR /app/api
+
+COPY --from=builder /app/api/package.json /app/api/package.json
+COPY --from=builder /app/yarn.lock /app/api/yarn.lock
+RUN yarn install
+RUN yarn add @redwoodjs/api-server @redwoodjs/internal
+
+COPY --from=builder /app/graphql.config.js /app/graphql.config.js
+COPY --from=builder /app/redwood.toml /app/redwood.toml
+COPY --from=builder /app/api/dist /app/api/dist
+COPY --from=builder /app/api/server.config.js /app/api/server.config.js
+COPY --from=builder /app/node_modules/.prisma/client /app/api/node_modules/.prisma/client
+
+EXPOSE 8911
+
+ENTRYPOINT [ "node", "node_modules/.bin/rw-api-server", "--port", "8911" ]

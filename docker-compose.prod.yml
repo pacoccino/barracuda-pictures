@@ -35,7 +35,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./api/Dockerfile
+      dockerfile: docker/api/Dockerfile
     depends_on:
       - db
     environment:
@@ -53,7 +53,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./web/Dockerfile
+      dockerfile: docker/web/Dockerfile
       args:
         PHOTOS_URL: ${PHOTOS_URL}
         MINIATURES_URL: ${MINIATURES_URL}
@@ -67,7 +67,7 @@ services:
   worker:
     build:
       context: .
-      dockerfile: ./scripts/Dockerfile
+      dockerfile: docker/scripts/Dockerfile
     command: [ "worker" ]
     depends_on:
       - minio
@@ -86,7 +86,7 @@ services:
   migrate:
     build:
       context: .
-      dockerfile: ./scripts/Dockerfile
+      dockerfile: docker/scripts/Dockerfile
     entrypoint: ["yarn", "rw", "prisma", "migrate", "deploy"]
     command: []
     depends_on:
