@@ -79,7 +79,7 @@ export async function scanFiles(_args = {}) {
 
   logger.debug('Getting file list from S3...')
   const files = await s3photos.list()
-  logger.debug('importing files from s3', files.length)
+  logger.debug({ filesLength: files.length }, 'importing files from s3')
 
   const scanResult = await parallel<Task, TaskResult>(
     files,
@@ -87,7 +87,8 @@ export async function scanFiles(_args = {}) {
     scanImage
   )
 
-  if (scanResult.errors.length) logger.error('errors:', scanResult.errors)
+  if (scanResult.errors.length)
+    logger.error({ errors: scanResult.errors }, 'errors:')
 
   const uploaded = scanResult.successes.filter(
     (s) => s.result === TaskResult.UPLOADED
@@ -107,5 +108,5 @@ export async function scanFiles(_args = {}) {
     `Scan finished: ${uploaded} added, ${existing} existing, ${unsupported} unsupported, ${scanResult.errors.length} errors`
   )
   if (no_date.length)
-    logger.error(`Image without date: ${no_date.length}`, no_date)
+    logger.error({ no_date }, `Image without date: ${no_date.length}`)
 }

@@ -78,14 +78,15 @@ export async function upload({
   const files = await listDirRecursive(rootDir)
   const tasks: Task[] = files.map((path) => ({ rootDir, path, prefix }))
 
-  logger.debug('uploading files to S3', files.length)
+  logger.debug({ filesLength: files.length }, 'uploading files to S3')
   const uploadResult = await parallel<Task, TaskResult>(
     tasks,
     PARALLEL_UPLOAD,
     uploadFile
   )
 
-  if (uploadResult.errors.length) logger.error(uploadResult.errors, 'errors:')
+  if (uploadResult.errors.length)
+    logger.error({ errors: uploadResult.errors }, 'error:')
 
   const uploaded = uploadResult.successes.filter(
     (s) => s.result === TaskResult.UPLOADED
