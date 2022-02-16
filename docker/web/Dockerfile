@@ -1,4 +1,4 @@
-FROM node:14-alpine as builder
+FROM node:14-alpine as yarner
 
 WORKDIR /app
 
@@ -6,8 +6,15 @@ COPY .nvmrc .
 COPY package.json .
 COPY yarn.lock .
 COPY web/package.json web/package.json
+COPY api/package.json api/package.json
 
 RUN yarn install --frozen-lockfile
+RUN yarn cache clean
+
+FROM node:14-alpine as builder
+
+WORKDIR /app
+COPY --from=yarner /app /app
 
 COPY web web
 COPY graphql.config.js .
