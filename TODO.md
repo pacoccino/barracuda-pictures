@@ -14,6 +14,7 @@ scroll, when add tag it moves back to top
 
 - Note
 - Create tag from metadata
+- duplicate tag group
 
 - Edit date
 

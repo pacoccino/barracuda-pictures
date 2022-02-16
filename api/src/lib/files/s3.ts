@@ -36,8 +36,21 @@ export class S3Lib {
       Bucket: this.bucket,
       Prefix,
     }
-    const res = await promisify(this.client, 'listObjects')(params)
-    return res.Contents.map((c) => c.Key)
+    const listObjects = promisify(this.client, 'listObjects')
+    let keys = []
+    let isTruncated = true
+
+    while (isTruncated) {
+      const Marker = keys.length > 0 ? keys[keys.length - 1] : undefined
+      const res = await listObjects({
+        ...params,
+        Marker,
+      })
+      isTruncated = res.IsTruncated
+      keys = keys.concat(res.Contents.map((c) => c.Key))
+    }
+
+    return keys
   }
 
   async get(Key: string, Range?: string): Promise<Buffer> {

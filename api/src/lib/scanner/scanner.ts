@@ -95,6 +95,6 @@ export async function scanFiles(_args = {}) {
     (s) => s.result === TaskResult.UNSUPPORTED
   ).length
   logger.info(
-    `Scan finished: ${uploaded} uploaded, ${existing} existing, ${unsupported} unsupported, ${scanResult.errors.length} errors`
+    `Scan finished: ${uploaded} added, ${existing} existing, ${unsupported} unsupported, ${scanResult.errors.length} errors`
   )
 }
