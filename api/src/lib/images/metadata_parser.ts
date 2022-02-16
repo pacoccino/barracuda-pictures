@@ -137,7 +137,7 @@ function hasAll(obj: any, props: string[]) {
   return obj && props.reduce((acc, curr) => acc && !!obj[curr], true)
 }
 function hasSome(obj: any, props: string[]) {
-  return obj && props.reduce((acc, curr) => acc || !!obj[curr], true)
+  return obj && props.reduce((acc, curr) => acc || !!obj[curr], false)
 }
 
 export function getDMS2DD(l, ref) {
