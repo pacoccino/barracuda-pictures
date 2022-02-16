@@ -8,7 +8,7 @@ import { S3Lib } from 'src/lib/files/s3'
 import { parallel } from 'src/lib/async'
 import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 import { getMiniature } from 'src/lib/images/miniature'
-import { createImageTags, getFileInceptionDate } from './tagger'
+import { createImageTags } from './tagger'
 
 const logger = parentLogger.child({ module: 'SCANNER' })
 
@@ -21,6 +21,7 @@ enum TaskResult {
   EXISTING = 'EXISTING',
   UNSUPPORTED = 'UNSUPPORTED',
   UPLOADED = 'UPLOADED',
+  NO_DATE = 'NO_DATE',
 }
 
 type Task = string
@@ -50,17 +51,20 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   }
 
   const imageMetadata = await getMetadata(imageBuffer)
-  const inceptionDate = getFileInceptionDate(head)
+
+  if (!imageMetadata.parsed.date) {
+    return TaskResult.NO_DATE
+  }
 
   const image = await db.image.create({
     data: {
       path: imagePath,
-      dateTaken: imageMetadata.parsed.date?.capture || inceptionDate,
+      dateTaken: imageMetadata.parsed.date.capture,
       metadata: imageMetadata.raw,
     },
   })
 
-  await createImageTags(image, imageMetadata, inceptionDate)
+  await createImageTags(image, imageMetadata)
 
   const miniature = await getMiniature(imageBuffer)
   await s3miniatures.put(imagePath, miniature.buffer, null, miniature.mime)
@@ -94,7 +98,14 @@ export async function scanFiles(_args = {}) {
   const unsupported = scanResult.successes.filter(
     (s) => s.result === TaskResult.UNSUPPORTED
   ).length
+
+  const no_date = scanResult.successes.filter(
+    (s) => s.result === TaskResult.NO_DATE
+  )
+
   logger.info(
     `Scan finished: ${uploaded} added, ${existing} existing, ${unsupported} unsupported, ${scanResult.errors.length} errors`
   )
+  if (no_date.length)
+    logger.error(`Image without date: ${no_date.length}`, no_date)
 }

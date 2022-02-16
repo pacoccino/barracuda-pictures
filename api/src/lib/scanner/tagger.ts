@@ -4,8 +4,7 @@ import { db } from 'src/lib/db'
 
 export async function createImageTags(
   image: Image,
-  imageMetadata: ImageMetadata,
-  inceptionDate: Date
+  imageMetadata: ImageMetadata
 ) {
   // Year
 
@@ -18,9 +17,7 @@ export async function createImageTags(
     create: tagGroup_dateInput,
   })
   const tag_dateInput = {
-    name: (imageMetadata.parsed.date?.capture || inceptionDate)
-      .getFullYear()
-      .toString(),
+    name: imageMetadata.parsed.date.capture.getFullYear().toString(),
     tagGroupId: tagGroup_date.id,
   }
   const tag_date = await db.tag.upsert({
@@ -107,23 +104,4 @@ export async function createImageTags(
       })
     }
   }
-}
-
-export function getFileInceptionDate(head: Record<string, any>) {
-  let inceptionDate = new Date()
-  if (+head.LastModified < +inceptionDate) inceptionDate = head.LastModified
-
-  if (
-    head.Metadata?.created_at &&
-    +new Date(head.Metadata.created_at) < +inceptionDate
-  )
-    inceptionDate = new Date(head.Metadata.created_at)
-
-  if (
-    head.Metadata?.modified_at &&
-    +new Date(head.Metadata.modified_at) < +inceptionDate
-  )
-    inceptionDate = new Date(head.Metadata.modified_at)
-
-  return inceptionDate
 }
