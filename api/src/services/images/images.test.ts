@@ -136,7 +136,7 @@ describe('images', () => {
     expect(result[result.length - 1]).toEqual(scenario.image.p1)
   })
 
-  scenario('takes', async (scenario: StandardScenario) => {
+  scenario('takes 2', async (scenario: StandardScenario) => {
     const result = await images({
       take: 2,
       sorting: {
@@ -148,6 +148,33 @@ describe('images', () => {
     expect(result[0]).toEqual(scenario.image.p1)
     expect(result[1]).toEqual(scenario.image.p2)
   })
+
+  scenario('take+cursor 1', async (scenario: StandardScenario) => {
+    const result = await images({
+      take: 1,
+      cursor: scenario.image.p2.id,
+      sorting: {
+        dateTaken: 'asc',
+      },
+    })
+
+    expect(result.length).toEqual(1)
+    expect(result[0]).toEqual(scenario.image.p2)
+  })
+  scenario('take+cursor -1 skip 1', async (scenario: StandardScenario) => {
+    const result = await images({
+      take: -1,
+      skip: 1,
+      cursor: scenario.image.p2.id,
+      sorting: {
+        dateTaken: 'asc',
+      },
+    })
+
+    expect(result.length).toEqual(1)
+    expect(result[0]).toEqual(scenario.image.p1)
+  })
+
   scenario('skips', async (scenario: StandardScenario) => {
     const result = await images({
       take: 2,

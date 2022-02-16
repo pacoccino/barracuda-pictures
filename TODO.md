@@ -12,6 +12,9 @@ scroll, when add tag it moves back to top
 
 ### TODO
 
+- Note
+- Create tag from metadata
+
 - Edit date
 
 - auth S3

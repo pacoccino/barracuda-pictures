@@ -28,7 +28,7 @@ export const images = ({
 
   if (take === undefined) {
     query.take = 10
-  } else if (take > 0) {
+  } else if (take !== 0) {
     query.take = take
   }
 
