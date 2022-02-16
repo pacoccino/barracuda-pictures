@@ -72,6 +72,10 @@ export function parseMetadata_exifr(
     parsed.edition = {
       software: rawMD.ifd0.Software,
     }
+  } else if (rawMD.xmp?.CreatorTool) {
+    parsed.edition = {
+      software: rawMD.xmp.CreatorTool,
+    }
   }
 
   // Settings
