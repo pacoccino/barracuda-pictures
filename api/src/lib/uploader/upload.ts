@@ -20,18 +20,20 @@ enum TaskResult {
 type Task = {
   rootDir: string
   path: string
+  prefix: string
 }
 
-async function uploadFile({ rootDir, path }) {
+async function uploadFile({ rootDir, path, prefix }: Task) {
   let fd
   try {
     const fullPath = `${rootDir}/${path}`
+    const S3Path = `${prefix ? `${prefix}/` : ''}${path}`
     logger.debug(`uploading image ${fullPath}`)
 
     fd = await open(fullPath, 'r')
     //const stream = fd.createReadStream()
 
-    const head = await s3photos.head(path).catch((error) => {
+    const head = await s3photos.head(S3Path).catch((error) => {
       if (error.code === 'NotFound') {
         return null
       } else throw error
@@ -53,7 +55,7 @@ async function uploadFile({ rootDir, path }) {
       modified_at: stat.mtime.toISOString(),
     }
 
-    await s3photos.put(path, buffer, metadata, fileType.mime)
+    await s3photos.put(S3Path, buffer, metadata, fileType.mime)
 
     logger.debug(`uploaded image ${fullPath}`)
 
@@ -63,12 +65,18 @@ async function uploadFile({ rootDir, path }) {
   }
 }
 
-export async function upload({ rootDir }) {
+export async function upload({
+  rootDir,
+  prefix,
+}: {
+  rootDir: string
+  prefix?: string
+}) {
   logger.info('Uploader script started')
 
   logger.debug('Getting file list from file system...')
   const files = await listDirRecursive(rootDir)
-  const tasks = files.map((path) => ({ rootDir, path }))
+  const tasks: Task[] = files.map((path) => ({ rootDir, path, prefix }))
 
   logger.debug('uploading files to S3', files.length)
   const uploadResult = await parallel<Task, TaskResult>(

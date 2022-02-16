@@ -105,3 +105,31 @@ yarn dc:prod up migrate
 Setup your Minio users and policies
 
 Upload and scan images
+
+## CLI
+
+### Upload
+Upload images from a local directory to S3
+
+`yarn upload -d ROOT_DIR -p PREFIX`
+- ROOT_DIR: directory of files to upload
+- PREFIX _(optional)_: Add a prefix in S3
+
+### Scan
+Scan images on S3 and add them into the app (DB, tags, miniatures)
+
+`yarn scan`
+- ROOT_DIR: directory of files to upload
+- PREFIX _(optional)_: Add a prefix in S3
+
+### Format
+Used to format log output
+
+`yarn upload -d ./data/images | yarn format`
+`yarn scan | yarn format`
+
+### Studio
+Open Prisma studio to inspect the database
+
+`yarn studio`
+
