@@ -6,7 +6,7 @@ import { logger as parentLogger } from 'src/lib/logger'
 
 import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 
-const logger = parentLogger.child({ module: 'SCANNER' })
+const logger = parentLogger.child({ module: 'UPLOADER' })
 
 const PARALLEL_UPLOAD = 5
 
@@ -79,12 +79,14 @@ export async function upload({
   const tasks: Task[] = files.map((path) => ({ rootDir, path, prefix }))
 
   logger.debug({ filesLength: files.length }, 'uploading files to S3')
-  const uploadResult = await parallel<Task, TaskResult>(
+  const parallelActions = await parallel<Task, TaskResult>(
     tasks,
     PARALLEL_UPLOAD,
-    uploadFile
+    uploadFile,
+    true
   )
 
+  const uploadResult = await parallelActions.finished()
   if (uploadResult.errors.length)
     logger.error({ errors: uploadResult.errors }, 'error:')
 

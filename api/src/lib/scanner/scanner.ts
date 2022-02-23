@@ -81,11 +81,14 @@ export async function scanFiles(_args = {}) {
   const files = await s3photos.list()
   logger.debug({ filesLength: files.length }, 'importing files from s3')
 
-  const scanResult = await parallel<Task, TaskResult>(
-    files,
+  const parallelActions = parallel<Task, TaskResult>(
+    files.slice(0, 8),
     PARALLEL_SCANS,
-    scanImage
+    scanImage,
+    true
   )
+
+  const scanResult = await parallelActions.finished()
 
   if (scanResult.errors.length)
     logger.error({ errors: scanResult.errors }, 'errors:')
