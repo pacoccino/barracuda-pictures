@@ -27,7 +27,7 @@ export const getImportWorker = ({ logger, prefix, rootDir }) =>
     let fd
     try {
       const fullPath = fpath.resolve(rootDir, path)
-      logger.debug(`Uploading image ${fullPath} ...`)
+      logger.debug(`Importing image ${fullPath} ...`)
 
       if (isPathExcluded(fullPath)) return TaskResult.EXCLUDED
 
@@ -70,7 +70,7 @@ export const getImportWorker = ({ logger, prefix, rootDir }) =>
 
       await createImageTags(image, imageMetadata)
 
-      logger.debug(`uploaded image ${fullPath}`)
+      logger.debug(`Imported image ${fullPath}`)
 
       return TaskResult.UPLOADED
     } finally {

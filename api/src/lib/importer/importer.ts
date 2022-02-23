@@ -2,6 +2,7 @@ import { parallel } from 'src/lib/async'
 import { logger as parentLogger } from 'src/lib/logger'
 import { getImportWorker, Task, TaskResult } from 'src/lib/importer/importFile'
 import { listTasks } from 'src/lib/importer/listTasks'
+import { reportExecution } from 'src/lib/importer/reporter'
 
 const logger = parentLogger.child({ module: 'UPLOADER' })
 
@@ -14,11 +15,11 @@ export async function importer({
   rootDir: string
   prefix?: string
 }) {
-  logger.info('Uploader script started')
+  logger.info('Importer script started')
 
   logger.debug('Getting file list from file system...')
   const tasks = await listTasks(rootDir)
-  logger.debug({ filesLength: tasks.length }, 'uploading files...')
+  logger.debug({ filesLength: tasks.length }, 'Importing files...')
 
   const uploadFileWorker = getImportWorker({
     logger,
@@ -33,18 +34,9 @@ export async function importer({
     true
   )
 
-  const uploadResult = await parallelActions.finished()
-  if (uploadResult.errors.length)
-    logger.error({ errors: uploadResult.errors }, 'errors while uploading')
+  const result = await parallelActions.finished()
 
-  const uploaded = uploadResult.successes.filter(
-    (s) => s.result === TaskResult.UPLOADED
-  ).length
-  const existing = uploadResult.successes.filter(
-    (s) => s.result === TaskResult.EXISTING
-  ).length
+  await reportExecution(result, logger)
 
-  logger.info(
-    `Upload finished: ${uploaded} uploaded, ${existing} existing, ${uploadResult.errors.length} errors`
-  )
+  logger.info(`Import finished.`)
 }

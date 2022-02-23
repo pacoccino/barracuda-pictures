@@ -8,7 +8,7 @@ type ExecResult<T, R> = {
   error?: Error
 }
 
-type ParrallelResult<T, R> = {
+export type ParrallelResult<T, R> = {
   successes: ExecResult<T, R>[]
   errors: ExecResult<T, R>[]
 }
