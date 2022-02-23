@@ -115,6 +115,15 @@ export class S3Lib {
     }
     await promisify(this.client, 'putObject')(params)
   }
+  async editKey(oldKey: string, newKey: string): Promise<void> {
+    const copyParams = {
+      Bucket: this.bucket,
+      Key: newKey,
+      CopySource: `${this.bucket}/${oldKey}`,
+    }
+    await promisify(this.client, 'copyObject')(copyParams)
+    await this.delete(oldKey)
+  }
 }
 
 export const Buckets = {

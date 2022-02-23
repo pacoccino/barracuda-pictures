@@ -1,16 +1,20 @@
-import type { Prisma } from '@prisma/client'
+import type { Prisma, Image as PImage } from '@prisma/client'
 import type { ResolverArgs } from '@redwoodjs/graphql-server'
 import type {
   QueryimagesArgs,
   MutationdeleteManyImagesArgs,
   MutationdeleteManyImagesWithFilterArgs,
-  DeleteManyResult,
+  MutationeditImageBasePathArgs,
+  Mutation,
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 import { Buckets } from 'src/lib/files/s3'
+import { getPath, getFileName } from 'src/lib/images/paths'
 
-export const image = ({ id }: Prisma.ImageWhereUniqueInput) => {
+export const image = ({
+  id,
+}: Prisma.ImageWhereUniqueInput): Promise<PImage> => {
   return db.image.findUnique({
     where: { id },
   })
@@ -27,7 +31,7 @@ export const images = ({
   skip,
   sorting,
   cursor,
-}: QueryimagesArgs) => {
+}: QueryimagesArgs): Promise<PImage[]> => {
   const query: Prisma.ImageFindManyArgs = {
     orderBy: new Array<Prisma.ImageOrderByWithRelationInput>(),
   }
@@ -100,7 +104,7 @@ export const moreImages = images
 
 export const deleteManyImages = async ({
   imageIds,
-}: MutationdeleteManyImagesArgs): Promise<DeleteManyResult> => {
+}: MutationdeleteManyImagesArgs): Promise<Mutation['deleteManyImages']> => {
   let count = 0
   for (const i in imageIds) {
     const imageId = imageIds[i]
@@ -126,11 +130,36 @@ export const deleteManyImages = async ({
 
 export const deleteManyImagesWithFilter = async ({
   filter,
-}: MutationdeleteManyImagesWithFilterArgs): Promise<DeleteManyResult> => {
+}: MutationdeleteManyImagesWithFilterArgs): Promise<
+  Mutation['deleteManyImagesWithFilter']
+> => {
   const imagesToApply = await images({
     filter: filter,
     take: 0,
   })
 
   return deleteManyImages({ imageIds: imagesToApply.map((i) => i.id) })
+}
+
+export const editImageBasePath = async ({
+  imageId,
+  basePath,
+}: MutationeditImageBasePathArgs): Promise<Mutation['editImageBasePath']> => {
+  const imageToEdit = await image({ id: imageId })
+  if (!imageToEdit) {
+    throw new Error('NOT_FOUND')
+  }
+  const fileName = getFileName(imageToEdit.path)
+  const path = getPath(basePath, fileName)
+  if (path === imageToEdit.path) return true
+
+  await db.image.update({
+    where: { id: imageId },
+    data: {
+      path,
+    },
+  })
+  await Buckets.photos.editKey(imageToEdit.path, path)
+  await Buckets.miniatures.editKey(imageToEdit.path, path)
+  return true
 }

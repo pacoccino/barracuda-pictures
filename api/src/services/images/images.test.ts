@@ -1,6 +1,7 @@
 import {
   deleteManyImages,
   deleteManyImagesWithFilter,
+  editImageBasePath,
   image,
   images,
   moreImages,
@@ -340,5 +341,55 @@ describe('images', () => {
         )
       }
     )
+  })
+  describe('edit', () => {
+    async function testEditImageBasePath(imageToEdit, basePath, newPath) {
+      await Buckets.photos.put(imageToEdit.path, imageToEdit.path)
+      await Buckets.miniatures.put(imageToEdit.path, imageToEdit.path)
+
+      const result = await editImageBasePath({
+        imageId: imageToEdit.id,
+        basePath,
+      })
+
+      expect(result).toBe(true)
+
+      const resImage = await image({ id: imageToEdit.id })
+      expect(resImage.path).toEqual(newPath)
+
+      expect((await Buckets.photos.get(newPath)).toString()).toEqual(
+        imageToEdit.path
+      )
+      expect((await Buckets.miniatures.get(newPath)).toString()).toEqual(
+        imageToEdit.path
+      )
+      if (imageToEdit.path !== newPath) {
+        expect(await Buckets.photos.get(imageToEdit.path)).toBeNull()
+        expect(await Buckets.miniatures.get(imageToEdit.path)).toBeNull()
+      }
+    }
+    scenario('editImageBasePath 1', async (scenario: StandardScenario) => {
+      await testEditImageBasePath(
+        scenario.image.p3,
+        'patate/labas',
+        'patate/labas/p3.jpg'
+      )
+    })
+    scenario('editImageBasePath 2', async (scenario: StandardScenario) => {
+      await testEditImageBasePath(
+        scenario.image.p5,
+        'caca/caca',
+        'caca/caca/p5.jpg'
+      )
+    })
+    scenario('editImageBasePath 3', async (scenario: StandardScenario) => {
+      await testEditImageBasePath(scenario.image.p5, '', 'p5.jpg')
+    })
+    scenario('editImageBasePath 4', async (scenario: StandardScenario) => {
+      await testEditImageBasePath(scenario.image.p4, 'ath3', 'ath3/p4.jpg')
+    })
+    scenario('editImageBasePath 5', async (scenario: StandardScenario) => {
+      await testEditImageBasePath(scenario.image.p4, '', 'p4.jpg')
+    })
   })
 })
