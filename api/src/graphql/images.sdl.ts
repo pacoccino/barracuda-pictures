@@ -27,6 +27,9 @@ export const schema = gql`
     image(id: String!): Image @requireAuth
   }
 
+  type EditManyResult {
+    count: Int!
+  }
   type DeleteManyResult {
     count: Int!
   }
@@ -35,8 +38,10 @@ export const schema = gql`
     deleteManyImages(imageIds: [String!]!): DeleteManyResult! @requireAuth
     deleteManyImagesWithFilter(filter: ImageFilters!): DeleteManyResult!
       @requireAuth
-    editImageBasePath(imageId: String!, basePath: String!): Boolean!
-      @requireAuth
+    editImagesBasePath(
+      imageIds: [String!]!
+      basePath: String!
+    ): EditManyResult! @requireAuth
   }
 
   input ImageFilters {

@@ -4,7 +4,7 @@ import type {
   QueryimagesArgs,
   MutationdeleteManyImagesArgs,
   MutationdeleteManyImagesWithFilterArgs,
-  MutationeditImageBasePathArgs,
+  MutationeditImagesBasePathArgs,
   Mutation,
 } from 'types/graphql'
 
@@ -113,7 +113,7 @@ export const deleteManyImages = async ({
         id: imageId,
       },
     })
-    if (!image) break
+    if (!image) continue
     await Buckets.photos.delete(image.path)
     await Buckets.miniatures.delete(image.path)
     await db.image.delete({
@@ -141,25 +141,33 @@ export const deleteManyImagesWithFilter = async ({
   return deleteManyImages({ imageIds: imagesToApply.map((i) => i.id) })
 }
 
-export const editImageBasePath = async ({
-  imageId,
+export const editImagesBasePath = async ({
+  imageIds,
   basePath,
-}: MutationeditImageBasePathArgs): Promise<Mutation['editImageBasePath']> => {
-  const imageToEdit = await image({ id: imageId })
-  if (!imageToEdit) {
-    throw new Error('NOT_FOUND')
-  }
-  const fileName = getFileName(imageToEdit.path)
-  const path = getPath(basePath, fileName)
-  if (path === imageToEdit.path) return true
+}: MutationeditImagesBasePathArgs): Promise<Mutation['editImagesBasePath']> => {
+  let count = 0
+  for (const i in imageIds) {
+    const imageId = imageIds[i]
+    const imageToEdit = await image({ id: imageId })
+    if (!imageToEdit) {
+      continue
+    }
+    const fileName = getFileName(imageToEdit.path)
+    const path = getPath(basePath, fileName)
+    if (path === imageToEdit.path) continue
 
-  await db.image.update({
-    where: { id: imageId },
-    data: {
-      path,
-    },
-  })
-  await Buckets.photos.editKey(imageToEdit.path, path)
-  await Buckets.miniatures.editKey(imageToEdit.path, path)
-  return true
+    await db.image.update({
+      where: { id: imageId },
+      data: {
+        path,
+      },
+    })
+    await Buckets.photos.editKey(imageToEdit.path, path)
+    await Buckets.miniatures.editKey(imageToEdit.path, path)
+
+    count++
+  }
+  return {
+    count,
+  }
 }
