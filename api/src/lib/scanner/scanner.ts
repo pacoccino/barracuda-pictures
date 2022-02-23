@@ -4,7 +4,7 @@ import { db } from 'src/lib/db'
 import ft from 'file-type'
 
 import { getMetadata } from 'src/lib/images/metadata'
-import { S3Lib } from 'src/lib/files/s3'
+import { Buckets } from 'src/lib/files/s3'
 import { parallel } from 'src/lib/async'
 import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 import { getMiniature } from 'src/lib/images/miniature'
@@ -13,9 +13,6 @@ import { createImageTags } from './tagger'
 const logger = parentLogger.child({ module: 'SCANNER' })
 
 const PARALLEL_SCANS = 5
-
-const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
-const s3miniatures = new S3Lib(process.env['S3_BUCKET_MINIATURES'])
 
 enum TaskResult {
   EXISTING = 'EXISTING',
@@ -36,11 +33,11 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   })
   if (imageExisting) return TaskResult.EXISTING
 
-  const head = await s3photos.head(imagePath)
+  const head = await Buckets.photos.head(imagePath)
   if (head.ContentLength === 0) {
     throw new Error('Zero byte file')
   }
-  const imageBuffer = await s3photos.get(imagePath)
+  const imageBuffer = await Buckets.photos.get(imagePath)
 
   const fileType = await ft.fromBuffer(imageBuffer)
   if (!fileType || ACCEPTED_EXTENSIONS.indexOf(fileType.ext) === -1) {
@@ -67,7 +64,12 @@ async function scanImage(imagePath: Prisma.ImageCreateInput['path']) {
   await createImageTags(image, imageMetadata)
 
   const miniature = await getMiniature(imageBuffer)
-  await s3miniatures.put(imagePath, miniature.buffer, null, miniature.mime)
+  await Buckets.miniatures.put(
+    imagePath,
+    miniature.buffer,
+    null,
+    miniature.mime
+  )
 
   logger.debug(`added image ${image.path} ${image.id}`)
 
@@ -78,7 +80,7 @@ export async function scanFiles(_args = {}) {
   logger.info('Scanner script started')
 
   logger.debug('Getting file list from S3...')
-  const files = await s3photos.list()
+  const files = await Buckets.photos.list()
   logger.debug({ filesLength: files.length }, 'importing files from s3')
 
   const parallelActions = parallel<Task, TaskResult>(

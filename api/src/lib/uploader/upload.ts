@@ -1,5 +1,5 @@
 import { listDirRecursive, open } from 'src/lib/files/fs'
-import { S3Lib } from 'src/lib/files/s3'
+import { Buckets } from 'src/lib/files/s3'
 import { parallel } from 'src/lib/async'
 import ft from 'file-type'
 import { logger as parentLogger } from 'src/lib/logger'
@@ -9,8 +9,6 @@ import { ACCEPTED_EXTENSIONS } from 'src/lib/images/constants'
 const logger = parentLogger.child({ module: 'UPLOADER' })
 
 const PARALLEL_UPLOAD = 5
-
-const s3photos = new S3Lib(process.env['S3_BUCKET_PHOTOS'])
 
 enum TaskResult {
   EXISTING = 'EXISTING',
@@ -33,7 +31,7 @@ async function uploadFile({ rootDir, path, prefix }: Task) {
     fd = await open(fullPath, 'r')
     //const stream = fd.createReadStream()
 
-    const head = await s3photos.head(S3Path).catch((error) => {
+    const head = await Buckets.photos.head(S3Path).catch((error) => {
       if (error.code === 'NotFound') {
         return null
       } else throw error
@@ -55,7 +53,7 @@ async function uploadFile({ rootDir, path, prefix }: Task) {
       modified_at: stat.mtime.toISOString(),
     }
 
-    await s3photos.put(S3Path, buffer, metadata, fileType.mime)
+    await Buckets.photos.put(S3Path, buffer, metadata, fileType.mime)
 
     logger.debug(`uploaded image ${fullPath}`)
 

@@ -1,8 +1,14 @@
 import type { Prisma } from '@prisma/client'
 import type { ResolverArgs } from '@redwoodjs/graphql-server'
-import type { QueryimagesArgs } from 'types/graphql'
+import type {
+  QueryimagesArgs,
+  MutationdeleteManyImagesArgs,
+  MutationdeleteManyImagesWithFilterArgs,
+  DeleteManyResult,
+} from 'types/graphql'
 
 import { db } from 'src/lib/db'
+import { Buckets } from 'src/lib/files/s3'
 
 export const image = ({ id }: Prisma.ImageWhereUniqueInput) => {
   return db.image.findUnique({
@@ -23,7 +29,7 @@ export const images = ({
   cursor,
 }: QueryimagesArgs) => {
   const query: Prisma.ImageFindManyArgs = {
-    orderBy: [],
+    orderBy: new Array<Prisma.ImageOrderByWithRelationInput>(),
   }
 
   if (take === undefined) {
@@ -89,4 +95,42 @@ export const images = ({
   return db.image.findMany(query)
 }
 
+// Copy of same function to have two distinct queries so different caches on Apollo (for infinite scroll)
 export const moreImages = images
+
+export const deleteManyImages = async ({
+  imageIds,
+}: MutationdeleteManyImagesArgs): Promise<DeleteManyResult> => {
+  let count = 0
+  for (const i in imageIds) {
+    const imageId = imageIds[i]
+    const image = await db.image.findUnique({
+      where: {
+        id: imageId,
+      },
+    })
+    if (!image) break
+    await Buckets.photos.delete(image.path)
+    await Buckets.miniatures.delete(image.path)
+    await db.image.delete({
+      where: {
+        id: imageId,
+      },
+    })
+    count++
+  }
+  return {
+    count,
+  }
+}
+
+export const deleteManyImagesWithFilter = async ({
+  filter,
+}: MutationdeleteManyImagesWithFilterArgs): Promise<DeleteManyResult> => {
+  const imagesToApply = await images({
+    filter: filter,
+    take: 0,
+  })
+
+  return deleteManyImages({ imageIds: imagesToApply.map((i) => i.id) })
+}

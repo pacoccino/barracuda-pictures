@@ -27,6 +27,16 @@ export const schema = gql`
     image(id: String!): Image @requireAuth
   }
 
+  type DeleteManyResult {
+    count: Int!
+  }
+
+  type Mutation {
+    deleteManyImages(imageIds: [String!]!): DeleteManyResult! @requireAuth
+    deleteManyImagesWithFilter(filter: ImageFilters!): DeleteManyResult!
+      @requireAuth
+  }
+
   input ImageFilters {
     tagLists: [FilterByTagList!]
     dateRange: DateRange

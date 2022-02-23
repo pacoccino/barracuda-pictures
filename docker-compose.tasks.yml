@@ -15,5 +15,9 @@ services:
       /usr/bin/mc mb myminio/miniatures;
       /usr/bin/mc policy set public myminio/photos;
       /usr/bin/mc policy set public myminio/miniatures;
+      /usr/bin/mc mb myminio/photos-test;
+      /usr/bin/mc mb myminio/miniatures-test;
+      /usr/bin/mc policy set public myminio/photos-test;
+      /usr/bin/mc policy set public myminio/miniatures-test;
       exit 0;
       "

@@ -66,28 +66,17 @@ export const applyManyTagsOnImage = async ({
 }
 
 export const applyTagOnFilter = async ({
-  input,
+  input: { filter, applyMode, tagId },
 }: MutationapplyTagOnFilterArgs): Promise<UpdateManyResult> => {
   const imagesToApply = await images({
-    filter: input.filter,
+    filter: filter,
     take: 0,
   })
 
-  const manyInput = imagesToApply.map((i) => ({
+  const tagsOnImages = imagesToApply.map((i) => ({
     imageId: i.id,
-    tagId: input.tagId,
+    tagId: tagId,
   }))
 
-  if (input.applyMode === 'ADD') {
-    return db.tagsOnImage.createMany({
-      data: manyInput,
-      skipDuplicates: true,
-    })
-  } else if (input.applyMode === 'REMOVE') {
-    return db.tagsOnImage.deleteMany({
-      where: {
-        OR: manyInput,
-      },
-    })
-  }
+  return applyManyTagsOnImage({ input: { tagsOnImages, applyMode } })
 }

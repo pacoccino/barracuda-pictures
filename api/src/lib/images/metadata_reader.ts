@@ -21,6 +21,8 @@ const exifrOptions = {
 export async function readMetadata_exifr(
   path: Buffer | string
 ): Promise<ImageRawMetadata> {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const rawMD = await exifr.parse(path, exifrOptions)
   return sanitize(rawMD)
 }

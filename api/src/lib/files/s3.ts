@@ -53,14 +53,22 @@ export class S3Lib {
     return keys
   }
 
-  async get(Key: string, Range?: string): Promise<Buffer> {
+  async get(Key: string, Range?: string): Promise<Buffer | null> {
     const params = {
       Bucket: this.bucket,
       Key,
       Range,
     }
-    const res = await promisify(this.client, 'getObject')(params)
-    return res.Body
+    try {
+      const res = await promisify(this.client, 'getObject')(params)
+      return res.Body
+    } catch (error) {
+      if (error.code === 'NoSuchKey') {
+        return null
+      } else {
+        throw error
+      }
+    }
   }
 
   async head(Key: string): Promise<S3.Types.HeadObjectOutput> {
@@ -107,6 +115,19 @@ export class S3Lib {
     }
     await promisify(this.client, 'putObject')(params)
   }
+}
+
+export const Buckets = {
+  photos: new S3Lib(
+    `${process.env['S3_BUCKET_PHOTOS']}${
+      process.env['NODE_ENV'] === 'test' ? '-test' : ''
+    }`
+  ),
+  miniatures: new S3Lib(
+    `${process.env['S3_BUCKET_MINIATURES']}${
+      process.env['NODE_ENV'] === 'test' ? '-test' : ''
+    }`
+  ),
 }
 
 /*
