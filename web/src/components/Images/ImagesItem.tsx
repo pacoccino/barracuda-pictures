@@ -42,7 +42,7 @@ const ItemMenu = ({ image }) => {
 
     const filterPath = imagePath.split('/').slice(0, -1).join('/')
     setPath(filterPath)
-  }, [image])
+  }, [setPath, image])
 
   return (
     <Menu>

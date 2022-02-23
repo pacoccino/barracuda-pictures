@@ -9,6 +9,7 @@ import {
 import type { StandardScenario } from './images.scenarios'
 import { ImageFilters } from 'types/graphql'
 import { Buckets } from 'src/lib/files/s3'
+import { getFileName, getPath } from 'src/lib/images/paths'
 
 describe('images', () => {
   scenario('returns one image', async (scenario: StandardScenario) => {
@@ -344,6 +345,7 @@ describe('images', () => {
       }
     )
   })
+
   describe('edit', () => {
     async function testEditImagesBasePath(
       imagesToEdit,
@@ -359,8 +361,10 @@ describe('images', () => {
       }
 
       const result = await editImagesBasePath({
-        imageIds: imagesToEdit.map((i) => (i ? i.id : 'numbid')),
-        basePath,
+        input: {
+          imageIds: imagesToEdit.map((i) => (i ? i.id : 'numbid')),
+          basePath,
+        },
       })
 
       expect(result.count).toBe(count)
@@ -461,6 +465,84 @@ describe('images', () => {
           ['papapapa/papap/p4.jpg'],
           1
         )
+      }
+    )
+
+    scenario(
+      'editImagesBasePath XOR arguments',
+      async (scenario: StandardScenario) => {
+        const basePath = ''
+        const filter: ImageFilters = {
+          tagLists: [
+            {
+              tagGroupId: scenario.tagGroup.one.id,
+              tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
+            },
+          ],
+        }
+        const imageIds = ['a', 'b']
+
+        await expect(
+          editImagesBasePath({
+            input: {
+              filter,
+              imageIds,
+              basePath,
+            },
+          })
+        ).rejects.toThrowError('need only one of imagesIds or filter')
+        await expect(
+          editImagesBasePath({
+            input: {
+              basePath,
+            },
+          })
+        ).rejects.toThrowError('need either imagesIds or filter')
+      }
+    )
+    scenario(
+      'editImagesBasePath with filter',
+      async (scenario: StandardScenario) => {
+        const basePath = 'ww/bb'
+        const expectedRemoved = [
+          scenario.image.p1,
+          scenario.image.p3,
+          scenario.image.p5,
+        ]
+        for (const i in expectedRemoved) {
+          const imageToEdit = expectedRemoved[i]
+          await Buckets.photos.put(imageToEdit.path, imageToEdit.path)
+          await Buckets.miniatures.put(imageToEdit.path, imageToEdit.path)
+        }
+
+        const filter: ImageFilters = {
+          tagLists: [
+            {
+              tagGroupId: scenario.tagGroup.one.id,
+              tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
+            },
+          ],
+        }
+
+        const result = await editImagesBasePath({
+          input: {
+            filter,
+            basePath,
+          },
+        })
+
+        expect(result.count).toBe(expectedRemoved.length)
+
+        for (const i in expectedRemoved) {
+          const imageToEdit = expectedRemoved[i]
+
+          const resImage = await image({ id: imageToEdit.id })
+          expect(resImage.path).toEqual(
+            getPath(basePath, getFileName(imageToEdit.path))
+          )
+        }
       }
     )
   })
