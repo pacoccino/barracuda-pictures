@@ -1,6 +1,6 @@
 import { Box, Text, useToast, AlertModal } from 'src/design-system'
 
-import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
+import { TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { useMutation } from '@redwoodjs/web'
 import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 
@@ -45,7 +45,7 @@ export const DeleteTagModal = ({ tag, onClose }) => {
       header={'Delete Tag'}
       body={
         <Box>
-          <TagItemWithGroup tag={tag} />
+          <TagItem tag={tag} showGroup />
           <Text mt={4}>
             Are you sure? This will remove the tag from all images which
             contains it

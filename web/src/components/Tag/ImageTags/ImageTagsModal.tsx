@@ -1,7 +1,7 @@
 import { Box, Wrap, WrapItem, Flex, Heading, VStack } from '@chakra-ui/react'
 
 import { useMemo } from 'react'
-import { TagGroupItemNew, TagItemNew } from 'src/components/Tag/TagItem/TagItem'
+import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { useTagContext } from 'src/contexts/tags'
 import { DefaultSpinner } from 'src/design-system'
 import { useMutation } from '@redwoodjs/web'
@@ -67,7 +67,7 @@ const ImageTagsModal = ({ image }) => {
           .map((ti) => ti.tag)
           .map((tag) => (
             <WrapItem key={tag.id}>
-              <TagItemNew
+              <TagItem
                 tag={tag}
                 onClick={() => handleRemoveTagOnImage(image.id, tag.id)}
                 actionLabel="Remove tag from image"
@@ -87,12 +87,12 @@ const ImageTagsModal = ({ image }) => {
           availableTagGroups.map((tagGroup) => (
             <Box key={tagGroup.id}>
               <Flex mb={2} justify="start">
-                <TagGroupItemNew tagGroup={tagGroup} showMenu />
+                <TagGroupItem tagGroup={tagGroup} showMenu />
               </Flex>
               <Wrap mb={1}>
                 {tagGroup.tags.map((tag) => (
                   <WrapItem key={tag.id}>
-                    <TagItemNew
+                    <TagItem
                       tag={tag}
                       onClick={() => handleAddTagOnImage(image.id, tag.id)}
                       actionLabel="Add tag to image"

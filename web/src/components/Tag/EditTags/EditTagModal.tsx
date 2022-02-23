@@ -2,7 +2,7 @@ import { Button, Input, useToast, BodyModal, Box } from 'src/design-system'
 
 import { useEffect, useRef } from 'react'
 import { useMutation } from '@redwoodjs/web'
-import { TagItemWithGroup } from 'src/components/Tag/TagItem/TagItem'
+import { TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
 import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 import { useForm } from 'react-hook-form'
@@ -70,7 +70,7 @@ export const EditTagModal = ({ tag, onClose }) => {
       title="Edit Tag"
     >
       <Box mb={2}>
-        <TagItemWithGroup tag={tag} />
+        <TagItem tag={tag} showGroup />
       </Box>
       <form onSubmit={handleSubmit(handleUpdateTag)}>
         <FormLabel>New name:</FormLabel>

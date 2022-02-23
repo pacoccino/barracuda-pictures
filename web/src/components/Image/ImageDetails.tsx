@@ -1,5 +1,5 @@
 import { Box, Flex, Text, WrapItem, Wrap } from 'src/design-system'
-import { TagItemNew } from 'src/components/Tag/TagItem/TagItem'
+import { TagItem } from 'src/components/Tag/TagItem/TagItem'
 import {
   Modal,
   ModalOverlay,
@@ -83,7 +83,7 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
               .map((ti) => ti.tag)
               .map((tag) => (
                 <WrapItem key={tag.id}>
-                  <TagItemNew tag={tag} showGroup />
+                  <TagItem tag={tag} showGroup />
                 </WrapItem>
               ))}
           </Wrap>

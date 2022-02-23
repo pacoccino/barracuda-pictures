@@ -10,10 +10,10 @@ import {
   Center,
 } from 'src/design-system'
 
-import { TagGroupItemNew, TagItemNew } from 'src/components/Tag/TagItem/TagItem'
+import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { DefaultSpinner } from 'src/design-system'
 import { useMutation } from '@redwoodjs/web'
-import { Tag, TagGroup } from 'types/graphql'
+import { Tag } from 'types/graphql'
 import { useSelectContext } from 'src/contexts/select'
 import { useCallback, useEffect } from 'react'
 import { useTagContext } from 'src/contexts/tags'
@@ -178,12 +178,12 @@ const ApplyTagsModal = ({
         {tagsQuery.data.tagGroups.map((tagGroup) => (
           <Box key={tagGroup.id}>
             <Flex mb={2} justify="start">
-              <TagGroupItemNew tagGroup={tagGroup} />
+              <TagGroupItem tagGroup={tagGroup} />
             </Flex>
             <Wrap mb={1}>
               {tagGroup.tags.map((tag) => (
                 <WrapItem key={tag.id}>
-                  <TagItemNew
+                  <TagItem
                     tag={tag}
                     onClick={() => handleApply(tag)}
                     actionLabel={LABELS.actionLabel[applyMode]}

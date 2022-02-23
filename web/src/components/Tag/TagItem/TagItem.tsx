@@ -1,45 +1,28 @@
-import { Tag, TagNew } from 'src/design-system'
-import { TagStatus, TagProps } from 'src/design-system/components/Tag'
+import { Tag, TagGroup } from 'types/graphql'
+
+import { TagComponent } from 'src/design-system'
+import { TagProps } from 'src/design-system/components/TagComponent'
 import { useTagContext } from 'src/contexts/tags'
 import { AddIcon, EditIcon, DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons'
 
 type TagItemProps = {
-  tag: { id: string; name: string }
-  actionLabel?: string
-  handleAction?: () => void
-  status?: TagStatus
+  tag: Tag
+  showGroup?: boolean
+  showMenu?: boolean
 }
 
-type TagItemWithGroupProps = TagItemProps & {
-  tag: { id: string; name: string; tagGroup: { id: string; name: string } }
-}
+type Optional<T> = { [K in keyof T]?: K }
+type OptionalMerge<T1, T2> = T1 & Optional<T2>
 
-const TagItem = ({ tag, ...tagArgs }: TagProps & TagItemProps) => {
-  return <Tag name={tag.name} color="green" {...tagArgs} />
-}
-
-const TagItemWithGroup = ({
+export const TagItem = ({
   tag,
-  ...tagArgs
-}: TagProps & TagItemWithGroupProps) => {
-  return (
-    <Tag
-      name={tag.name}
-      color="green"
-      category={{ name: tag.tagGroup.name, color: 'red' }}
-      {...tagArgs}
-    />
-  )
-}
-
-const TagGroupItem = ({ tagGroup, ...tagArgs }) => {
-  return <Tag name={tagGroup.name} color="red" {...tagArgs} />
-}
-
-export const TagItemNew = ({ tag, showGroup, showMenu, ...args }) => {
+  showGroup,
+  showMenu,
+  ...args
+}: OptionalMerge<TagItemProps, TagProps>) => {
   const { setTagForDelete, setTagForEdit, setTagForMove } = useTagContext()
   return (
-    <TagNew
+    <TagComponent
       menuItems={
         showMenu && [
           {
@@ -68,8 +51,16 @@ export const TagItemNew = ({ tag, showGroup, showMenu, ...args }) => {
   )
 }
 
-//       menuItems={[{ icon: <DeleteIcon />, onClick: null, label: 'dekete' }]}
-export const TagGroupItemNew = ({ tagGroup, showMenu, ...args }) => {
+type TagGroupItemProps = {
+  tagGroup: TagGroup
+  showGroup?: boolean
+  showMenu?: boolean
+}
+export const TagGroupItem = ({
+  tagGroup,
+  showMenu,
+  ...args
+}: OptionalMerge<TagGroupItemProps, TagProps>) => {
   const {
     setTagGroupCreateOpen,
     setTagCreateTagGroup,
@@ -77,30 +68,32 @@ export const TagGroupItemNew = ({ tagGroup, showMenu, ...args }) => {
     setTagGroupForEdit,
   } = useTagContext()
   return (
-    <TagNew
+    <TagComponent
       menuItems={
-        showMenu && [
-          {
-            icon: <AddIcon />,
-            onClick: () => setTagCreateTagGroup(tagGroup),
-            label: 'Create tag in group',
-          },
-          {
-            icon: <PlusSquareIcon />,
-            onClick: () => setTagGroupCreateOpen(tagGroup),
-            label: 'Create tag group',
-          },
-          {
-            icon: <EditIcon />,
-            onClick: () => setTagGroupForEdit(tagGroup),
-            label: 'Edit tag group',
-          },
-          {
-            icon: <DeleteIcon />,
-            onClick: () => setTagGroupForDelete(tagGroup),
-            label: 'Delete tag group',
-          },
-        ]
+        showMenu
+          ? [
+              {
+                icon: <AddIcon />,
+                onClick: () => setTagCreateTagGroup(tagGroup),
+                label: 'Create tag in group',
+              },
+              {
+                icon: <PlusSquareIcon />,
+                onClick: () => setTagGroupCreateOpen(tagGroup),
+                label: 'Create tag group',
+              },
+              {
+                icon: <EditIcon />,
+                onClick: () => setTagGroupForEdit(tagGroup),
+                label: 'Edit tag group',
+              },
+              {
+                icon: <DeleteIcon />,
+                onClick: () => setTagGroupForDelete(tagGroup),
+                label: 'Delete tag group',
+              },
+            ]
+          : undefined
       }
       color="red"
       name={tagGroup.name}
@@ -108,5 +101,3 @@ export const TagGroupItemNew = ({ tagGroup, showMenu, ...args }) => {
     />
   )
 }
-
-export { TagItem, TagGroupItem, TagItemWithGroup }

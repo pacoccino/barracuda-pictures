@@ -18,12 +18,8 @@ import {
 } from '@chakra-ui/react'
 import { useMemo, useCallback, useEffect } from 'react'
 import { useFilterContext } from 'src/contexts/filter'
-import { TagStatus } from 'src/design-system/components/Tag'
-import {
-  TagGroupItemNew,
-  TagItemWithGroup,
-  TagItemNew,
-} from 'src/components/Tag/TagItem/TagItem'
+import { TagStatus } from 'src/design-system/components/TagComponent'
+import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { AddIcon } from '@chakra-ui/icons'
 import { useTagContext } from 'src/contexts/tags'
 import { DefaultSpinner } from 'src/design-system'
@@ -172,7 +168,7 @@ const TagsPanel = ({ tagGroups }) => {
           <Box key={tagGroup.id}>
             <Flex>
               <Flex flex={1}>
-                <TagGroupItemNew tagGroup={tagGroup} showMenu />
+                <TagGroupItem tagGroup={tagGroup} showMenu />
 
                 <IconButton
                   aria-label="create tag"
@@ -204,7 +200,7 @@ const TagsPanel = ({ tagGroups }) => {
             <Wrap my={2}>
               {tagGroup.tags.map((tag) => (
                 <WrapItem key={tag.id}>
-                  <TagItemNew
+                  <TagItem
                     tag={tag}
                     onClick={
                       isTagSelected(tag)
@@ -270,8 +266,9 @@ const SelectedTagsPanel = ({ tagGroups }) => {
         <Wrap>
           {selectedTags.map((tag) => (
             <WrapItem key={tag.id}>
-              <TagItemWithGroup
+              <TagItem
                 tag={tag}
+                showGroup
                 actionLabel="Remove from filter"
                 onClick={() => removeTagToFilter(tag, tag.tagGroup)}
               />
