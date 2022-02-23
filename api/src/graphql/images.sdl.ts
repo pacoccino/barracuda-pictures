@@ -35,8 +35,7 @@ export const schema = gql`
   }
 
   type Mutation {
-    deleteManyImages(imageIds: [String!]!): DeleteManyResult! @requireAuth
-    deleteManyImagesWithFilter(filter: ImageFilters!): DeleteManyResult!
+    deleteManyImages(input: DeleteManyImagesInput!): DeleteManyResult!
       @requireAuth
     editImagesBasePath(input: EditImagesBasePath!): EditManyResult! @requireAuth
   }
@@ -51,6 +50,10 @@ export const schema = gql`
     tagGroupId: String!
     tagIds: [String]!
     condition: TagListCondition!
+  }
+  input DeleteManyImagesInput {
+    imageIds: [String!]
+    filter: ImageFilters
   }
   input EditImagesBasePath {
     imageIds: [String!]

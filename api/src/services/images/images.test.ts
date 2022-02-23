@@ -280,9 +280,11 @@ describe('images', () => {
       const imagesToDelete = [scenario.image.p1, scenario.image.p3]
 
       const result = await deleteManyImages({
-        imageIds: ['not-existing']
-          .concat(imagesToDelete.map((i) => i.id))
-          .concat('neither'),
+        input: {
+          imageIds: ['not-existing']
+            .concat(imagesToDelete.map((i) => i.id))
+            .concat('neither'),
+        },
       })
 
       expect(result.count).toEqual(imagesToDelete.length)
@@ -323,8 +325,10 @@ describe('images', () => {
           ],
         }
 
-        const result = await deleteManyImagesWithFilter({
-          filter,
+        const result = await deleteManyImages({
+          input: {
+            filter,
+          },
         })
 
         expect(result.count).toEqual(expectedRemovedIds.length)
@@ -342,6 +346,35 @@ describe('images', () => {
         expect(resImages.length).toEqual(
           Object.keys(scenario.image).length - expectedRemovedIds.length
         )
+      }
+    )
+
+    scenario(
+      'delete many XOR arguments',
+      async (scenario: StandardScenario) => {
+        const imageIds = ['a', 'b']
+        const filter: ImageFilters = {
+          tagLists: [
+            {
+              tagGroupId: scenario.tagGroup.one.id,
+              tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
+            },
+          ],
+        }
+        await expect(
+          deleteManyImages({
+            input: {
+              filter,
+              imageIds,
+            },
+          })
+        ).rejects.toThrowError('need only one of imagesIds or filter')
+        await expect(
+          deleteManyImages({
+            input: {},
+          })
+        ).rejects.toThrowError('need either imagesIds or filter')
       }
     )
   })

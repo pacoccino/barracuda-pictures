@@ -4,27 +4,18 @@ import { useMutation } from '@redwoodjs/web'
 import { useSelectContext } from 'src/contexts/select'
 import { useFilterContext } from 'src/contexts/filter'
 import { useEffect } from 'react'
+import { MutationdeleteManyImagesArgs } from 'types/graphql'
 
 const DELETE_IMAGES = gql`
-  mutation DeleteImages($imageIds: [String!]!) {
-    deleteManyImages(imageIds: $imageIds) {
-      count
-    }
-  }
-`
-const DELETE_IMAGES_FILTER = gql`
-  mutation DeleteImagesFilter($filter: ImageFilters!) {
-    deleteManyImagesWithFilter(filter: $filter) {
+  mutation DeleteImages($input: DeleteManyImagesInput!) {
+    deleteManyImages(input: $input) {
       count
     }
   }
 `
 
 export const DeleteImagesModal = ({ isOpen, onClose }) => {
-  const [deleteManyImages, { loading: ldi }] = useMutation(DELETE_IMAGES)
-  const [deleteManyImagesWithFilter, { loading: ldf }] =
-    useMutation(DELETE_IMAGES_FILTER)
-  const loading = ldi || ldf
+  const [deleteManyImages, { loading }] = useMutation(DELETE_IMAGES)
   const toast = useToast()
 
   const { selectedImages, allSelected } = useSelectContext()
@@ -35,31 +26,23 @@ export const DeleteImagesModal = ({ isOpen, onClose }) => {
   }, [isOpen, selectedImages, allSelected, onClose])
 
   const handleDelete = () => {
-    let promise
+    const input: MutationdeleteManyImagesArgs['input'] = {}
     if (allSelected) {
-      promise = deleteManyImagesWithFilter({
-        variables: { filter },
-        refetchQueries: ['FindImages'],
-      })
+      input.filter = filter
     } else {
-      promise = deleteManyImages({
-        variables: {
-          imageIds: selectedImages.map((i) => i.id),
-        },
-        refetchQueries: ['FindImages'],
-      })
+      input.imageIds = selectedImages.map((i) => i.id)
     }
-
-    promise
+    deleteManyImages({
+      variables: {
+        input,
+      },
+      refetchQueries: ['FindImages'],
+    })
       .then((res) => {
         onClose()
         toast({
           title: 'Images deleted',
-          description: `${
-            res.data[
-              allSelected ? 'deleteManyImagesWithFilter' : 'deleteManyImages'
-            ].count
-          } images have been removed`,
+          description: `${res.data.deleteManyImages.count} images have been removed`,
           status: 'success',
           duration: 9000,
           isClosable: true,
