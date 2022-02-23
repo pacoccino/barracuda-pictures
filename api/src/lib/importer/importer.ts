@@ -16,6 +16,7 @@ export async function importer({
   prefix?: string
 }) {
   logger.info('Importer script started')
+  console.time('exec')
 
   logger.debug('Getting file list from file system...')
   const tasks = await listTasks(rootDir)
@@ -36,7 +37,8 @@ export async function importer({
 
   const result = await parallelActions.finished()
 
-  await reportExecution(result, logger)
+  await reportExecution(tasks, result, logger)
 
+  console.timeEnd('exec')
   logger.info(`Import finished.`)
 }

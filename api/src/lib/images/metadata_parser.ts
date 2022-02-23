@@ -1,5 +1,6 @@
 import moment from 'moment'
 import Decimal from 'decimal.js'
+import { parse } from 'exifr'
 
 type ImageRawMetadata = Record<string, Record<string, any>>
 
@@ -49,7 +50,12 @@ export function parseMetadata_exifr(
   }
 
   // keywords
-  parsed.keywords = rawMD.iptc?.Keywords
+  const keywords = rawMD.iptc?.Keywords
+  if (keywords) {
+    if (typeof keywords === 'string') parsed.keywords = [keywords]
+    else parsed.keywords = keywords
+    parsed.keywords = parsed.keywords.filter((k) => !!k)
+  }
 
   // camera
   if (hasSome(rawMD.ifd0, ['Model', 'Make'])) {
