@@ -61,7 +61,7 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
 
       <RowTitle>Date taken</RowTitle>
       <RowContent>
-        {moment(image.dateTaken).format('D/MM/YYYY HH:mm:ss')}
+        {moment(image.dateTaken).format('DD/MM/YYYY HH:mm:ss')}
       </RowContent>
 
       <RowTitle

@@ -15,6 +15,9 @@ scroll, when add tag it moves back to top
 - Note
 - Create tag from metadata
 - duplicate tag group
+- logger logfile
+
+- upload exclude list (.DSstore etc )
 
 - Edit date
 
