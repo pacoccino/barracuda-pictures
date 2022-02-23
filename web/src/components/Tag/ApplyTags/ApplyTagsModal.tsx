@@ -47,7 +47,6 @@ export type ApplyTagsModalProps = {
   isOpen: boolean
   onClose?: () => void
   applyMode: ApplyTagMode
-  tagGroups: TagGroup[]
 }
 
 const LABELS = {
@@ -92,7 +91,7 @@ const ApplyTagsModal = ({
 
   useEffect(() => {
     isOpen && !allSelected && selectedImages.length === 0 && onClose()
-  }, [isOpen, selectedImages])
+  }, [isOpen, allSelected, selectedImages, onClose])
 
   const handleApply = useCallback(
     (tag: Tag) => {

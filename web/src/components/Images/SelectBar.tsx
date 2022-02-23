@@ -13,6 +13,7 @@ import { TooltipIconButton } from 'src/design-system'
 import ApplyTagsModal from 'src/components/Tag/ApplyTags/ApplyTagsModal'
 import { ApplyTagMode } from 'src/components/Tag/ApplyTags/ApplyTagsModal'
 import { useEffect, useRef } from 'react'
+import { DeleteImagesModal } from 'src/components/Images/DeleteImagesModal'
 
 export const SelectBar = () => {
   const {
@@ -22,11 +23,13 @@ export const SelectBar = () => {
     setAllSelected,
     clearSelection,
     allSelected,
+    isSelectionActive,
   } = useSelectContext()
   const ref = useRef(null)
 
   const applyTagDisclosure = useDisclosure()
   const removeTagDisclosure = useDisclosure()
+  const deleteImagesDisclosure = useDisclosure()
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -96,17 +99,25 @@ export const SelectBar = () => {
               variant="solid"
               onClick={applyTagDisclosure.onOpen}
               colorScheme="green"
-              disabled={!allSelected && selectedImages.length === 0}
+              disabled={!isSelectionActive}
             >
               Apply tag
             </Button>
             <Button
               variant="solid"
               onClick={removeTagDisclosure.onOpen}
-              colorScheme="red"
-              disabled={!allSelected && selectedImages.length === 0}
+              colorScheme="yellow"
+              disabled={!isSelectionActive}
             >
               Remove tag
+            </Button>
+            <Button
+              variant="solid"
+              onClick={deleteImagesDisclosure.onOpen}
+              colorScheme="red"
+              disabled={!isSelectionActive}
+            >
+              Delete
             </Button>
           </ButtonGroup>
           <TooltipIconButton
@@ -136,6 +147,10 @@ export const SelectBar = () => {
         isOpen={removeTagDisclosure.isOpen}
         onClose={removeTagDisclosure.onClose}
         applyMode={ApplyTagMode.REMOVE}
+      />
+      <DeleteImagesModal
+        isOpen={deleteImagesDisclosure.isOpen}
+        onClose={deleteImagesDisclosure.onClose}
       />
     </Flex>
   )

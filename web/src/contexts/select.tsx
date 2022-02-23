@@ -1,5 +1,5 @@
 import type { Image } from 'types/graphql'
-import { useContext, useState, useCallback } from 'react'
+import { useContext, useState, useCallback, useMemo } from 'react'
 
 export enum SelectMode {
   VIEW,
@@ -15,6 +15,7 @@ interface SelectContextType {
   setSelectMode: (sm: SelectMode) => void
   setAllSelected: (b: boolean) => void
   allSelected: boolean
+  isSelectionActive: boolean
 }
 
 export const SelectContext = React.createContext<SelectContextType>({
@@ -27,12 +28,17 @@ export const SelectContext = React.createContext<SelectContextType>({
   setSelectMode: (sm: SelectMode) => 0,
   setAllSelected: (b: boolean) => 0,
   allSelected: false,
+  isSelectionActive: false,
 })
 
 export const SelectContextProvider = ({ children }) => {
   const [allSelected, setAllSelected] = useState<boolean>(false)
   const [selectedImages, setSelectedImages] = useState<Image[]>([])
   const [selectMode, setSelectMode] = useState<SelectMode>(SelectMode.VIEW)
+  const isSelectionActive = useMemo(
+    () => allSelected || selectedImages.length > 0,
+    [allSelected, selectedImages]
+  )
 
   const addImageToSelection = useCallback(
     (image: Image) => {
@@ -72,6 +78,7 @@ export const SelectContextProvider = ({ children }) => {
         isImageSelected,
         allSelected,
         setAllSelected,
+        isSelectionActive,
       }}
     >
       {children}
