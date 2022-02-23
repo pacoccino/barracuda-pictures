@@ -76,8 +76,16 @@ export class S3Lib {
       Bucket: this.bucket,
       Key,
     }
-    const res = await promisify(this.client, 'headObject')(params)
-    return res
+    try {
+      const res = await promisify(this.client, 'headObject')(params)
+      return res
+    } catch (error) {
+      if (error.code === 'NotFound') {
+        return null
+      } else {
+        throw error
+      }
+    }
   }
 
   async delete(Key: string): Promise<void> {

@@ -1,6 +1,5 @@
 import {
   deleteManyImages,
-  deleteManyImagesWithFilter,
   editImagesBasePath,
   image,
   images,
@@ -9,7 +8,7 @@ import {
 import type { StandardScenario } from './images.scenarios'
 import { ImageFilters } from 'types/graphql'
 import { Buckets } from 'src/lib/files/s3'
-import { getFileName, getPath } from 'src/lib/images/paths'
+import S3Path from 'src/lib/files/S3Path'
 
 describe('images', () => {
   scenario('returns one image', async (scenario: StandardScenario) => {
@@ -573,7 +572,7 @@ describe('images', () => {
 
           const resImage = await image({ id: imageToEdit.id })
           expect(resImage.path).toEqual(
-            getPath(basePath, getFileName(imageToEdit.path))
+            S3Path.getPath(basePath, S3Path.getFileName(imageToEdit.path))
           )
         }
       }

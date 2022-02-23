@@ -3,14 +3,13 @@ import type { ResolverArgs } from '@redwoodjs/graphql-server'
 import type {
   QueryimagesArgs,
   MutationdeleteManyImagesArgs,
-  MutationdeleteManyImagesWithFilterArgs,
   MutationeditImagesBasePathArgs,
   Mutation,
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
 import { Buckets } from 'src/lib/files/s3'
-import { getPath, getFileName } from 'src/lib/images/paths'
+import S3Path from 'src/lib/files/S3Path'
 
 export const image = ({
   id,
@@ -162,8 +161,8 @@ export const editImagesBasePath = async ({
     if (!imageToEdit) {
       continue
     }
-    const fileName = getFileName(imageToEdit.path)
-    const path = getPath(basePath, fileName)
+    const fileName = S3Path.getFileName(imageToEdit.path)
+    const path = S3Path.getPath(basePath, fileName)
     if (path === imageToEdit.path) continue
 
     await db.image.update({
