@@ -14,6 +14,7 @@ import ApplyTagsModal from 'src/components/Tag/ApplyTags/ApplyTagsModal'
 import { ApplyTagMode } from 'src/components/Tag/ApplyTags/ApplyTagsModal'
 import { useEffect, useRef } from 'react'
 import { DeleteImagesModal } from 'src/components/Images/DeleteImagesModal'
+import { EditBasePathModal } from 'src/components/Images/EditBasePathModal'
 
 export const SelectBar = () => {
   const {
@@ -29,6 +30,7 @@ export const SelectBar = () => {
 
   const applyTagDisclosure = useDisclosure()
   const removeTagDisclosure = useDisclosure()
+  const editBasePathDisclosure = useDisclosure()
   const deleteImagesDisclosure = useDisclosure()
 
   useEffect(() => {
@@ -119,6 +121,14 @@ export const SelectBar = () => {
             >
               Delete
             </Button>
+            <Button
+              variant="solid"
+              onClick={editBasePathDisclosure.onOpen}
+              colorScheme="blue"
+              disabled={!isSelectionActive}
+            >
+              Path
+            </Button>
           </ButtonGroup>
           <TooltipIconButton
             label="Deselect all"
@@ -138,6 +148,10 @@ export const SelectBar = () => {
           />
         </Flex>
       )}
+      <EditBasePathModal
+        isOpen={editBasePathDisclosure.isOpen}
+        onClose={editBasePathDisclosure.onClose}
+      />
       <ApplyTagsModal
         isOpen={applyTagDisclosure.isOpen}
         onClose={applyTagDisclosure.onClose}

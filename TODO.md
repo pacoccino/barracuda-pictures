@@ -16,6 +16,7 @@ scroll, when add tag it moves back to top
 - Create tag from metadata
 - duplicate tag group
 - logger logfile
+- search tags
 
 - upload exclude list (.DSstore etc )
 
@@ -26,13 +27,11 @@ scroll, when add tag it moves back to top
 - detect people
 
 - upload images
-- delete images
 
 - sync db to image metadata (and test reverse)
 
 - select range
 - rename tag group => category
-- change path
 
 - tag colors
 - download zip of filter (hash filter)

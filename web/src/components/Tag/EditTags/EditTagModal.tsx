@@ -18,7 +18,7 @@ const UPDATE_TAG = gql`
   }
 `
 export const EditTagModal = ({ tag, onClose }) => {
-  const updateTagMutation = useMutation(UPDATE_TAG)
+  const [updateTag, { loading }] = useMutation(UPDATE_TAG)
   const initialRef = useRef(null)
   const toast = useToast()
 
@@ -36,7 +36,6 @@ export const EditTagModal = ({ tag, onClose }) => {
   }, [reset, tag])
   const { ref: registerRef, ...registerRest } = register('tagName')
 
-  const [updateTag, { loading }] = updateTagMutation
   const handleUpdateTag = ({ tagName }) =>
     updateTag({
       variables: { name: tagName, tagId: tag.id },
