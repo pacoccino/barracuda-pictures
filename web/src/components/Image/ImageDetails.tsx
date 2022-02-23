@@ -18,6 +18,7 @@ import { RightPanelOptions } from 'src/components/Image/RightPanel'
 import moment from 'moment'
 
 import { parseMetadata_exifr } from 'src/lib/metadata_parser'
+import { formatDate } from 'src/lib/utils'
 
 const RowTitle = ({ children, rightItem = null }) => (
   <Flex mb={3} align="center">
@@ -60,9 +61,7 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
       <RowContent>{image.path}</RowContent>
 
       <RowTitle>Date taken</RowTitle>
-      <RowContent>
-        {moment(image.dateTaken).format('DD/MM/YYYY HH:mm:ss')}
-      </RowContent>
+      <RowContent>{formatDate(image.dateTaken)}</RowContent>
 
       <RowTitle
         rightItem={

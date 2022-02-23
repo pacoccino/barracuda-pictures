@@ -9,13 +9,29 @@ import {
   MdCheckCircle,
   MdMoreVert,
   MdRadioButtonUnchecked,
+  MdInfo,
   MdSearch,
 } from 'react-icons/md'
-import { Menu, MenuButton, MenuItem, MenuList } from 'src/design-system'
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  Table,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+} from 'src/design-system'
 import { useFilterContext } from 'src/contexts/filter'
+import { formatDate } from 'src/lib/utils'
 
 type ImagesItemProps = {
-  image: FindImages['images'][number]
+  image: FindImages['imagesInfinite'][number]
 }
 
 const ItemMenu = ({ image }) => {
@@ -47,6 +63,43 @@ const ItemMenu = ({ image }) => {
         </MenuItem>
       </MenuList>
     </Menu>
+  )
+}
+const ItemDetails = ({ image }) => {
+  return (
+    <Popover trigger="hover">
+      <PopoverTrigger>
+        <IconButton
+          color="black"
+          bg="white"
+          variant="ghost"
+          _hover={{ bg: 'gray.100' }}
+          icon={<MdInfo />}
+          size="xs"
+          aria-label="info"
+        />
+      </PopoverTrigger>
+      <PopoverContent width="initial">
+        <PopoverBody>
+          <Table size="sm">
+            <Tbody>
+              <Tr>
+                <Th>Id</Th>
+                <Td>{image.id}</Td>
+              </Tr>
+              <Tr>
+                <Th>Path</Th>
+                <Td>{image.path}</Td>
+              </Tr>
+              <Tr>
+                <Th>Date</Th>
+                <Td>{formatDate(image.dateTaken)}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -121,6 +174,18 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
           }}
         >
           <ItemMenu image={image} />
+        </Center>
+        <Center
+          position="absolute"
+          bottom={0}
+          left={0}
+          opacity={0}
+          boxSize={14}
+          _hover={{
+            opacity: 1,
+          }}
+        >
+          <ItemDetails image={image} />
         </Center>
       </Box>
     )
