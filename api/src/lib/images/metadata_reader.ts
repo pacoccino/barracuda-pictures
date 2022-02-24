@@ -18,7 +18,7 @@ const exifrOptions = {
   mergeOutput: false,
 }
 
-const SUPPORTED_FILE_TYPES = ['jpg', 'tif', 'heic', 'avif', 'PNG']
+const SUPPORTED_FILE_TYPES = ['jpg', 'tif', 'heic', 'avif', 'png']
 
 export async function readMetadata_exifr(
   path: Buffer | string,

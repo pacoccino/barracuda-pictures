@@ -2,7 +2,7 @@ import { Task, TaskResult } from 'src/lib/importer/importFile'
 import { ParrallelResult } from 'src/lib/async'
 import fsPromise from 'fs/promises'
 
-async function addLog(path, data, index) {
+async function addLog(path: string, data: any, index: string) {
   let obj = {}
 
   try {
@@ -12,9 +12,16 @@ async function addLog(path, data, index) {
     if (e.code !== 'ENOENT') throw e
   }
 
-  obj[index] = data
+  if (data) {
+    obj[index] = data
+  }
 
   await fsPromise.writeFile(path, JSON.stringify(obj, null, 2))
+}
+
+export async function assertReporterReady() {
+  await addLog('./logs/importResult.json', null, '')
+  await addLog('./logs/importErrors.json', null, '')
 }
 
 export async function reportSuccesses(

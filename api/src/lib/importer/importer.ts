@@ -2,7 +2,7 @@ import { parallel } from 'src/lib/async'
 import { logger as parentLogger } from 'src/lib/logger'
 import { getImportWorker, Task, TaskResult } from 'src/lib/importer/importFile'
 import { listTasks } from 'src/lib/importer/listTasks'
-import { reportExecution } from 'src/lib/importer/reporter'
+import { assertReporterReady, reportExecution } from 'src/lib/importer/reporter'
 
 const logger = parentLogger.child({ module: 'UPLOADER' })
 
@@ -17,6 +17,7 @@ export async function importer({
 }) {
   logger.info('Importer script started')
   console.time('exec')
+  await assertReporterReady()
 
   logger.debug('Getting file list from file system...')
   const tasks = await listTasks(rootDir)
