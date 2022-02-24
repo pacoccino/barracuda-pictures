@@ -1,6 +1,6 @@
 import fpath from 'path'
 
-export const ACCEPTED_EXTENSIONS = ['jpg', 'jpg', 'png', 'webp', 'tif']
+export const ACCEPTED_EXTENSIONS = ['jpg', 'png', 'webp', 'tif']
 export const EXCLUDED_FILES = ['.DS_Store', 'Icon', 'Thumbs.db']
 
 export function isPathExcluded(path: string) {

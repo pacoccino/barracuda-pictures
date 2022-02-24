@@ -1,6 +1,6 @@
 import moment from 'moment'
+import _ from 'lodash'
 import Decimal from 'decimal.js'
-import { parse } from 'exifr'
 
 type ImageRawMetadata = Record<string, Record<string, any>>
 
@@ -35,22 +35,37 @@ export type ImageParsedMetadata = {
   keywords?: string[]
 }
 
+function getProp(
+  object: Record<string, any> | null | undefined,
+  propPaths: string[] | string
+): any | null {
+  if (typeof propPaths === 'string') propPaths = [propPaths]
+  for (const i in propPaths) {
+    const propPath = propPaths[i]
+    const val = _.get(object, propPath)
+    if (val) return val
+  }
+  return null
+}
+
 export function parseMetadata_exifr(
   rawMD: ImageRawMetadata
 ): ImageParsedMetadata {
   const parsed: ImageParsedMetadata = {}
 
   // dates
-  if (rawMD.exif?.CreateDate) {
+  const captureDate = getProp(rawMD, [
+    'exif.CreateDate',
+    'exif.DateTimeOriginal',
+  ])
+  if (captureDate) {
     parsed.date = {
-      capture: moment
-        .utc(rawMD.exif.CreateDate, 'YYYY-MM-DD hh:mm:ss')
-        .toDate(),
+      capture: moment.utc(captureDate, 'YYYY-MM-DD hh:mm:ss').toDate(),
     }
   }
 
   // keywords
-  const keywords = rawMD.iptc?.Keywords
+  const keywords = getProp(rawMD, ['iptc.Keywords'])
   if (keywords) {
     if (typeof keywords === 'string') parsed.keywords = [keywords]
     else parsed.keywords = keywords
@@ -144,10 +159,10 @@ export function parseMetadata_exifr(
 }
 
 function hasAll(obj: any, props: string[]) {
-  return obj && props.reduce((acc, curr) => acc && !!obj[curr], true)
+  return obj && props.reduce((acc, prop) => acc && !!_.has(obj, prop), true)
 }
 function hasSome(obj: any, props: string[]) {
-  return obj && props.reduce((acc, curr) => acc || !!obj[curr], false)
+  return obj && props.reduce((acc, prop) => acc || !!_.has(obj, prop), false)
 }
 
 export function getDMS2DD(l, ref) {

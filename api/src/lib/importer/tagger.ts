@@ -83,7 +83,6 @@ export async function createImageTags(
       create: tagGroup_keywordsInput,
     })
 
-    console.log(imageMetadata.parsed.keywords)
     for (const i in imageMetadata.parsed.keywords) {
       const keyword = imageMetadata.parsed.keywords[i]
       const tag_keywordInput = {

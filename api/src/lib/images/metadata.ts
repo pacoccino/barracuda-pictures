@@ -12,9 +12,10 @@ export type ImageMetadata = {
 }
 
 export async function getMetadata(
-  path: Buffer | string
+  path: Buffer | string,
+  fileType: string
 ): Promise<ImageMetadata> {
-  const rawMD = await readMetadata_exifr(path)
+  const rawMD = await readMetadata_exifr(path, fileType)
   const parsedMD = parseMetadata_exifr(rawMD)
   return {
     raw: rawMD,

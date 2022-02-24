@@ -18,13 +18,19 @@ const exifrOptions = {
   mergeOutput: false,
 }
 
+const SUPPORTED_FILE_TYPES = ['jpg', 'tif', 'heic', 'avif', 'PNG']
+
 export async function readMetadata_exifr(
-  path: Buffer | string
+  path: Buffer | string,
+  fileType: string
 ): Promise<ImageRawMetadata> {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const rawMD = await exifr.parse(path, exifrOptions)
-  return sanitize(rawMD)
+  if (SUPPORTED_FILE_TYPES.includes(fileType)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const rawMD = await exifr.parse(path, exifrOptions)
+    return sanitize(rawMD || {})
+  }
+  return {}
 }
 
 function sanitize(j: any): any {

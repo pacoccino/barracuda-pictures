@@ -47,6 +47,7 @@ export async function reportErrors(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     errorCode: e.error.code,
+    errorStack: e.error.stack,
   }))
 
   await addLog('./logs/importErrors.json', es, logIndex)

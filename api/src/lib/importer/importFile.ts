@@ -45,9 +45,10 @@ export const getImportWorker = ({ logger, prefix, rootDir }) =>
       const buffer = await fd.readFile()
       const fileType = await ft.fromBuffer(buffer)
 
-      if (isFileTypeExcluded(fileType.ext)) return TaskResult.EXCLUDED
+      if (!fileType || isFileTypeExcluded(fileType.ext))
+        return TaskResult.EXCLUDED
 
-      const imageMetadata = await getMetadata(buffer)
+      const imageMetadata = await getMetadata(buffer, fileType.ext)
       if (!imageMetadata.parsed.date) {
         return TaskResult.NO_DATE
       }
