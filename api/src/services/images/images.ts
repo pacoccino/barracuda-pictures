@@ -10,6 +10,8 @@ import type {
 import { db } from 'src/lib/db'
 import { Buckets } from 'src/lib/files/s3'
 import S3Path from 'src/lib/files/S3Path'
+import { parallel } from 'src/lib/async'
+import { logger } from 'src/lib/logger'
 
 export const image = ({
   id,
@@ -116,24 +118,34 @@ export const deleteManyImages = async ({
     imageIds = imagesToApply.map((i) => i.id)
   }
 
-  let count = 0
-  for (const i in imageIds) {
-    const imageId = imageIds[i]
-    const image = await db.image.findUnique({
-      where: {
-        id: imageId,
-      },
-    })
-    if (!image) continue
-    await Buckets.photos.delete(image.path)
-    await Buckets.miniatures.delete(image.path)
-    await db.image.delete({
-      where: {
-        id: imageId,
-      },
-    })
-    count++
+  const parallelActions = await parallel<string, boolean>(
+    imageIds,
+    5,
+    async (imageId) => {
+      const image = await db.image.findUnique({
+        where: {
+          id: imageId,
+        },
+      })
+      if (!image) return false
+      await Buckets.photos.delete(image.path)
+      await Buckets.miniatures.delete(image.path)
+      await db.image.delete({
+        where: {
+          id: imageId,
+        },
+      })
+      return true
+    }
+  )
+  const result = await parallelActions.finished()
+
+  const count = result.successes.filter((s) => s.result).length
+
+  if (result.errors.length > 0) {
+    logger.error({ errors: result.errors }, 'Errors while deleting images')
   }
+
   return {
     count,
   }
@@ -154,28 +166,38 @@ export const editImagesBasePath = async ({
     imageIds = imagesToApply.map((i) => i.id)
   }
 
-  let count = 0
-  for (const i in imageIds) {
-    const imageId = imageIds[i]
-    const imageToEdit = await image({ id: imageId })
-    if (!imageToEdit) {
-      continue
+  const parallelActions = await parallel<string, boolean>(
+    imageIds,
+    5,
+    async (imageId) => {
+      const imageToEdit = await image({ id: imageId })
+      if (!imageToEdit) {
+        return false
+      }
+      const fileName = S3Path.getFileName(imageToEdit.path)
+      const path = S3Path.getPath(basePath, fileName)
+      if (path === imageToEdit.path) return false
+
+      await db.image.update({
+        where: { id: imageId },
+        data: {
+          path,
+        },
+      })
+      await Buckets.photos.editKey(imageToEdit.path, path)
+      await Buckets.miniatures.editKey(imageToEdit.path, path)
+      return true
     }
-    const fileName = S3Path.getFileName(imageToEdit.path)
-    const path = S3Path.getPath(basePath, fileName)
-    if (path === imageToEdit.path) continue
+  )
 
-    await db.image.update({
-      where: { id: imageId },
-      data: {
-        path,
-      },
-    })
-    await Buckets.photos.editKey(imageToEdit.path, path)
-    await Buckets.miniatures.editKey(imageToEdit.path, path)
+  const result = await parallelActions.finished()
 
-    count++
+  const count = result.successes.filter((s) => s.result).length
+
+  if (result.errors.length > 0) {
+    logger.error({ errors: result.errors }, 'Errors while deleting images')
   }
+
   return {
     count,
   }
