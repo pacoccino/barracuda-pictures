@@ -4,7 +4,7 @@ import { useFilterContext } from 'src/contexts/filter'
 import { Box, Heading } from '@chakra-ui/react'
 import { ArboDate } from 'src/components/Filter/Arbo'
 
-export const DatePanel = () => {
+export const DateRanger = () => {
   const {
     filter: { dateRange },
     setDateRange,
@@ -30,6 +30,15 @@ export const DatePanel = () => {
         onChange={onChange}
         value={dateRange && [dateRange.from, dateRange.to]}
       />
+    </Box>
+  )
+}
+
+export const DatePanel = () => {
+  return (
+    <Box>
+      {/*<DateRanger />*/}
+      <ArboDate />
     </Box>
   )
 }

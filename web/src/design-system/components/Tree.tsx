@@ -2,19 +2,22 @@ import { Icon, Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { MdFolder } from 'react-icons/md'
 import { useCallback, useMemo } from 'react'
-import { isEqual } from 'lodash'
+import { isEqual, sortBy } from 'lodash'
 
-type Tree = {
+export type Tree = {
   path: string
+  date?: Date
   count: number
   children: Tree[]
 }
 
-interface TreeProps {
+type Path = string | number
+export interface TreeProps {
   tree: Tree
-  paths: string[]
-  selectedPath?: string[]
-  onSelect?: (a: string[], b: Tree) => void
+  paths?: Path[]
+  selectedPath?: Path[]
+  onSelect?: (a: Path[], b: Tree) => void
+  formatPath?: (a: Path[], b: Tree) => React.ReactElement | string
 }
 
 export const Tree = ({
@@ -22,6 +25,7 @@ export const Tree = ({
   paths = [],
   selectedPath = null,
   onSelect,
+  formatPath,
 }: TreeProps) => {
   const disclosure = useDisclosure()
 
@@ -34,6 +38,11 @@ export const Tree = ({
   const handleSelect = useCallback(() => {
     onSelect(fullPath, tree)
   }, [onSelect, fullPath, tree])
+
+  const sortedChildren = useMemo(() => {
+    const { children } = tree
+    return sortBy(children, 'path')
+  }, [tree])
 
   return (
     <Box borderTopColor="gray.300" borderTopWidth={paths.length > 0 ? 1 : 0}>
@@ -50,7 +59,7 @@ export const Tree = ({
         borderWidth={0}
         borderColor="gray.400"
       >
-        {tree.children.length > 0 ? (
+        {sortedChildren.length > 0 ? (
           <Box
             onClick={(e) => {
               disclosure.onToggle()
@@ -65,7 +74,7 @@ export const Tree = ({
         )}
         <Icon as={MdFolder} ml={1} />
         <Text textStyle="small" ml={2} flex={1}>
-          {tree.path}
+          {formatPath ? formatPath(paths, tree) : tree.path}
         </Text>
         <Text textStyle="h3" mr={2}>
           {tree.count}
@@ -73,13 +82,14 @@ export const Tree = ({
       </Flex>
       {disclosure.isOpen && (
         <Box ml={2}>
-          {tree.children.map((child) => (
+          {sortedChildren.map((child) => (
             <Tree
               tree={child}
               key={child.path}
               paths={fullPath}
               selectedPath={selectedPath}
               onSelect={onSelect}
+              formatPath={formatPath}
             />
           ))}
         </Box>

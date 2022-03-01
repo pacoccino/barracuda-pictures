@@ -1,17 +1,18 @@
-import type { ArboResponse } from 'types/graphql'
+import type { ArboResponse, ArboPath, ArboDate } from 'types/graphql'
 import { db } from 'src/lib/db'
 import _ from 'lodash'
 import S3Path from 'src/lib/files/S3Path'
 import moment from 'moment'
 
 export const arbo = async (): Promise<ArboResponse> => {
-  const arboPath = {
+  const arboPath: ArboPath = {
     path: '/',
     count: 0,
     children: [],
   }
-  const arboDate = {
+  const arboDate: ArboDate = {
     path: 0,
+    date: new Date().toISOString(),
     count: 0,
     children: [],
   }
@@ -35,6 +36,7 @@ export const arbo = async (): Promise<ArboResponse> => {
     if (!yearArb) {
       yearArb = {
         path: year,
+        date: moment.utc([year]).toISOString(),
         count: 0,
         children: [],
       }
@@ -48,6 +50,7 @@ export const arbo = async (): Promise<ArboResponse> => {
     if (!monthArb) {
       monthArb = {
         path: month,
+        date: moment.utc([year, month]).toISOString(),
         count: 0,
         children: [],
       }
@@ -60,6 +63,7 @@ export const arbo = async (): Promise<ArboResponse> => {
     if (!dayArbo) {
       dayArbo = {
         path: day,
+        date: moment.utc([year, month, day]).toISOString(),
         count: 0,
         children: [],
       }
@@ -74,7 +78,7 @@ export const arbo = async (): Promise<ArboResponse> => {
 
     let currArbo = arboPath
 
-    _.forEach(splitted, (subPath, i) => {
+    _.forEach(splitted, (subPath) => {
       let subArbo = currArbo.children.find((a) => a.path === subPath)
       if (!subArbo) {
         subArbo = {

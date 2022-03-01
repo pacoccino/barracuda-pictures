@@ -16,6 +16,7 @@ export const schema = gql`
 
   type ArboDate {
     path: Int!
+    date: DateTime!
     count: Int!
     children: [ArboDate!]!
   }
