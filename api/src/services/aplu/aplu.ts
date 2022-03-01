@@ -1,9 +1,10 @@
-import type { ArboPath } from 'types/graphql'
+import type { ArboPath, ArboDate } from 'types/graphql'
 import { db } from 'src/lib/db'
 import _ from 'lodash'
 import S3Path from 'src/lib/files/S3Path'
+import moment from 'moment'
 
-export const arbo = async (): Promise<ArboPath> => {
+export const arboPath = async (): Promise<ArboPath> => {
   const root = {
     path: '/',
     count: 0,
@@ -37,6 +38,50 @@ export const arbo = async (): Promise<ArboPath> => {
       currArbo = subArbo
       currArbo.count++
     })
+  })
+  return root
+}
+
+export const arboDate = async (): Promise<ArboDate> => {
+  const root = {
+    path: 0,
+    count: 0,
+    children: [],
+  }
+
+  const allImages = await db.image.findMany({
+    select: {
+      dateTaken: true,
+    },
+  })
+  root.count = allImages.length
+
+  _.forEach(allImages, ({ dateTaken }) => {
+    const date = moment(dateTaken)
+    const year = date.year()
+    const month = date.month()
+
+    let yearArb = root.children.find((c) => c.path === year)
+    if (!yearArb) {
+      yearArb = {
+        path: year,
+        count: 0,
+        children: [],
+      }
+      root.children.push(yearArb)
+    }
+    yearArb.count++
+
+    let monthArb = yearArb.children.find((c) => c.path === month)
+    if (!monthArb) {
+      monthArb = {
+        path: month,
+        count: 0,
+        children: [],
+      }
+      yearArb.children.push(monthArb)
+    }
+    monthArb.count++
   })
   return root
 }

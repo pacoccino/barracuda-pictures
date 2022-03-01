@@ -54,7 +54,7 @@ export const standard = defineScenario({
     p1: (scenario) => ({
       data: {
         path: 'p1.jpg',
-        dateTaken: '2022-01-01T00:01:00Z',
+        dateTaken: '2001-01-01T00:01:00Z',
         tagsOnImages: {
           create: [
             {
@@ -70,7 +70,7 @@ export const standard = defineScenario({
     p2: (scenario) => ({
       data: {
         path: 'ath1/p2.jpg',
-        dateTaken: '2022-01-01T00:02:00Z',
+        dateTaken: '2001-01-01T00:02:00Z',
         tagsOnImages: {
           create: [
             {
@@ -86,7 +86,7 @@ export const standard = defineScenario({
     p3: (scenario) => ({
       data: {
         path: 'ath1/ath2/p3.jpg',
-        dateTaken: '2022-01-01T00:03:00Z',
+        dateTaken: '2001-02-01T00:03:00Z',
         tagsOnImages: {
           create: [
             {
@@ -102,7 +102,7 @@ export const standard = defineScenario({
     p4: (scenario) => ({
       data: {
         path: 'ath3/p4.jpg',
-        dateTaken: '2022-01-01T00:04:00Z',
+        dateTaken: '2002-01-01T00:04:00Z',
         tagsOnImages: {
           create: [
             {
@@ -118,7 +118,7 @@ export const standard = defineScenario({
     p5: (scenario) => ({
       data: {
         path: 'p5.jpg',
-        dateTaken: '2022-01-01T00:05:00Z',
+        dateTaken: '2004-03-01T00:05:00Z',
         tagsOnImages: {
           create: [
             {
@@ -137,7 +137,7 @@ export const standard = defineScenario({
     notag: {
       data: {
         path: 'notag.jpg',
-        dateTaken: '2022-01-02T00:00:00Z',
+        dateTaken: '2004-03-02T00:00:00Z',
       },
     },
   },
