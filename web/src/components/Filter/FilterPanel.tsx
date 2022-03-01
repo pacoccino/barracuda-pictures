@@ -1,18 +1,18 @@
-import { Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
 import { PathPanel } from './PathPanel'
 import { DatePanel } from './DatePanel'
-import { TagsPanel, SelectedTagsPanel } from './TagsPanel'
+import { TagsPanel } from './TagsPanel'
 import { useFilterContext } from 'src/contexts/filter'
 
 const FilterPanel = () => {
   const { clearFilter, isFilterActive } = useFilterContext()
 
   return (
-    <VStack py={4} px={2} spacing={4} align="stretch" h="100%">
-      <Flex>
-        <Heading textStyle="h3" size="sm" mb={2} flex="1">
+    <Flex h="100%" overflow="hidden" direction="column">
+      <Flex px={2} py={4} align="center">
+        <Text textStyle="h1" fontSize="md" ml={2} flex="1">
           Filters
-        </Heading>
+        </Text>
         <Button
           onClick={clearFilter}
           size="xs"
@@ -23,10 +23,20 @@ const FilterPanel = () => {
         </Button>
       </Flex>
 
-      <PathPanel />
-      <DatePanel />
-      <TagsPanel />
-    </VStack>
+      <VStack
+        px={2}
+        pb={8}
+        flex={1}
+        spacing={4}
+        align="stretch"
+        h="100%"
+        overflow="scroll"
+      >
+        <PathPanel />
+        <DatePanel />
+        <TagsPanel />
+      </VStack>
+    </Flex>
   )
 }
 

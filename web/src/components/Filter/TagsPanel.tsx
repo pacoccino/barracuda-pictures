@@ -2,8 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
-  Icon,
   IconButton,
   Switch,
   Text,
@@ -49,7 +47,7 @@ export const TagsPanel = () => {
       active={selectedTagIds.length > 0}
       onClear={clearTags}
     >
-      <VStack overflow="hidden" align="stretch">
+      <VStack align="stretch">
         <Flex align="center">
           <Text textStyle="h3" size="sm" mb={2} flex="1">
             Available
@@ -64,13 +62,8 @@ export const TagsPanel = () => {
             Create Tag Group
           </Button>
         </Flex>
-        <VStack
-          flex={1}
-          overflowX="hidden"
-          overflowY="scroll"
-          py={1}
-          align="stretch"
-        >
+
+        <VStack flex={1} py={1} align="stretch">
           {tagGroups.map((tagGroup) => (
             <Box key={tagGroup.id}>
               <Flex>
@@ -136,11 +129,12 @@ export const TagsPanel = () => {
             </Box>
           ))}
         </VStack>
+
+        <Text textStyle="h3" size="sm" mb={2} flex="1">
+          Selected
+        </Text>
+        <SelectedTagsPanel />
       </VStack>
-      <Text textStyle="h3" size="sm" mb={2} flex="1">
-        Selected
-      </Text>
-      <SelectedTagsPanel />
     </FilterSection>
   )
 }
