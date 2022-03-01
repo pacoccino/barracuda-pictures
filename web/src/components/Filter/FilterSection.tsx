@@ -1,4 +1,11 @@
-import { Center, Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import {
+  Tooltip,
+  Center,
+  Box,
+  Flex,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { StatusIcon } from 'src/design-system'
 
@@ -31,18 +38,20 @@ export const FilterSection = ({
         <Text textStyle="h3" ml={2} flex={1} fontWeight={500}>
           {title}
         </Text>
-        <Center
-          onClick={(e) => {
-            e.stopPropagation()
-            onClear()
-          }}
-          boxSize={3}
-          borderRadius="full"
-          bg="white"
-          _hover={active && { bg: 'red.200' }}
-        >
-          <StatusIcon status={active ? 'positive' : 'disabled'} />
-        </Center>
+        <Tooltip label={active && 'Clear filter'}>
+          <Center
+            onClick={(e) => {
+              e.stopPropagation()
+              onClear()
+            }}
+            boxSize={3}
+            borderRadius="full"
+            bg="white"
+            _hover={active && { bg: 'red.200' }}
+          >
+            <StatusIcon status={active ? 'positive' : 'disabled'} />
+          </Center>
+        </Tooltip>
       </Flex>
       <Box mt={4} display={disclosure.isOpen ? 'block' : 'none'}>
         {children}

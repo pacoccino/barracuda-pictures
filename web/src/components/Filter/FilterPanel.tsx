@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text, VStack } from '@chakra-ui/react'
+import { Button, Flex, Text, VStack } from '@chakra-ui/react'
 import { PathPanel } from './PathPanel'
 import { DatePanel } from './DatePanel'
 import { TagsPanel } from './TagsPanel'

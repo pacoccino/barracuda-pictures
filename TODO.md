@@ -12,13 +12,12 @@ scroll, when add tag it moves back to top
 
 ### TODO
 
+- Display only tags available from filter
 - Note
 - Create tag from metadata
 - duplicate tag group
 - logger logfile
 - search tags
-
-- upload exclude list (.DSstore etc )
 
 - Edit date
 

@@ -27,7 +27,7 @@ export const Tree = ({
   onSelect,
   formatPath,
 }: TreeProps) => {
-  const disclosure = useDisclosure()
+  const disclosure = useDisclosure({ defaultIsOpen: paths.length === 0 })
 
   const fullPath = useMemo(() => paths.concat(tree.path), [tree, paths])
 

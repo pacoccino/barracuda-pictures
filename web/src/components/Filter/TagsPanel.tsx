@@ -49,7 +49,7 @@ export const TagsPanel = () => {
     >
       <VStack align="stretch">
         <Flex align="center">
-          <Text textStyle="h3" size="sm" mb={2} flex="1">
+          <Text textStyle="h3" mb={2} flex="1">
             Available
           </Text>
           <Button
