@@ -1,7 +1,11 @@
 export const schema = gql`
   type Query {
-    arboPath: ArboPath! @requireAuth
-    arboDate: ArboDate! @requireAuth
+    arbo: ArboResponse! @requireAuth
+  }
+
+  type ArboResponse {
+    arboPath: ArboPath!
+    arboDate: ArboDate!
   }
 
   type ArboPath {
@@ -11,7 +15,7 @@ export const schema = gql`
   }
 
   type ArboDate {
-    path: Integer!
+    path: Int!
     count: Int!
     children: [ArboDate!]!
   }

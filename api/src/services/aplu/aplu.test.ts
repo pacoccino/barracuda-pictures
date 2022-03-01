@@ -1,5 +1,5 @@
-import { arboDate, arboPath } from './aplu'
-import { ArboPath } from 'types/graphql'
+import { arbo } from './aplu'
+import { ArboPath, ArboDate } from 'types/graphql'
 
 type NewArbo = {
   path: string | number
@@ -7,14 +7,14 @@ type NewArbo = {
   children: Record<string, NewArbo>
 }
 
-function arboToObject(arbo: ArboPath): NewArbo {
+function arboToObject<T = ArboPath | ArboDate>(arbo: T): NewArbo {
   return {
     path: arbo.path,
     count: arbo.count,
     children: arbo.children.reduce(
       (acc, curr) => ({
         ...acc,
-        [curr.path]: arboToObject(curr),
+        [curr.path]: arboToObject<T>(curr),
       }),
       {}
     ),
@@ -23,8 +23,8 @@ function arboToObject(arbo: ArboPath): NewArbo {
 
 describe('aplu', () => {
   scenario('arbo path', async (scenario) => {
-    const root = await arboPath()
-    const rootO = arboToObject(root)
+    const root = await arbo()
+    const rootO = arboToObject<ArboPath>(root.arboPath)
     expect(rootO.path).toBe('/')
     expect(rootO.count).toEqual(Object.keys(scenario.image).length)
     expect(Object.keys(rootO.children).length).toEqual(2)
@@ -39,8 +39,8 @@ describe('aplu', () => {
   })
 
   scenario('arbo date', async (scenario) => {
-    const root = await arboDate()
-    const rootO = arboToObject(root)
+    const root = await arbo()
+    const rootO = arboToObject<ArboDate>(root.arboDate)
     expect(rootO.path).toBe(0)
     expect(rootO.count).toEqual(Object.keys(scenario.image).length)
     expect(Object.keys(rootO.children).length).toEqual(3)
