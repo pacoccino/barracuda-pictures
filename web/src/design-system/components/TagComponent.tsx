@@ -68,7 +68,7 @@ export const TagComponent = ({
             </Text>
           </Flex>
         )}
-        {leftAction && <Center>{leftAction}</Center>}
+        {leftAction && <Center mr={1}>{leftAction}</Center>}
 
         <Text color="white" py={1} fontSize="0.7rem">
           {name}

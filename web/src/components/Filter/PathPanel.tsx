@@ -7,12 +7,10 @@ import {
   InputGroup,
   InputRightElement,
   Text,
-  Box,
 } from '@chakra-ui/react'
 import { MdClear, MdSearch } from 'react-icons/md'
-import { useApluContext } from 'src/contexts/aplu'
-import { DefaultSpinner } from 'src/design-system'
 import { ArboPath } from 'src/components/Filter/Arbo'
+import { FilterSection } from 'src/components/Filter/FilterSection'
 
 export const PathSearch = () => {
   const {
@@ -69,11 +67,17 @@ export const PathSearch = () => {
 }
 
 export const PathPanel = () => {
+  const {
+    filter: { path },
+  } = useFilterContext()
+
   return (
     <>
-      <ArboPath />
-      {/*<Box mt={2} />*/}
-      {/*<PathSearch />*/}
+      <FilterSection title="Path" active={!!path}>
+        <ArboPath />
+        {/*<Box mt={2} />*/}
+        {/*<PathSearch />*/}
+      </FilterSection>
     </>
   )
 }

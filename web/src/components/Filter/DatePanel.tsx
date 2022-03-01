@@ -3,6 +3,7 @@ import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 import { useFilterContext } from 'src/contexts/filter'
 import { Box, Heading } from '@chakra-ui/react'
 import { ArboDate } from 'src/components/Filter/Arbo'
+import { FilterSection } from 'src/components/Filter/FilterSection'
 
 export const DateRanger = () => {
   const {
@@ -35,10 +36,18 @@ export const DateRanger = () => {
 }
 
 export const DatePanel = () => {
+  const {
+    filter: { dateRange },
+    setDateRange,
+  } = useFilterContext()
+  function onClear() {
+    setDateRange(null)
+  }
+
   return (
-    <Box>
+    <FilterSection title="Date" active={!!dateRange} onClear={onClear}>
       {/*<DateRanger />*/}
       <ArboDate />
-    </Box>
+    </FilterSection>
   )
 }

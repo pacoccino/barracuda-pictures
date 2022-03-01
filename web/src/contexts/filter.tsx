@@ -10,6 +10,7 @@ import { useContext, useMemo, useState, useCallback } from 'react'
 interface FilterContextType {
   addTagToFilter: (t: Tag, tg: TagGroup) => void
   removeTagToFilter: (t: Tag, tg: TagGroup) => void
+  clearTags: () => void
   clearFilter: () => void
   filter: {
     tagLists?: FilterByTagList[]
@@ -26,6 +27,7 @@ interface FilterContextType {
 export const FilterContext = React.createContext<FilterContextType>({
   addTagToFilter: () => 0,
   removeTagToFilter: () => 0,
+  clearTags: () => 0,
   clearFilter: () => 0,
   filter: {
     tagLists: [],
@@ -138,8 +140,12 @@ export const FilterContextProvider = ({ children }) => {
   )
 
   const clearFilter = useCallback(() => {
+    setPath(null)
     setTagLists([])
     setDateRange(null)
+  }, [])
+  const clearTags = useCallback(() => {
+    setTagLists([])
   }, [])
 
   return (
@@ -152,6 +158,7 @@ export const FilterContextProvider = ({ children }) => {
         removeTagToFilter,
         filter,
         clearFilter,
+        clearTags,
         setDateRange,
         setPath,
       }}
