@@ -12,7 +12,7 @@ import {
 import { MdClear, MdSearch } from 'react-icons/md'
 import { useApluContext } from 'src/contexts/aplu'
 import { DefaultSpinner } from 'src/design-system'
-import { Arbo } from 'src/components/Filter/Arbo'
+import { ArboPath } from 'src/components/Filter/Arbo'
 
 export const PathSearch = () => {
   const {
@@ -68,19 +68,10 @@ export const PathSearch = () => {
   )
 }
 
-export const PathArbo = () => {
-  const { apluQuery } = useApluContext()
-  if (apluQuery.loading) {
-    return <DefaultSpinner />
-  }
-
-  return <Arbo arbo={apluQuery.data.arbo.arboPath} />
-}
-
 export const PathPanel = () => {
   return (
     <>
-      <PathArbo />
+      <ArboPath />
       <Box mt={2} />
       <PathSearch />
     </>

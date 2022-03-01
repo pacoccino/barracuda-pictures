@@ -2,6 +2,7 @@ import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 
 import { useFilterContext } from 'src/contexts/filter'
 import { Box, Heading } from '@chakra-ui/react'
+import { ArboDate } from 'src/components/Filter/Arbo'
 
 export const DatePanel = () => {
   const {
