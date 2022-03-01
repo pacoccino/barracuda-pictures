@@ -72,8 +72,8 @@ export const PathPanel = () => {
   return (
     <>
       <ArboPath />
-      <Box mt={2} />
-      <PathSearch />
+      {/*<Box mt={2} />*/}
+      {/*<PathSearch />*/}
     </>
   )
 }

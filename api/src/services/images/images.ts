@@ -26,13 +26,14 @@ export const Image = {
     db.image.findUnique({ where: { id: root.id } }).tagsOnImages(),
 }
 
-export const images = ({
-  filter,
-  take,
-  skip,
-  sorting,
-  cursor,
-}: QueryimagesArgs): Promise<PImage[]> => {
+interface ImagesOpts {
+  select?: Prisma.ImageSelect
+}
+
+export const images = (
+  { filter, take, skip, sorting, cursor }: QueryimagesArgs,
+  opts: ImagesOpts = {}
+): Promise<PImage[]> => {
   const query: Prisma.ImageFindManyArgs = {
     orderBy: new Array<Prisma.ImageOrderByWithRelationInput>(),
   }
@@ -45,6 +46,9 @@ export const images = ({
 
   if (skip !== undefined) {
     query.skip = skip
+  }
+  if (opts.select) {
+    query.select = opts.select
   }
 
   if (cursor) {

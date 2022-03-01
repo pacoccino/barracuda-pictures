@@ -1,10 +1,19 @@
-import type { ArboResponse, ArboPath, ArboDate } from 'types/graphql'
-import { db } from 'src/lib/db'
+import type {
+  ArboResponse,
+  ArboPath,
+  ArboDate,
+  QueryarboArgs,
+} from 'types/graphql'
+import { images } from 'src/services/images'
 import _ from 'lodash'
 import S3Path from 'src/lib/files/S3Path'
 import moment from 'moment'
 
-export const arbo = async (): Promise<ArboResponse> => {
+// Advanced Picture Look Up
+
+export const arbo = async ({
+  filter,
+}: QueryarboArgs = {}): Promise<ArboResponse> => {
   const arboPath: ArboPath = {
     path: '/',
     count: 0,
@@ -17,12 +26,17 @@ export const arbo = async (): Promise<ArboResponse> => {
     children: [],
   }
 
-  const allImages = await db.image.findMany({
-    select: {
-      path: true,
-      dateTaken: true,
+  const allImages = await images(
+    {
+      filter,
     },
-  })
+    {
+      select: {
+        path: true,
+        dateTaken: true,
+      },
+    }
+  )
   arboPath.count = allImages.length
   arboDate.count = allImages.length
 

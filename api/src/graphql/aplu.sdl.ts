@@ -1,6 +1,6 @@
 export const schema = gql`
   type Query {
-    arbo: JSONObject! @requireAuth
+    arbo(filter: ImageFilters): JSONObject! @requireAuth
   }
 
   type ArboResponse {
