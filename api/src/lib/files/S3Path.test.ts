@@ -23,6 +23,7 @@ describe('paths', () => {
     expect(S3Path.getPath('/', 'b.zip')).toEqual('b.zip')
   })
   it('splitPath', () => {
+    expect(S3Path.splitPath('')).toEqual([])
     expect(S3Path.splitPath('a.jpg')).toEqual(['a.jpg'])
     expect(S3Path.splitPath('a/b.jpg')).toEqual(['a', 'b.jpg'])
     expect(S3Path.splitPath('a/b/c.jpg')).toEqual(['a', 'b', 'c.jpg'])

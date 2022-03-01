@@ -2,16 +2,19 @@ import { useFilterContext } from 'src/contexts/filter'
 import { useForm } from 'react-hook-form'
 import { useEffect } from 'react'
 import {
-  Box,
-  Heading,
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
+  Text,
+  Box,
 } from '@chakra-ui/react'
 import { MdClear, MdSearch } from 'react-icons/md'
+import { useApluContext } from 'src/contexts/aplu'
+import { DefaultSpinner } from 'src/design-system'
+import { Arbo } from 'src/components/Filter/Arbo'
 
-export const PathPanel = () => {
+export const PathSearch = () => {
   const {
     filter: { path: filterPath },
     setPath,
@@ -38,6 +41,9 @@ export const PathPanel = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Text ml={1} mb={1}>
+        Search
+      </Text>
       <InputGroup>
         <Input
           placeholder="argentique/2021/"
@@ -59,5 +65,24 @@ export const PathPanel = () => {
         </InputRightElement>
       </InputGroup>
     </form>
+  )
+}
+
+export const PathArbo = () => {
+  const { apluQuery } = useApluContext()
+  if (apluQuery.loading) {
+    return <DefaultSpinner />
+  }
+
+  return <Arbo arbo={apluQuery.data.arbo.arboPath} />
+}
+
+export const PathPanel = () => {
+  return (
+    <>
+      <PathArbo />
+      <Box mt={2} />
+      <PathSearch />
+    </>
   )
 }

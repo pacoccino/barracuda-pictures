@@ -5,6 +5,9 @@ import { useEffect } from 'react'
 import { FilterContextProvider } from 'src/contexts/filter'
 import { TagContextProvider } from 'src/contexts/tags'
 import { SelectContextProvider } from 'src/contexts/select'
+import { ApluContextProvider } from 'src/contexts/aplu'
+
+const contexts = [FilterContextProvider, TagContextProvider, SelectContextProvider, ApluContextProvider]
 
 const Routes = () => {
   useEffect(() => {
@@ -30,7 +33,7 @@ const Routes = () => {
       <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
 
       <Private unauthenticated="login">
-        <Set wrap={[FilterContextProvider, TagContextProvider, SelectContextProvider, DashboardLayout]}>
+        <Set wrap={contexts.concat([DashboardLayout])}>
           <Route path="/photos" page={PhotosPage} name="photos" />
           <Route path="/admin" page={AdminPage} name="admin" />
           <Route path="/infos" page={InfoPage} name="infos" />

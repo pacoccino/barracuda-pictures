@@ -11,18 +11,21 @@ const Section = ({ children, title }) => {
       <Flex
         onClick={disclosure.onToggle}
         cursor="pointer"
-        borderTop="1px solid black"
-        borderBottom="1px solid black"
+        bg="gray.200"
         align="center"
         py={2}
         px={2}
+        boxShadow="md"
+        borderRadius="sm"
       >
         {disclosure.isOpen ? <ChevronDownIcon /> : <ChevronRightIcon />}
         <Text textStyle="h3" ml={2}>
           {title}
         </Text>
       </Flex>
-      {disclosure.isOpen && <Box mt={4}>{children}</Box>}
+      <Box mt={4} display={disclosure.isOpen ? 'block' : 'none'}>
+        {children}
+      </Box>
     </Box>
   )
 }
@@ -30,7 +33,7 @@ const Section = ({ children, title }) => {
 const FilterPanel = () => {
   return (
     <VStack py={4} px={2} spacing={4} align="stretch" h="100%">
-      <Text align="center">Filter</Text>
+      <Text align="center">Filters</Text>
 
       <Section title="Path">
         <PathPanel />
