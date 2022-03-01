@@ -28,9 +28,9 @@ export const arbo = async (): Promise<ArboResponse> => {
   _.forEach(allImages, ({ path, dateTaken }) => {
     // Dates
     const date = moment(dateTaken)
-    const year = date.year()
-    const month = date.month()
 
+    // Year
+    const year = date.year()
     let yearArb = arboDate.children.find((c) => c.path === year)
     if (!yearArb) {
       yearArb = {
@@ -42,6 +42,8 @@ export const arbo = async (): Promise<ArboResponse> => {
     }
     yearArb.count++
 
+    // Month
+    const month = date.month()
     let monthArb = yearArb.children.find((c) => c.path === month)
     if (!monthArb) {
       monthArb = {
@@ -52,6 +54,18 @@ export const arbo = async (): Promise<ArboResponse> => {
       yearArb.children.push(monthArb)
     }
     monthArb.count++
+    // Day
+    const day = date.date()
+    let dayArbo = monthArb.children.find((c) => c.path === day)
+    if (!dayArbo) {
+      dayArbo = {
+        path: day,
+        count: 0,
+        children: [],
+      }
+      monthArb.children.push(dayArbo)
+    }
+    dayArbo.count++
 
     // Paths
 

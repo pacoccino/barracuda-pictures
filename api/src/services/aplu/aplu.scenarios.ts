@@ -86,7 +86,7 @@ export const standard = defineScenario({
     p3: (scenario) => ({
       data: {
         path: 'ath1/ath2/p3.jpg',
-        dateTaken: '2001-02-01T00:03:00Z',
+        dateTaken: '2001-02-02T00:03:00Z',
         tagsOnImages: {
           create: [
             {
