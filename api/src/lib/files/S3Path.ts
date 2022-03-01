@@ -1,10 +1,7 @@
-export default {
+const S3Path = {
   getBasePath(path: string) {
-    const basePath = path
-      .split('/')
-      .filter((p) => p !== '')
-      .slice(0, -1)
-      .join('/')
+    const splitted = S3Path.splitPath(path)
+    const basePath = splitted.slice(0, -1).join('/')
 
     return basePath
   },
@@ -29,4 +26,12 @@ export default {
 
     return path
   },
+
+  splitPath(path: string) {
+    const splitted = path.split('/').filter((p) => p !== '')
+
+    return splitted
+  },
 }
+
+export default S3Path
