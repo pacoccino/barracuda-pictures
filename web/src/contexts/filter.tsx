@@ -22,6 +22,7 @@ interface FilterContextType {
   setTagListCondition: (s: string, c: TagListCondition) => void
   setDateRange: (d?: DateRange) => void
   setPath: (s?: string) => void
+  isFilterActive: boolean
 }
 
 export const FilterContext = React.createContext<FilterContextType>({
@@ -39,6 +40,7 @@ export const FilterContext = React.createContext<FilterContextType>({
   tagListConditions: new Map(),
   setDateRange: () => 0,
   setPath: () => 0,
+  isFilterActive: false,
 })
 
 export const FilterContextProvider = ({ children }) => {
@@ -148,6 +150,10 @@ export const FilterContextProvider = ({ children }) => {
     setTagLists([])
   }, [])
 
+  const isFilterActive = useMemo(() => {
+    return filter.path || filter.tagLists.length || filter.dateRange
+  }, [filter])
+
   return (
     <FilterContext.Provider
       value={{
@@ -161,6 +167,7 @@ export const FilterContextProvider = ({ children }) => {
         clearTags,
         setDateRange,
         setPath,
+        isFilterActive,
       }}
     >
       {children}
