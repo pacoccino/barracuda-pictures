@@ -20,7 +20,7 @@ export interface TreeProps {
   formatPath?: (a: Path[], b: Tree) => React.ReactElement | string
 }
 
-export const Tree = ({
+export const RecursiveTree = ({
   tree,
   paths = [],
   selectedPath = null,
@@ -83,7 +83,7 @@ export const Tree = ({
       {disclosure.isOpen && (
         <Box ml={2}>
           {sortedChildren.map((child) => (
-            <Tree
+            <RecursiveTree
               tree={child}
               key={child.path}
               paths={fullPath}
@@ -97,3 +97,18 @@ export const Tree = ({
     </Box>
   )
 }
+
+export const Tree = (props: TreeProps) => (
+  <Box
+    maxHeight="300px"
+    maxWidth="100%"
+    overflow="auto"
+    px={1}
+    borderWidth={1}
+    borderColor="gray.600"
+    bg="gray.600"
+    borderRadius="md"
+  >
+    <RecursiveTree {...props} />
+  </Box>
+)

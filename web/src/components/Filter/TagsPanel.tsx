@@ -101,7 +101,7 @@ const AvailableTagsPanel = () => {
           onClick={() => setTagGroupCreateOpen(true)}
           leftIcon={<AddIcon />}
           size="xs"
-          colorScheme="blue"
+          colorScheme="orchid"
           variant="solid"
         >
           Create Tag Group
@@ -118,7 +118,7 @@ const AvailableTagsPanel = () => {
                 <IconButton
                   aria-label="create tag"
                   size="xs"
-                  colorScheme="blue"
+                  colorScheme="fulvous"
                   variant="solid"
                   icon={<AddIcon />}
                   onClick={() => setTagCreateTagGroup(tagGroup)}

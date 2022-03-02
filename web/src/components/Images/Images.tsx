@@ -54,7 +54,7 @@ const Images = ({ images, loadMore }: ImagesProps) => {
       ref={scrollRef}
       align="start"
       h="100%"
-      overflow="scroll"
+      overflow="auto"
       pt={4}
       pb={4}
       spacing={4}

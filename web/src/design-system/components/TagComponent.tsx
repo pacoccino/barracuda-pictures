@@ -63,14 +63,14 @@ export const TagComponent = ({
             mr={1}
             height="100%"
           >
-            <Text color="white" fontSize="0.7rem">
+            <Text color="white" fontSize="0.73rem" fontWeight={600} X>
               {groupName}
             </Text>
           </Flex>
         )}
         {leftAction && <Center mr={1}>{leftAction}</Center>}
 
-        <Text color="white" py={1} fontSize="0.7rem">
+        <Text color="white" py={1} fontSize="0.73rem" fontWeight={600}>
           {name}
         </Text>
       </Flex>

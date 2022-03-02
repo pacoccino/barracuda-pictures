@@ -12,8 +12,7 @@ scroll, when add tag it moves back to top
 
 ### TODO
 
-- Display only tags available from filter
-- Note
+- Display tags not in filter for being able to filter OR tags
 - Create tag from metadata
 - duplicate tag group
 - logger logfile

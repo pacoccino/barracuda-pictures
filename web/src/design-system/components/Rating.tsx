@@ -7,13 +7,7 @@ interface RatingProps {
   loading?: boolean
 }
 export const Rating = ({ value, onChange, loading }: RatingProps) => (
-  <ButtonGroup
-    isAttached
-    size="sm"
-    variant="ghost"
-    flex={1}
-    isDisabled={loading}
-  >
+  <ButtonGroup isAttached size="sm" variant="ghost" isDisabled={loading}>
     {[1, 2, 3, 4, 5].map((i) => (
       <IconButton
         aria-label="lte"

@@ -49,7 +49,7 @@ export const RatingPanel = () => {
       active={!!rating}
       onClear={() => setRating(null)}
     >
-      <Flex align="center" px={4}>
+      <Flex align="center" justify="space-around">
         <Rating
           value={value}
           onChange={(v) => (v === value ? setValue(0) : setValue(v))}

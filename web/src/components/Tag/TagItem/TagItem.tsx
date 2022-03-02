@@ -42,8 +42,8 @@ export const TagItem = ({
           },
         ]
       }
-      color="green"
-      groupColor="red"
+      color="celadon"
+      groupColor="fulvous"
       name={tag.name}
       groupName={showGroup && tag.tagGroup?.name}
       {...args}
@@ -95,7 +95,7 @@ export const TagGroupItem = ({
             ]
           : undefined
       }
-      color="red"
+      color="fulvous"
       name={tagGroup.name}
       {...args}
     />

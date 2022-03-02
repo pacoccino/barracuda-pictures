@@ -31,22 +31,12 @@ export const ArboPath = () => {
   const selectedPath = ['/'].concat(S3Path.splitPath(filter.path || ''))
 
   return (
-    <Box
-      maxHeight="300px"
-      overflowY="scroll"
-      px={1}
-      borderWidth={1}
-      borderColor="gray.600"
-      bg="gray.800"
-      borderRadius="md"
-    >
-      <Tree
-        tree={arbo}
-        selectedPath={selectedPath}
-        onSelect={selectPath}
-        formatPath={formatPath}
-      />
-    </Box>
+    <Tree
+      tree={arbo}
+      selectedPath={selectedPath}
+      onSelect={selectPath}
+      formatPath={formatPath}
+    />
   )
 }
 
@@ -113,21 +103,11 @@ export const ArboDate = () => {
   }
 
   return (
-    <Box
-      maxHeight="300px"
-      overflowY="scroll"
-      px={1}
-      borderWidth={1}
-      borderColor="gray.600"
-      bg="gray.600"
-      borderRadius="md"
-    >
-      <Tree
-        tree={arbo}
-        selectedPath={selectedPath}
-        onSelect={selectDate}
-        formatPath={formatPath}
-      />
-    </Box>
+    <Tree
+      tree={arbo}
+      selectedPath={selectedPath}
+      onSelect={selectDate}
+      formatPath={formatPath}
+    />
   )
 }

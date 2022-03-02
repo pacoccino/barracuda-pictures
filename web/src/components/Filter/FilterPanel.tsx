@@ -31,7 +31,7 @@ const FilterPanel = () => {
         spacing={4}
         align="stretch"
         h="100%"
-        overflow="scroll"
+        overflow="auto"
       >
         <PathPanel />
         <DatePanel />
