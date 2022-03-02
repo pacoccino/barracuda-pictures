@@ -6,34 +6,6 @@ export async function createImageTags(
   image: Image,
   imageMetadata: ImageMetadata
 ) {
-  // Year
-
-  const tagGroup_dateInput = {
-    name: 'Year',
-  }
-  const tagGroup_date = await db.tagGroup.upsert({
-    where: tagGroup_dateInput,
-    update: tagGroup_dateInput,
-    create: tagGroup_dateInput,
-  })
-  const tag_dateInput = {
-    name: imageMetadata.parsed.date.capture.getFullYear().toString(),
-    tagGroupId: tagGroup_date.id,
-  }
-  const tag_date = await db.tag.upsert({
-    where: {
-      name_tagGroupId: tag_dateInput,
-    },
-    update: tag_dateInput,
-    create: tag_dateInput,
-  })
-  await db.tagsOnImage.create({
-    data: {
-      tagId: tag_date.id,
-      imageId: image.id,
-    },
-  })
-
   // Camera
 
   const tagGroup_cameraInput = {
