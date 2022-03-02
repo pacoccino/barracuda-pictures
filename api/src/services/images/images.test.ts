@@ -631,8 +631,10 @@ describe('images', () => {
     scenario('edit rating', async (scenario: StandardScenario) => {
       const images = [scenario.image.p1, scenario.image.p2]
       const res = await editImages({
-        input: {
+        select: {
           imageIds: images.map((i) => i.id),
+        },
+        input: {
           rating: 3,
         },
       })
@@ -653,8 +655,10 @@ describe('images', () => {
         },
       }
       const res = await editImages({
-        input: {
+        select: {
           filter,
+        },
+        input: {
           rating: 3,
         },
       })
@@ -682,15 +686,18 @@ describe('images', () => {
 
         await expect(
           editImages({
-            input: {
+            select: {
               filter,
               imageIds,
+            },
+            input: {
               rating: 0,
             },
           })
         ).rejects.toThrowError('need only one of imagesIds or filter')
         await expect(
           editImages({
+            select: {},
             input: {
               rating: 0,
             },

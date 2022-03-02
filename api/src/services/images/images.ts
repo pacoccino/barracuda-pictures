@@ -207,7 +207,8 @@ export const editImagesBasePath = async ({
 }
 
 export const editImages = async ({
-  input: { imageIds, rating, filter },
+  select: { imageIds, filter },
+  input: { rating },
 }: MutationeditImagesArgs): Promise<Mutation['editImages']> => {
   if (!filter && !imageIds) throw new Error('need either imagesIds or filter')
   if (filter && imageIds)
