@@ -17,6 +17,7 @@ import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { TagStatus } from 'src/design-system/components/TagComponent'
 import { DefaultSpinner, StatusIcon } from 'src/design-system'
 import { FilterSection } from 'src/components/Filter/FilterSection'
+import { useQuery } from '@redwoodjs/web'
 
 export const TagsPanel = () => {
   const { selectedTagIds, clearTags } = useFilterContext()
@@ -32,14 +33,32 @@ export const TagsPanel = () => {
   )
 }
 
+export const QUERY_FILTERED_TAGS = gql`
+  query FindFilteredTags($filter: ImageFilters) {
+    tagsFromFilter(filter: $filter) {
+      id
+      name
+    }
+  }
+`
+
 const AvailableTagsPanel = () => {
   const {
+    filter,
     selectedTagIds,
     addTagToFilter,
     removeTagToFilter,
     tagListConditions,
     setTagListCondition,
   } = useFilterContext()
+
+  const filteredTagsQuery = useQuery(QUERY_FILTERED_TAGS, {
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      filter,
+    },
+  })
 
   const { tagsQuery, setTagGroupCreateOpen, setTagCreateTagGroup } =
     useTagContext()
@@ -49,11 +68,29 @@ const AvailableTagsPanel = () => {
     [selectedTagIds]
   )
 
-  if (!tagsQuery.previousData && tagsQuery.loading) {
+  const filteredTagGroups = useMemo(() => {
+    if (tagsQuery.loading || filteredTagsQuery.loading) return []
+
+    return tagsQuery.data.tagGroups
+      .map((tagGroup) => {
+        return {
+          ...tagGroup,
+          tags: tagGroup.tags.filter((tag) => {
+            return (
+              filteredTagsQuery.data.tagsFromFilter.findIndex(
+                (t) => t.id === tag.id
+              ) !== -1
+            )
+          }),
+        }
+      })
+      .filter((tagGroup) => tagGroup.tags.length > 0)
+  }, [filteredTagsQuery, tagsQuery])
+
+  if (filteredTagsQuery.loading || tagsQuery.loading) {
     return <DefaultSpinner />
   }
 
-  const tagGroups = tagsQuery.data.tagGroups
   return (
     <VStack align="stretch">
       <Flex align="center">
@@ -72,7 +109,7 @@ const AvailableTagsPanel = () => {
       </Flex>
 
       <VStack flex={1} py={1} align="stretch">
-        {tagGroups.map((tagGroup) => (
+        {filteredTagGroups.map((tagGroup) => (
           <Box key={tagGroup.id}>
             <Flex>
               <Flex flex={1}>
