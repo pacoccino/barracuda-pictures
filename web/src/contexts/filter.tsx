@@ -17,7 +17,7 @@ interface FilterContextType {
   filter: ImageFilters
   selectedTagIds: string[]
   tagListConditions: { [key: string]: TagListCondition }
-  setTagListCondition: (s: string, c: TagListCondition) => void
+  setTagListCondition: (tg: TagGroup, c: TagListCondition) => void
   setDateRange: (d?: DateRange) => void
   setPath: (s?: string) => void
   setRating: (s?: FilterByRating) => void

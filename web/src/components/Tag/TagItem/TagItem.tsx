@@ -19,7 +19,7 @@ export const TagItem = ({
   showGroup,
   showMenu,
   ...args
-}: OptionalMerge<TagItemProps, TagProps>) => {
+}: TagItemProps & Partial<TagProps>) => {
   const { setTagForDelete, setTagForEdit, setTagForMove } = useTagContext()
   return (
     <TagComponent
@@ -79,7 +79,7 @@ export const TagGroupItem = ({
               },
               {
                 icon: <PlusSquareIcon />,
-                onClick: () => setTagGroupCreateOpen(tagGroup),
+                onClick: () => setTagGroupCreateOpen(true),
                 label: 'Create tag group',
               },
               {

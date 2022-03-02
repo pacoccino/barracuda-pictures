@@ -63,7 +63,7 @@ export const TagComponent = ({
             mr={1}
             height="100%"
           >
-            <Text color="white" fontSize="0.73rem" fontWeight={600} X>
+            <Text color="white" fontSize="0.73rem" fontWeight={600}>
               {groupName}
             </Text>
           </Flex>

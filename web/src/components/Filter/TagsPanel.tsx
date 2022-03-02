@@ -5,6 +5,7 @@ import {
   IconButton,
   Switch,
   Text,
+  useDisclosure,
   VStack,
   Wrap,
   WrapItem,
@@ -15,7 +16,11 @@ import { useCallback, useMemo } from 'react'
 import { AddIcon } from '@chakra-ui/icons'
 import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { TagStatus } from 'src/design-system/components/TagComponent'
-import { DefaultSpinner, StatusIcon } from 'src/design-system'
+import {
+  DefaultSpinner,
+  StatusIcon,
+  TooltipIconButton,
+} from 'src/design-system'
 import { FilterSection } from 'src/components/Filter/FilterSection'
 import { useQuery } from '@redwoodjs/web'
 
@@ -52,6 +57,8 @@ const AvailableTagsPanel = () => {
     setTagListCondition,
   } = useFilterContext()
 
+  const allTagsDisclosure = useDisclosure()
+
   const filteredTagsQuery = useQuery(QUERY_FILTERED_TAGS, {
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
@@ -69,7 +76,10 @@ const AvailableTagsPanel = () => {
   )
 
   const filteredTagGroups = useMemo(() => {
-    if (tagsQuery.loading || filteredTagsQuery.loading) return []
+    if (tagsQuery.loading) return []
+    if (allTagsDisclosure.isOpen) return tagsQuery.data.tagGroups
+
+    if (filteredTagsQuery.loading) return []
 
     return tagsQuery.data.tagGroups
       .map((tagGroup) => {
@@ -94,9 +104,15 @@ const AvailableTagsPanel = () => {
   return (
     <VStack align="stretch">
       <Flex align="center">
-        <Text textStyle="h3" mb={2} flex="1">
-          Available
+        <Text textStyle="h3" flex={1}>
+          {allTagsDisclosure.isOpen ? 'All tags' : 'Tags on filter'}
         </Text>
+        <Switch
+          isChecked={allTagsDisclosure.isOpen}
+          onChange={allTagsDisclosure.onToggle}
+          mr={2}
+          size="md"
+        />
         <Button
           onClick={() => setTagGroupCreateOpen(true)}
           leftIcon={<AddIcon />}
@@ -115,7 +131,9 @@ const AvailableTagsPanel = () => {
               <Flex flex={1}>
                 <TagGroupItem tagGroup={tagGroup} showMenu />
 
-                <IconButton
+                <TooltipIconButton
+                  label="Create tag"
+                  tooltipProps={{ placement: 'right' }}
                   aria-label="create tag"
                   size="xs"
                   colorScheme="fulvous"
@@ -175,7 +193,7 @@ const AvailableTagsPanel = () => {
         ))}
       </VStack>
 
-      <Text textStyle="h3" size="sm" mb={2} flex="1">
+      <Text textStyle="h3" mb={4} flex="1">
         Selected
       </Text>
       <SelectedTagsPanel />

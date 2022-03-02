@@ -69,11 +69,12 @@ export const PathSearch = () => {
 export const PathPanel = () => {
   const {
     filter: { path },
+    setPath,
   } = useFilterContext()
 
   return (
     <>
-      <FilterSection title="Path" active={!!path}>
+      <FilterSection title="Path" active={!!path} onClear={() => setPath(null)}>
         <ArboPath />
         {/*<Box mt={2} />*/}
         {/*<PathSearch />*/}
