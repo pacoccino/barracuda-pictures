@@ -21,6 +21,7 @@ model Image {
   id            String        @id @default(uuid())
   path          String        @unique
   dateTaken     DateTime      @default(now())
+  rating        Int           @default(0)
   metadata      Json          @default("{}")
   tagsOnImages  TagsOnImage[]
 }

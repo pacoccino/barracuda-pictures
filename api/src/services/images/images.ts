@@ -34,9 +34,7 @@ export const images = (
   { filter, take, skip, sorting, cursor }: QueryimagesArgs,
   opts: ImagesOpts = {}
 ): Promise<PImage[]> => {
-  const query: Prisma.ImageFindManyArgs = {
-    orderBy: new Array<Prisma.ImageOrderByWithRelationInput>(),
-  }
+  const query: Prisma.ImageFindManyArgs = {}
 
   if (take === undefined) {
     query.take = 10
@@ -57,12 +55,7 @@ export const images = (
     }
   }
 
-  query.orderBy.push({
-    dateTaken: sorting?.dateTaken || 'desc',
-  })
-  query.orderBy.push({
-    id: 'desc',
-  })
+  query.orderBy = [{ dateTaken: sorting?.dateTaken || 'desc' }, { id: 'desc' }]
 
   if (filter) {
     query.where = {}
@@ -97,6 +90,11 @@ export const images = (
     if (filter.path && filter.path.length > 0) {
       query.where.path = {
         contains: filter.path,
+      }
+    }
+    if (filter.rating) {
+      query.where.rating = {
+        [filter.rating.condition]: filter.rating.value,
       }
     }
   }

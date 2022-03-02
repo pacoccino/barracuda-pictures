@@ -29,6 +29,7 @@ export const arbo = async ({
   const allImages = await images(
     {
       filter,
+      take: 0,
     },
     {
       select: {

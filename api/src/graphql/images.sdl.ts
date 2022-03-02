@@ -3,6 +3,7 @@ export const schema = gql`
     id: String!
     path: String!
     dateTaken: DateTime!
+    rating: Int!
     metadata: JSONObject!
     tagsOnImages: [TagsOnImage]!
   }
@@ -44,6 +45,7 @@ export const schema = gql`
     tagLists: [FilterByTagList!]
     dateRange: DateRange
     path: String
+    rating: FilterByRating
   }
 
   input FilterByTagList {
@@ -51,6 +53,18 @@ export const schema = gql`
     tagIds: [String]!
     condition: TagListCondition!
   }
+
+  enum IntCondition {
+    equals
+    lte
+    gte
+  }
+
+  input FilterByRating {
+    value: Int!
+    condition: IntCondition
+  }
+
   input DeleteManyImagesInput {
     imageIds: [String!]
     filter: ImageFilters

@@ -55,6 +55,7 @@ export const standard = defineScenario({
       data: {
         path: 'p1.jpg',
         dateTaken: '2022-01-01T00:01:00Z',
+        rating: 1,
         tagsOnImages: {
           create: [
             {
@@ -71,6 +72,7 @@ export const standard = defineScenario({
       data: {
         path: 'ath1/p2.jpg',
         dateTaken: '2022-01-01T00:02:00Z',
+        rating: 2,
         tagsOnImages: {
           create: [
             {
@@ -86,6 +88,7 @@ export const standard = defineScenario({
     p3: (scenario) => ({
       data: {
         path: 'ath1/ath2/p3.jpg',
+        rating: 3,
         dateTaken: '2022-01-01T00:03:00Z',
         tagsOnImages: {
           create: [
@@ -102,6 +105,7 @@ export const standard = defineScenario({
     p4: (scenario) => ({
       data: {
         path: 'ath3/p4.jpg',
+        rating: 4,
         dateTaken: '2022-01-01T00:04:00Z',
         tagsOnImages: {
           create: [
@@ -117,6 +121,7 @@ export const standard = defineScenario({
     }),
     p5: (scenario) => ({
       data: {
+        rating: 5,
         path: 'p5.jpg',
         dateTaken: '2022-01-01T00:05:00Z',
         tagsOnImages: {

@@ -200,7 +200,7 @@ describe('images', () => {
       expect(result[1]).toEqual(scenario.image.p4)
     })
 
-    describe(' filter date range', () => {
+    describe('filter date range', () => {
       scenario('date range from to', async (scenario: StandardScenario) => {
         const result = await images({
           sorting: {
@@ -260,6 +260,53 @@ describe('images', () => {
         expect(result.length).toEqual(2)
         expect(result).toContainEqual(scenario.image.p2)
         expect(result).toContainEqual(scenario.image.p3)
+      })
+    })
+
+    describe('filter rating', () => {
+      scenario('less than', async (scenario: StandardScenario) => {
+        const result = await images({
+          filter: {
+            rating: {
+              value: 2,
+              condition: 'lte',
+            },
+          },
+        })
+
+        expect(result.length).toEqual(3)
+        expect(result).toContainEqual(scenario.image.p1)
+        expect(result).toContainEqual(scenario.image.p2)
+        expect(result).toContainEqual(scenario.image.notag)
+      })
+      scenario('greater than', async (scenario: StandardScenario) => {
+        const result = await images({
+          filter: {
+            rating: {
+              value: 2,
+              condition: 'gte',
+            },
+          },
+        })
+
+        expect(result.length).toEqual(4)
+        expect(result).toContainEqual(scenario.image.p2)
+        expect(result).toContainEqual(scenario.image.p3)
+        expect(result).toContainEqual(scenario.image.p4)
+        expect(result).toContainEqual(scenario.image.p5)
+      })
+      scenario('equals', async (scenario: StandardScenario) => {
+        const result = await images({
+          filter: {
+            rating: {
+              value: 2,
+              condition: 'equals',
+            },
+          },
+        })
+
+        expect(result.length).toEqual(1)
+        expect(result).toContainEqual(scenario.image.p2)
       })
     })
   })
