@@ -1,6 +1,7 @@
 export const schema = gql`
   type Query {
     arbo(filter: ImageFilters): JSONObject! @requireAuth
+    tagsFromFilter(filter: ImageFilters): [Tag!]! @requireAuth
   }
 
   type ArboResponse {

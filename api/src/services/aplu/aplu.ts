@@ -3,11 +3,14 @@ import type {
   ArboPath,
   ArboDate,
   QueryarboArgs,
+  QuerytagsFromFilterArgs,
 } from 'types/graphql'
 import { images } from 'src/services/images'
 import _ from 'lodash'
 import S3Path from 'src/lib/files/S3Path'
 import moment from 'moment'
+import { Tag } from '@prisma/client'
+import { db } from 'src/lib/db'
 
 // Advanced Picture Look Up
 
@@ -111,4 +114,32 @@ export const arbo = async ({
     arboPath,
     arboDate,
   }
+}
+
+export const tagsFromFilter = async ({
+  filter,
+}: QuerytagsFromFilterArgs = {}): Promise<Tag[]> => {
+  const allImages = await images(
+    {
+      filter,
+      take: 0,
+    },
+    {
+      select: {
+        id: true,
+      },
+    }
+  )
+
+  return db.tag.findMany({
+    where: {
+      tagsOnImages: {
+        some: {
+          OR: allImages.map((image) => ({
+            imageId: image.id,
+          })),
+        },
+      },
+    },
+  })
 }
