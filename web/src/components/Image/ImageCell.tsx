@@ -10,6 +10,7 @@ export const QUERY = gql`
       path
       dateTaken
       metadata
+      rating
       tagsOnImages {
         id
         tag {

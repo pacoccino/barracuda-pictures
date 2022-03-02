@@ -33,6 +33,7 @@ export type ImageParsedMetadata = {
     software?: string
   }
   keywords?: string[]
+  rating?: number
 }
 
 function getProp(
@@ -62,6 +63,12 @@ export function parseMetadata_exifr(
     parsed.date = {
       capture: moment.utc(captureDate, 'YYYY-MM-DD hh:mm:ss').toDate(),
     }
+  }
+
+  // rating
+  const rating = getProp(rawMD, ['xmp.Rating'])
+  if (rating) {
+    parsed.rating = rating
   }
 
   // keywords

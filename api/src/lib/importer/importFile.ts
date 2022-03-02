@@ -66,6 +66,7 @@ export const getImportWorker = ({ logger, prefix, rootDir }) =>
           path: s3path,
           dateTaken: imageMetadata.parsed.date.capture,
           metadata: imageMetadata.raw,
+          rating: imageMetadata.parsed.rating,
         },
       })
 
