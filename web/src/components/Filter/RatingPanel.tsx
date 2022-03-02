@@ -4,6 +4,7 @@ import { FilterSection } from 'src/components/Filter/FilterSection'
 import { FaEquals, FaGreaterThanEqual, FaLessThanEqual } from 'react-icons/fa'
 import { MdStar, MdStarOutline } from 'react-icons/md'
 import { useCallback } from 'react'
+import { Rating } from 'src/design-system/components/Rating'
 
 export const RatingPanel = () => {
   const {
@@ -49,19 +50,10 @@ export const RatingPanel = () => {
       onClear={() => setRating(null)}
     >
       <Flex align="center" px={4}>
-        <ButtonGroup isAttached size="sm" variant="ghost" flex={1}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <IconButton
-              aria-label="lte"
-              key={i}
-              icon={
-                i <= value ? <MdStar size={20} /> : <MdStarOutline size={20} />
-              }
-              color={i <= value ? 'yellow.400' : 'black'}
-              onClick={() => (value === i ? setValue(0) : setValue(i))}
-            />
-          ))}
-        </ButtonGroup>
+        <Rating
+          value={value}
+          onChange={(v) => (v === value ? setValue(0) : setValue(v))}
+        />
 
         <ButtonGroup isAttached size="sm" variant="outline" colorScheme="green">
           <IconButton

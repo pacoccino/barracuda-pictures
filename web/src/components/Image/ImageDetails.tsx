@@ -15,10 +15,10 @@ import {
 import { useMemo } from 'react'
 import { CopyIcon, CheckIcon } from '@chakra-ui/icons'
 import { RightPanelOptions } from 'src/components/Image/RightPanel'
-import moment from 'moment'
 
 import { parseMetadata_exifr } from 'src/lib/metadata_parser'
 import { formatDate } from 'src/lib/utils'
+import { Rating } from 'src/design-system/components/Rating'
 
 const RowTitle = ({ children, rightItem = null }) => (
   <Flex mb={3} align="center">
@@ -54,7 +54,7 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
 
   return (
     <Box>
-      <RowTitle>ID</RowTitle>
+      <RowTitle rightItem={<Rating value={image.rating} />}>ID</RowTitle>
       <RowContent>{image.id}</RowContent>
 
       <RowTitle>Path</RowTitle>
