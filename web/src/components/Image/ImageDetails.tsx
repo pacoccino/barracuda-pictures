@@ -1,4 +1,4 @@
-import { Box, Flex, Text, WrapItem, Wrap } from 'src/design-system'
+import { Box, Flex, Text, WrapItem, Wrap, useToast } from 'src/design-system'
 import { TagItem } from 'src/components/Tag/TagItem/TagItem'
 import {
   Modal,
@@ -19,6 +19,15 @@ import { RightPanelOptions } from 'src/components/Image/RightPanel'
 import { parseMetadata_exifr } from 'src/lib/metadata_parser'
 import { formatDate } from 'src/lib/utils'
 import { Rating } from 'src/design-system/components/Rating'
+import { useMutation } from '@redwoodjs/web'
+
+const EDIT_IMAGE = gql`
+  mutation EditImage($imageId: String!, $input: EditImages!) {
+    editImages(select: { imageIds: [$imageId] }, input: $input) {
+      count
+    }
+  }
+`
 
 const RowTitle = ({ children, rightItem = null }) => (
   <Flex mb={3} align="center">
@@ -43,6 +52,8 @@ const RowSubContent = ({ children }) => <Text fontSize="sm">{children}</Text>
 
 export const ImageDetails = ({ image, switchRightPanel }) => {
   const metadataDisclosure = useDisclosure()
+  const [editImages, { loading }] = useMutation(EDIT_IMAGE)
+  const toast = useToast()
 
   const parsedMetadata = useMemo(
     () => parseMetadata_exifr(image.metadata),
@@ -52,9 +63,48 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
   const gps = useMemo(() => `${image.takenAtLat}, ${image.takenAtLng}`, [image])
   const { hasCopied, onCopy } = useClipboard(gps)
 
+  const handleEdit = ({ rating }) => {
+    editImages({
+      variables: {
+        imageId: image.id,
+        input: {
+          rating,
+        },
+      },
+      refetchQueries: ['FindImageWithTagsById'],
+    })
+      .then(() => {
+        toast({
+          title: 'Image edited',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        })
+      })
+      .catch((error) => {
+        toast({
+          title: 'Error editing image',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      })
+  }
+
   return (
     <Box>
-      <RowTitle rightItem={<Rating value={image.rating} />}>ID</RowTitle>
+      <RowTitle
+        rightItem={
+          <Rating
+            value={image.rating}
+            onChange={(rating) => handleEdit({ rating })}
+            loading={loading}
+          />
+        }
+      >
+        ID
+      </RowTitle>
       <RowContent>{image.id}</RowContent>
 
       <RowTitle>Path</RowTitle>
