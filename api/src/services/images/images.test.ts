@@ -1,5 +1,6 @@
 import {
   deleteManyImages,
+  editImages,
   editImagesBasePath,
   image,
   images,
@@ -425,7 +426,7 @@ describe('images', () => {
     )
   })
 
-  describe('edit', () => {
+  describe('edit base path', () => {
     async function testEditImagesBasePath(
       imagesToEdit,
       basePath,
@@ -622,6 +623,79 @@ describe('images', () => {
             S3Path.getPath(basePath, S3Path.getFileName(imageToEdit.path))
           )
         }
+      }
+    )
+  })
+
+  describe('edit', () => {
+    scenario('edit rating', async (scenario: StandardScenario) => {
+      const images = [scenario.image.p1, scenario.image.p2]
+      const res = await editImages({
+        input: {
+          imageIds: images.map((i) => i.id),
+          rating: 3,
+        },
+      })
+      expect(res.count).toBe(2)
+      const i1 = await image({ id: images[0].id })
+      const i2 = await image({ id: images[1].id })
+
+      expect(i1.rating).toBe(3)
+      expect(i2.rating).toBe(3)
+    })
+
+    scenario('edit rating from filter', async (scenario: StandardScenario) => {
+      const images = [scenario.image.p4, scenario.image.p5]
+      const filter: ImageFilters = {
+        rating: {
+          value: 4,
+          condition: 'gte',
+        },
+      }
+      const res = await editImages({
+        input: {
+          filter,
+          rating: 3,
+        },
+      })
+      expect(res.count).toBe(2)
+      const i1 = await image({ id: images[0].id })
+      const i2 = await image({ id: images[1].id })
+
+      expect(i1.rating).toBe(3)
+      expect(i2.rating).toBe(3)
+    })
+
+    scenario(
+      'edit images XOR arguments',
+      async (scenario: StandardScenario) => {
+        const filter: ImageFilters = {
+          tagLists: [
+            {
+              tagGroupId: scenario.tagGroup.one.id,
+              tagIds: [scenario.tag.g1t1.id],
+              condition: 'OR',
+            },
+          ],
+        }
+        const imageIds = ['a', 'b']
+
+        await expect(
+          editImages({
+            input: {
+              filter,
+              imageIds,
+              rating: 0,
+            },
+          })
+        ).rejects.toThrowError('need only one of imagesIds or filter')
+        await expect(
+          editImages({
+            input: {
+              rating: 0,
+            },
+          })
+        ).rejects.toThrowError('need either imagesIds or filter')
       }
     )
   })

@@ -39,6 +39,7 @@ export const schema = gql`
     deleteManyImages(input: DeleteManyImagesInput!): DeleteManyResult!
       @requireAuth
     editImagesBasePath(input: EditImagesBasePath!): EditManyResult! @requireAuth
+    editImages(input: EditImages!): EditManyResult! @requireAuth
   }
 
   input ImageFilters {
@@ -73,6 +74,12 @@ export const schema = gql`
     imageIds: [String!]
     filter: ImageFilters
     basePath: String!
+  }
+
+  input EditImages {
+    imageIds: [String!]
+    filter: ImageFilters
+    rating: Int
   }
 
   input DateRange {

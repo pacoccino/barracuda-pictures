@@ -4,6 +4,7 @@ import type {
   QueryimagesArgs,
   MutationdeleteManyImagesArgs,
   MutationeditImagesBasePathArgs,
+  MutationeditImagesArgs,
   Mutation,
 } from 'types/graphql'
 
@@ -199,6 +200,36 @@ export const editImagesBasePath = async ({
   if (result.errors.length > 0) {
     logger.error({ errors: result.errors }, 'Errors while deleting images')
   }
+
+  return {
+    count,
+  }
+}
+
+export const editImages = async ({
+  input: { imageIds, rating, filter },
+}: MutationeditImagesArgs): Promise<Mutation['editImages']> => {
+  if (!filter && !imageIds) throw new Error('need either imagesIds or filter')
+  if (filter && imageIds)
+    throw new Error('need only one of imagesIds or filter')
+
+  if (filter) {
+    const imagesToApply = await images({
+      filter: filter,
+      take: 0,
+    })
+    imageIds = imagesToApply.map((i) => i.id)
+  }
+
+  const res = await db.image.updateMany({
+    where: {
+      OR: imageIds.map((id) => ({ id })),
+    },
+    data: {
+      rating,
+    },
+  })
+  const count = res.count
 
   return {
     count,
