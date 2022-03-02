@@ -1,42 +1,69 @@
-import { Box, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Flex,
+} from '@chakra-ui/react'
 import { useFilterContext } from 'src/contexts/filter'
 import { DefaultSpinner, Tree } from 'src/design-system'
 import S3Path from 'api/src/lib/files/S3Path'
 import { useApluContext } from 'src/contexts/aplu'
 import moment from 'moment'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 export const ArboPath = () => {
   const { filter, setPath } = useFilterContext()
   const { apluQuery } = useApluContext()
+
+  const selectPath = useCallback(
+    (paths: string[]) => {
+      const pathToSelect = paths.slice(1).join('/')
+      setPath(pathToSelect)
+    },
+    [setPath]
+  )
+  const formatPath = useCallback((paths: string[], tree: Tree) => {
+    if (paths.length === 0) {
+      return 'All'
+    }
+
+    return tree.path
+  }, [])
+
+  const selectedPath = useMemo(
+    () => ['/'].concat(S3Path.splitPath(filter.path || '')),
+    [filter]
+  )
 
   if (!apluQuery.previousData && apluQuery.loading) {
     return <DefaultSpinner />
   }
   const arbo = (apluQuery.data || apluQuery.previousData).arbo.arboPath
 
-  const selectPath = (paths) => {
-    const pathToSelect = paths.slice(1).join('/')
-    setPath(pathToSelect)
-  }
-
-  function formatPath(paths: string[], tree: Tree) {
-    if (paths.length === 0) {
-      return 'All'
-    }
-
-    return tree.path
-  }
-
-  const selectedPath = ['/'].concat(S3Path.splitPath(filter.path || ''))
-
   return (
-    <Tree
-      tree={arbo}
-      selectedPath={selectedPath}
-      onSelect={selectPath}
-      formatPath={formatPath}
-    />
+    <Box>
+      <Flex justify="center">
+        <Breadcrumb mb={2} px={1}>
+          {selectedPath.map((p, i) => (
+            <BreadcrumbItem key={p}>
+              <BreadcrumbLink
+                onClick={() => selectPath(selectedPath.slice(0, i + 1))}
+              >
+                {i === 0 ? 'All' : p}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          ))}
+        </Breadcrumb>
+      </Flex>
+
+      <Tree
+        tree={arbo}
+        selectedPath={selectedPath}
+        onSelect={selectPath}
+        formatPath={formatPath}
+      />
+    </Box>
   )
 }
 
