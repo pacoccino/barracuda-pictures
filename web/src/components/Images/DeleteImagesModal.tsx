@@ -4,11 +4,11 @@ import { useMutation } from '@redwoodjs/web'
 import { useSelectContext } from 'src/contexts/select'
 import { useFilterContext } from 'src/contexts/filter'
 import { useEffect } from 'react'
-import { MutationdeleteManyImagesArgs } from 'types/graphql'
+import { MutationeditImagesBasePathArgs } from 'api/types/graphql'
 
 const DELETE_IMAGES = gql`
-  mutation DeleteImages($input: DeleteManyImagesInput!) {
-    deleteManyImages(input: $input) {
+  mutation DeleteImages($select: ImagesSelect!) {
+    deleteManyImages(select: $select) {
       count
     }
   }
@@ -26,15 +26,15 @@ export const DeleteImagesModal = ({ isOpen, onClose }) => {
   }, [isOpen, selectedImages, allSelected, onClose])
 
   const handleDelete = () => {
-    const input: MutationdeleteManyImagesArgs['input'] = {}
+    const select: MutationeditImagesBasePathArgs['select'] = {}
     if (allSelected) {
-      input.filter = filter
+      select.filter = filter
     } else {
-      input.imageIds = selectedImages.map((i) => i.id)
+      select.imageIds = selectedImages.map((i) => i.id)
     }
     deleteManyImages({
       variables: {
-        input,
+        select,
       },
       refetchQueries: ['FindImages'],
     })

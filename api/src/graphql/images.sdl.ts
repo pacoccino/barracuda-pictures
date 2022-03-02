@@ -28,19 +28,18 @@ export const schema = gql`
     image(id: String!): Image @requireAuth
   }
 
-  type EditManyResult {
-    count: Int!
-  }
-  type DeleteManyResult {
-    count: Int!
+  type Mutation {
+    deleteManyImages(select: ImagesSelect!): ManyResult! @requireAuth
+    editImagesBasePath(
+      select: ImagesSelect!
+      input: EditImagesBasePath!
+    ): ManyResult! @requireAuth
+    editImages(select: ImagesSelect!, input: EditImages!): ManyResult!
+      @requireAuth
   }
 
-  type Mutation {
-    deleteManyImages(input: DeleteManyImagesInput!): DeleteManyResult!
-      @requireAuth
-    editImagesBasePath(input: EditImagesBasePath!): EditManyResult! @requireAuth
-    editImages(select: ImagesSelect!, input: EditImages!): EditManyResult!
-      @requireAuth
+  type ManyResult {
+    count: Int!
   }
 
   input ImageFilters {
@@ -50,21 +49,10 @@ export const schema = gql`
     rating: FilterByRating
   }
 
-  input ImagesSelect {
-    imageIds: [String!]
-    filter: ImageFilters
-  }
-
   input FilterByTagList {
     tagGroupId: String!
     tagIds: [String]!
     condition: TagListCondition!
-  }
-
-  enum IntCondition {
-    equals
-    lte
-    gte
   }
 
   input FilterByRating {
@@ -72,18 +60,21 @@ export const schema = gql`
     condition: IntCondition
   }
 
+  input ImagesSelect {
+    imageIds: [String!]
+    filter: ImageFilters
+  }
+
   input DeleteManyImagesInput {
     imageIds: [String!]
     filter: ImageFilters
   }
-  input EditImagesBasePath {
-    imageIds: [String!]
-    filter: ImageFilters
-    basePath: String!
-  }
 
   input EditImages {
     rating: Int
+  }
+  input EditImagesBasePath {
+    basePath: String!
   }
 
   input DateRange {
@@ -94,6 +85,12 @@ export const schema = gql`
   enum TagListCondition {
     AND
     OR
+  }
+
+  enum IntCondition {
+    equals
+    lte
+    gte
   }
 
   input ImageSorting {

@@ -9,8 +9,8 @@ import { useForm } from 'react-hook-form'
 import { Flex, FormLabel } from '@chakra-ui/react'
 
 const EDIT_BASE_PATH = gql`
-  mutation EditBasePath($input: EditImagesBasePath!) {
-    editImagesBasePath(input: $input) {
+  mutation EditBasePath($select: ImagesSelect!, $input: EditImagesBasePath!) {
+    editImagesBasePath(select: $select, input: $input) {
       count
     }
   }
@@ -37,17 +37,19 @@ export const EditBasePathModal = ({ isOpen, onClose }) => {
   }, [isOpen, selectedImages, allSelected, onClose])
 
   const handleEditBasePath = ({ basePath }) => {
+    const select: MutationeditImagesBasePathArgs['select'] = {}
     const input: MutationeditImagesBasePathArgs['input'] = {
       basePath,
     }
     if (allSelected) {
-      input.filter = filter
+      select.filter = filter
     } else {
-      input.imageIds = selectedImages.map((i) => i.id)
+      select.imageIds = selectedImages.map((i) => i.id)
     }
 
     editImagesBasePath({
       variables: {
+        select,
         input,
       },
       refetchQueries: ['FindImages'],

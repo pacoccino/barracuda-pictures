@@ -107,7 +107,7 @@ export const images = (
 export const moreImages = images
 
 export const deleteManyImages = async ({
-  input: { imageIds, filter },
+  select: { imageIds, filter },
 }: MutationdeleteManyImagesArgs): Promise<Mutation['deleteManyImages']> => {
   if (!filter && !imageIds) throw new Error('need either imagesIds or filter')
   if (filter && imageIds)
@@ -155,7 +155,8 @@ export const deleteManyImages = async ({
 }
 
 export const editImagesBasePath = async ({
-  input: { imageIds, basePath, filter },
+  select: { imageIds, filter },
+  input: { basePath },
 }: MutationeditImagesBasePathArgs): Promise<Mutation['editImagesBasePath']> => {
   if (!filter && !imageIds) throw new Error('need either imagesIds or filter')
   if (filter && imageIds)

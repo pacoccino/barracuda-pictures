@@ -327,7 +327,7 @@ describe('images', () => {
       const imagesToDelete = [scenario.image.p1, scenario.image.p3]
 
       const result = await deleteManyImages({
-        input: {
+        select: {
           imageIds: ['not-existing']
             .concat(imagesToDelete.map((i) => i.id))
             .concat('neither'),
@@ -373,7 +373,7 @@ describe('images', () => {
         }
 
         const result = await deleteManyImages({
-          input: {
+          select: {
             filter,
           },
         })
@@ -411,7 +411,7 @@ describe('images', () => {
         }
         await expect(
           deleteManyImages({
-            input: {
+            select: {
               filter,
               imageIds,
             },
@@ -419,7 +419,7 @@ describe('images', () => {
         ).rejects.toThrowError('need only one of imagesIds or filter')
         await expect(
           deleteManyImages({
-            input: {},
+            select: {},
           })
         ).rejects.toThrowError('need either imagesIds or filter')
       }
@@ -441,8 +441,10 @@ describe('images', () => {
       }
 
       const result = await editImagesBasePath({
-        input: {
+        select: {
           imageIds: imagesToEdit.map((i) => (i ? i.id : 'numbid')),
+        },
+        input: {
           basePath,
         },
       })
@@ -565,15 +567,18 @@ describe('images', () => {
 
         await expect(
           editImagesBasePath({
-            input: {
+            select: {
               filter,
               imageIds,
+            },
+            input: {
               basePath,
             },
           })
         ).rejects.toThrowError('need only one of imagesIds or filter')
         await expect(
           editImagesBasePath({
+            select: {},
             input: {
               basePath,
             },
@@ -607,8 +612,10 @@ describe('images', () => {
         }
 
         const result = await editImagesBasePath({
-          input: {
+          select: {
             filter,
+          },
+          input: {
             basePath,
           },
         })
