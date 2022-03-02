@@ -4,6 +4,8 @@ import type {
   FilterByTagList,
   TagListCondition,
   DateRange,
+  ImageFilters,
+  FilterByRating,
 } from 'types/graphql'
 import { useContext, useMemo, useState, useCallback } from 'react'
 
@@ -12,16 +14,13 @@ interface FilterContextType {
   removeTagToFilter: (t: Tag, tg: TagGroup) => void
   clearTags: () => void
   clearFilter: () => void
-  filter: {
-    tagLists?: FilterByTagList[]
-    dateRange?: DateRange
-    path?: string
-  }
+  filter: ImageFilters
   selectedTagIds: string[]
   tagListConditions: { [key: string]: TagListCondition }
   setTagListCondition: (s: string, c: TagListCondition) => void
   setDateRange: (d?: DateRange) => void
   setPath: (s?: string) => void
+  setRating: (s?: FilterByRating) => void
   isFilterActive: boolean
 }
 
@@ -34,12 +33,14 @@ export const FilterContext = React.createContext<FilterContextType>({
     tagLists: [],
     dateRange: null,
     path: null,
+    rating: null,
   },
   selectedTagIds: [],
   setTagListCondition: () => 0,
   tagListConditions: new Map(),
   setDateRange: () => 0,
   setPath: () => 0,
+  setRating: () => 0,
   isFilterActive: false,
 })
 
@@ -47,14 +48,16 @@ export const FilterContextProvider = ({ children }) => {
   const [path, setPath] = useState<string | null>(null)
   const [tagLists, setTagLists] = useState<FilterByTagList[]>([])
   const [dateRange, setDateRange] = useState<DateRange | null>(null)
+  const [rating, setRating] = useState<FilterByRating | null>(null)
 
   const filter = useMemo(() => {
     return {
       path,
       tagLists,
       dateRange,
+      rating,
     }
-  }, [tagLists, dateRange, path])
+  }, [tagLists, dateRange, path, rating])
 
   const selectedTagIds = useMemo(
     () => tagLists.reduce((acc, tagList) => acc.concat(tagList.tagIds), []),
@@ -167,6 +170,7 @@ export const FilterContextProvider = ({ children }) => {
         clearTags,
         setDateRange,
         setPath,
+        setRating,
         isFilterActive,
       }}
     >

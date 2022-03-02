@@ -30,8 +30,6 @@ export const ApluContextProvider = ({ children }) => {
     },
   })
 
-  console.log(apluQuery)
-
   return (
     <ApluContext.Provider
       value={{

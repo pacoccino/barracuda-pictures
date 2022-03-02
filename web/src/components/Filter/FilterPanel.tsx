@@ -1,6 +1,7 @@
 import { Button, Flex, Text, VStack } from '@chakra-ui/react'
 import { PathPanel } from './PathPanel'
 import { DatePanel } from './DatePanel'
+import { RatingPanel } from './RatingPanel'
 import { TagsPanel } from './TagsPanel'
 import { useFilterContext } from 'src/contexts/filter'
 
@@ -34,6 +35,7 @@ const FilterPanel = () => {
       >
         <PathPanel />
         <DatePanel />
+        <RatingPanel />
         <TagsPanel />
       </VStack>
     </Flex>
