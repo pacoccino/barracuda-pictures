@@ -85,7 +85,7 @@ export const MoveTagModal = ({ tag, onClose }) => {
       </Box>
       {!tagsQuery.loading ? (
         <form onSubmit={handleSubmit(handleUpdateTag)}>
-          <FormLabel>Tag Group:</FormLabel>
+          <FormLabel>Category:</FormLabel>
           <Select {...register('tagGroupId')}>
             {tagsQuery.data?.tagGroups?.map((tg) => (
               <option key={tg.id} value={tg.id}>

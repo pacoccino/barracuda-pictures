@@ -30,7 +30,7 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
       })
       .catch((error) => {
         toast({
-          title: 'Error deleting tag group',
+          title: 'Error deleting category',
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -42,7 +42,7 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
     <AlertModal
       isOpen={loading || !!tagGroup}
       loading={loading}
-      header={'Delete Tag Group'}
+      header={'Delete category'}
       body={
         <Box>
           <TagGroupItem tagGroup={tagGroup} />

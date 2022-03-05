@@ -80,17 +80,17 @@ export const TagGroupItem = ({
               {
                 icon: <PlusSquareIcon />,
                 onClick: () => setTagGroupCreateOpen(true),
-                label: 'Create tag group',
+                label: 'Create category',
               },
               {
                 icon: <EditIcon />,
                 onClick: () => setTagGroupForEdit(tagGroup),
-                label: 'Edit tag group',
+                label: 'Edit category',
               },
               {
                 icon: <DeleteIcon />,
                 onClick: () => setTagGroupForDelete(tagGroup),
-                label: 'Delete tag group',
+                label: 'Delete category',
               },
             ]
           : undefined

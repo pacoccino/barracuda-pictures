@@ -40,7 +40,7 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
     })
       .then(() => {
         toast({
-          title: 'Tag group created completed',
+          title: 'Category created',
           description: tagGroupName,
           status: 'success',
           duration: 9000,
@@ -50,7 +50,7 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
       })
       .catch((error) => {
         toast({
-          title: 'Error creating tag group',
+          title: 'Error creating category',
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -63,12 +63,12 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
       isOpen={loading || isOpen}
       initialFocusRef={initialRef}
       onClose={onClose}
-      title="Create tag group"
+      title="Create category"
     >
       <form onSubmit={handleSubmit(handleCreateTagGroup)}>
         <Input
           type="text"
-          placeholder="Tag group name"
+          placeholder="Category name"
           {...registerRest}
           ref={(e) => {
             registerRef(e)

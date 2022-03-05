@@ -120,7 +120,7 @@ const AvailableTagsPanel = () => {
           colorScheme="orchid"
           variant="solid"
         >
-          Create Tag Group
+          Create category
         </Button>
       </Flex>
 

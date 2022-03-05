@@ -44,7 +44,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
     })
       .then(() => {
         toast({
-          title: 'Tag group edited',
+          title: 'Category edited',
           description: tagGroupName,
           status: 'success',
           duration: 9000,
@@ -54,7 +54,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
       })
       .catch((error) => {
         toast({
-          title: 'Error editing tag group',
+          title: 'Error editing category',
           description: error.message,
           status: 'error',
           duration: 9000,
@@ -67,7 +67,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
       isOpen={loading || !!tagGroup}
       onClose={onClose}
       initialFocusRef={initialRef}
-      title="Edit tag group"
+      title="Edit category"
     >
       <Box mb={2}>
         <TagGroupItem tagGroup={tagGroup} />
@@ -76,7 +76,7 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
         <FormLabel>New name:</FormLabel>
         <Input
           type="text"
-          placeholder="Tag group name"
+          placeholder="Category name"
           {...registerRest}
           ref={(e) => {
             registerRef(e)

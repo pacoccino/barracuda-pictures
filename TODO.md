@@ -14,7 +14,7 @@ scroll, when add tag it moves back to top
 
 - Display tags not in filter for being able to filter OR tags
 - Create tag from metadata
-- duplicate tag group
+- duplicate category
 - logger logfile
 - search tags
 

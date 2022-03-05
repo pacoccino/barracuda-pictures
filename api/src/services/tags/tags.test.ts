@@ -24,7 +24,7 @@ describe('tags', () => {
 
     expect(result).toMatchObject({ ...scenario.tag.g1t1, ...input })
   })
-  scenario('update tag group', async (scenario: StandardScenario) => {
+  scenario('update tag category', async (scenario: StandardScenario) => {
     const input = { tagGroupId: scenario.tagGroup.two.id }
     const result = await updateTag({ id: scenario.tag.g1t1.id, input })
 
