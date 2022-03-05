@@ -32,8 +32,8 @@ const Routes = () => {
       <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
       <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
 
-      <Private unauthenticated="login">
-        <Set wrap={contexts.concat([DashboardLayout])}>
+      <Private unauthenticated="login" wrap={contexts}>
+        <Set wrap={[DashboardLayout]}>
           <Route path="/photos" page={PhotosPage} name="photos" />
           <Route path="/admin" page={AdminPage} name="admin" />
           <Route path="/infos" page={InfoPage} name="infos" />

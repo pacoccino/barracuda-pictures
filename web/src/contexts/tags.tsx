@@ -29,6 +29,9 @@ export const QUERY = gql`
 export const QUERIES_TO_REFETCH = ['FindTags']
 
 interface TagContextType {
+  tagsQuery:
+    | QueryOperationResult<{ tagCategorys: TagCategory[] }>
+    | { loading: false; data: null }
   setTagCategoryCreateOpen: (b: boolean) => void
   setTagCategoryForDelete: (tg: TagCategory) => void
   setTagCategoryForEdit: (tg: TagCategory) => void
@@ -36,10 +39,10 @@ interface TagContextType {
   setTagForMove: (t: Tag) => void
   setTagForDelete: (t: Tag) => void
   setTagForEdit: (t: Tag) => void
-  tagsQuery: QueryOperationResult<{ tagCategorys: TagCategory[] }>
 }
 
 export const TagContext = React.createContext<TagContextType>({
+  tagsQuery: { loading: false, data: null },
   setTagCategoryCreateOpen: () => 0,
   setTagCategoryForDelete: () => 0,
   setTagCategoryForEdit: () => 0,
@@ -47,12 +50,16 @@ export const TagContext = React.createContext<TagContextType>({
   setTagForMove: () => 0,
   setTagForDelete: () => 0,
   setTagForEdit: () => 0,
-  tagsQuery: { loading: false, data: null },
 })
 
 export const TagContextProvider = ({ children }) => {
-  const [tagCategoryCreateOpen, setTagCategoryCreateOpen] = useState(false)
+  const tagsQuery = useQuery(QUERY, {
+    fetchPolicy: 'cache-first',
+    notifyOnNetworkStatusChange: true,
+  })
 
+  // Modals
+  const [tagCategoryCreateOpen, setTagCategoryCreateOpen] = useState(false)
   const [tagCategoryForDelete, setTagCategoryForDelete] =
     useState<TagCategory | null>(null)
   const [tagCategoryForEdit, setTagCategoryForEdit] =
@@ -62,11 +69,6 @@ export const TagContextProvider = ({ children }) => {
   const [tagForMove, setTagForMove] = useState<Tag | null>(null)
   const [tagForDelete, setTagForDelete] = useState<Tag | null>(null)
   const [tagForEdit, setTagForEdit] = useState<Tag | null>(null)
-
-  const tagsQuery = useQuery(QUERY, {
-    fetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
-  })
 
   return (
     <TagContext.Provider
