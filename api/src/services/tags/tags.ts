@@ -14,22 +14,22 @@ export const tag = ({ id }: Prisma.TagWhereUniqueInput) => {
 }
 
 export const Tag = {
-  tagGroup: (_obj, { root }: ResolverArgs<ReturnType<typeof tag>>) =>
-    db.tag.findUnique({ where: { id: root.id } }).tagGroup(),
+  tagCategory: (_obj, { root }: ResolverArgs<ReturnType<typeof tag>>) =>
+    db.tag.findUnique({ where: { id: root.id } }).tagCategory(),
   tagsOnImages: (_obj, { root }: ResolverArgs<ReturnType<typeof tag>>) =>
     db.tag.findUnique({ where: { id: root.id } }).tagsOnImages(),
 }
 
-export const createTag = async ({ input: { name, tagGroupId } }) => {
+export const createTag = async ({ input: { name, tagCategoryId } }) => {
   return db.tag.create({
-    data: { name, tagGroupId },
+    data: { name, tagCategoryId },
   })
 }
 
 export const updateTag = async ({ id, input }) => {
   return db.tag.update({
     where: { id },
-    data: { name: input.name, tagGroupId: input.tagGroupId },
+    data: { name: input.name, tagCategoryId: input.tagCategoryId },
   })
 }
 

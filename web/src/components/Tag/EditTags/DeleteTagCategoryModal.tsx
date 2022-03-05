@@ -1,27 +1,27 @@
 import { Box, Text, useToast, AlertModal } from 'src/design-system'
 
-import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
+import { TagCategoryItem } from 'src/components/Tag/TagItem/TagItem'
 import { useMutation } from '@redwoodjs/web'
 import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 
 const DELETE_TAG_GROUP = gql`
-  mutation DeleteTagGroup($tagGroupId: String!) {
-    deleteTagGroup(id: $tagGroupId)
+  mutation DeleteTagCategory($tagCategoryId: String!) {
+    deleteTagCategory(id: $tagCategoryId)
   }
 `
-export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
-  const [deleteTagGroup, { loading }] = useMutation(DELETE_TAG_GROUP)
+export const DeleteTagCategoryModal = ({ tagCategory, onClose }) => {
+  const [deleteTagCategory, { loading }] = useMutation(DELETE_TAG_GROUP)
   const toast = useToast()
 
-  const handleDeleteTagGroup = (tagGroupId) =>
-    deleteTagGroup({
-      variables: { tagGroupId },
+  const handleDeleteTagCategory = (tagCategoryId) =>
+    deleteTagCategory({
+      variables: { tagCategoryId },
       refetchQueries: QUERIES_TO_REFETCH,
     })
       .then(() => {
         toast({
           title: 'Tag groud deleted',
-          description: `${tagGroup.name}`,
+          description: `${tagCategory.name}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -40,12 +40,12 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
 
   return (
     <AlertModal
-      isOpen={loading || !!tagGroup}
+      isOpen={loading || !!tagCategory}
       loading={loading}
       header={'Delete category'}
       body={
         <Box>
-          <TagGroupItem tagGroup={tagGroup} />
+          <TagCategoryItem tagCategory={tagCategory} />
           <Text mt={4}>
             Are you sure? This will remove all the tags that belongs to it
           </Text>
@@ -53,7 +53,7 @@ export const DeleteTagGroupModal = ({ tagGroup, onClose }) => {
       }
       acceptLabel={'Delete'}
       acceptColor="red"
-      onAccept={() => handleDeleteTagGroup(tagGroup.id)}
+      onAccept={() => handleDeleteTagCategory(tagCategory.id)}
       onCancel={onClose}
     />
   )

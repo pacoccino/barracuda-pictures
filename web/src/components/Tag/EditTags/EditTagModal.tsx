@@ -12,7 +12,7 @@ const UPDATE_TAG = gql`
     updateTag(id: $tagId, input: { name: $name }) {
       id
       name
-      tagGroupId
+      tagCategoryId
       __typename
     }
   }
@@ -44,7 +44,7 @@ export const EditTagModal = ({ tag, onClose }) => {
       .then(() => {
         toast({
           title: 'Tag edited',
-          description: `${tag.tagGroup.name} / ${tagName}`,
+          description: `${tag.tagCategory.name} / ${tagName}`,
           status: 'success',
           duration: 9000,
           isClosable: true,

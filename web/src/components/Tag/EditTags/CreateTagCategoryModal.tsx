@@ -7,41 +7,41 @@ import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 import { useForm } from 'react-hook-form'
 
 const CREATE_TAG_GROUP = gql`
-  mutation CreateTagGroup($name: String!) {
-    createTagGroup(input: { name: $name }) {
+  mutation CreateTagCategory($name: String!) {
+    createTagCategory(input: { name: $name }) {
       id
       name
       __typename
     }
   }
 `
-export const CreateTagGroupModal = ({ isOpen, onClose }) => {
-  const createTagGroupMutation = useMutation(CREATE_TAG_GROUP)
+export const CreateTagCategoryModal = ({ isOpen, onClose }) => {
+  const createTagCategoryMutation = useMutation(CREATE_TAG_GROUP)
   const initialRef = useRef(null)
   const toast = useToast()
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {
-      tagGroupName: '',
+      tagCategoryName: '',
     },
   })
   useEffect(() => {
     reset({
-      tagGroupName: '',
+      tagCategoryName: '',
     })
   }, [isOpen, reset])
-  const { ref: registerRef, ...registerRest } = register('tagGroupName')
+  const { ref: registerRef, ...registerRest } = register('tagCategoryName')
 
-  const [createTagGroup, { loading }] = createTagGroupMutation
-  const handleCreateTagGroup = ({ tagGroupName }) =>
-    createTagGroup({
-      variables: { name: tagGroupName },
+  const [createTagCategory, { loading }] = createTagCategoryMutation
+  const handleCreateTagCategory = ({ tagCategoryName }) =>
+    createTagCategory({
+      variables: { name: tagCategoryName },
       refetchQueries: QUERIES_TO_REFETCH,
     })
       .then(() => {
         toast({
           title: 'Category created',
-          description: tagGroupName,
+          description: tagCategoryName,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -65,7 +65,7 @@ export const CreateTagGroupModal = ({ isOpen, onClose }) => {
       onClose={onClose}
       title="Create category"
     >
-      <form onSubmit={handleSubmit(handleCreateTagGroup)}>
+      <form onSubmit={handleSubmit(handleCreateTagCategory)}>
         <Input
           type="text"
           placeholder="Category name"

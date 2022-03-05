@@ -21,7 +21,7 @@ export const DeleteTagModal = ({ tag, onClose }) => {
       .then(() => {
         toast({
           title: 'Tag deleted',
-          description: `${tag.tagGroup.name} / ${tag.name}`,
+          description: `${tag.tagCategory.name} / ${tag.name}`,
           status: 'success',
           duration: 9000,
           isClosable: true,

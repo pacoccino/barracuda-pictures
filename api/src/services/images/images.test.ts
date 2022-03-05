@@ -34,7 +34,7 @@ describe('images', () => {
           filter: {
             tagLists: [
               {
-                tagGroupId: scenario.tagGroup.one.id,
+                tagCategoryId: scenario.tagCategory.one.id,
                 tagIds: [scenario.tag.g1t1.id],
                 condition: 'OR',
               },
@@ -56,12 +56,12 @@ describe('images', () => {
           filter: {
             tagLists: [
               {
-                tagGroupId: scenario.tagGroup.one.id,
+                tagCategoryId: scenario.tagCategory.one.id,
                 tagIds: [scenario.tag.g1t1.id],
                 condition: 'OR',
               },
               {
-                tagGroupId: scenario.tagGroup.two.id,
+                tagCategoryId: scenario.tagCategory.two.id,
                 tagIds: [scenario.tag.g2t1.id],
                 condition: 'OR',
               },
@@ -80,12 +80,12 @@ describe('images', () => {
           filter: {
             tagLists: [
               {
-                tagGroupId: scenario.tagGroup.one.id,
+                tagCategoryId: scenario.tagCategory.one.id,
                 tagIds: [scenario.tag.g1t1.id],
                 condition: 'OR',
               },
               {
-                tagGroupId: scenario.tagGroup.two.id,
+                tagCategoryId: scenario.tagCategory.two.id,
                 tagIds: [scenario.tag.g2t1.id, scenario.tag.g2t2.id],
                 condition: 'OR',
               },
@@ -107,12 +107,12 @@ describe('images', () => {
           filter: {
             tagLists: [
               {
-                tagGroupId: scenario.tagGroup.one.id,
+                tagCategoryId: scenario.tagCategory.one.id,
                 tagIds: [scenario.tag.g1t1.id],
                 condition: 'OR',
               },
               {
-                tagGroupId: scenario.tagGroup.two.id,
+                tagCategoryId: scenario.tagCategory.two.id,
                 tagIds: [scenario.tag.g2t2.id, scenario.tag.g2t3.id],
                 condition: 'AND',
               },
@@ -365,7 +365,7 @@ describe('images', () => {
         const filter: ImageFilters = {
           tagLists: [
             {
-              tagGroupId: scenario.tagGroup.one.id,
+              tagCategoryId: scenario.tagCategory.one.id,
               tagIds: [scenario.tag.g1t1.id],
               condition: 'OR',
             },
@@ -403,7 +403,7 @@ describe('images', () => {
         const filter: ImageFilters = {
           tagLists: [
             {
-              tagGroupId: scenario.tagGroup.one.id,
+              tagCategoryId: scenario.tagCategory.one.id,
               tagIds: [scenario.tag.g1t1.id],
               condition: 'OR',
             },
@@ -557,7 +557,7 @@ describe('images', () => {
         const filter: ImageFilters = {
           tagLists: [
             {
-              tagGroupId: scenario.tagGroup.one.id,
+              tagCategoryId: scenario.tagCategory.one.id,
               tagIds: [scenario.tag.g1t1.id],
               condition: 'OR',
             },
@@ -604,7 +604,7 @@ describe('images', () => {
         const filter: ImageFilters = {
           tagLists: [
             {
-              tagGroupId: scenario.tagGroup.one.id,
+              tagCategoryId: scenario.tagCategory.one.id,
               tagIds: [scenario.tag.g1t1.id],
               condition: 'OR',
             },
@@ -683,7 +683,7 @@ describe('images', () => {
         const filter: ImageFilters = {
           tagLists: [
             {
-              tagGroupId: scenario.tagGroup.one.id,
+              tagCategoryId: scenario.tagCategory.one.id,
               tagIds: [scenario.tag.g1t1.id],
               condition: 'OR',
             },

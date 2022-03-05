@@ -8,13 +8,13 @@ export async function createImageTags(
 ) {
   // Camera
 
-  const tagGroup_cameraInput = {
+  const tagCategory_cameraInput = {
     name: 'Camera',
   }
-  const tagGroup_camera = await db.tagGroup.upsert({
-    where: tagGroup_cameraInput,
-    update: tagGroup_cameraInput,
-    create: tagGroup_cameraInput,
+  const tagCategory_camera = await db.tagCategory.upsert({
+    where: tagCategory_cameraInput,
+    update: tagCategory_cameraInput,
+    create: tagCategory_cameraInput,
   })
   const tagInput = {
     name: imageMetadata.parsed.camera
@@ -23,7 +23,7 @@ export async function createImageTags(
           imageMetadata.parsed.camera.model,
         ])
       : 'Unknown',
-    tagGroupId: tagGroup_camera.id,
+    tagCategoryId: tagCategory_camera.id,
   }
   await db.tagsOnImage.create({
     data: {
@@ -31,7 +31,7 @@ export async function createImageTags(
         connectOrCreate: {
           create: tagInput,
           where: {
-            name_tagGroupId: tagInput,
+            name_tagCategoryId: tagInput,
           },
         },
       },
@@ -46,24 +46,24 @@ export async function createImageTags(
   // keywords
 
   if (imageMetadata.parsed.keywords) {
-    const tagGroup_keywordsInput = {
+    const tagCategory_keywordsInput = {
       name: 'Keywords',
     }
-    const tagGroup_keywords = await db.tagGroup.upsert({
-      where: tagGroup_keywordsInput,
-      update: tagGroup_keywordsInput,
-      create: tagGroup_keywordsInput,
+    const tagCategory_keywords = await db.tagCategory.upsert({
+      where: tagCategory_keywordsInput,
+      update: tagCategory_keywordsInput,
+      create: tagCategory_keywordsInput,
     })
 
     for (const i in imageMetadata.parsed.keywords) {
       const keyword = imageMetadata.parsed.keywords[i]
       const tag_keywordInput = {
         name: keyword,
-        tagGroupId: tagGroup_keywords.id,
+        tagCategoryId: tagCategory_keywords.id,
       }
       const tag_keyword = await db.tag.upsert({
         where: {
-          name_tagGroupId: tag_keywordInput,
+          name_tagCategoryId: tag_keywordInput,
         },
         update: tag_keywordInput,
         create: tag_keywordInput,

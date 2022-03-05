@@ -2,8 +2,8 @@ export const schema = gql`
   type Tag {
     id: String!
     name: String!
-    tagGroupId: String!
-    tagGroup: TagGroup!
+    tagCategoryId: String!
+    tagCategory: TagCategory!
     tagsOnImages: [TagsOnImage]!
   }
 
@@ -19,11 +19,11 @@ export const schema = gql`
 
   input CreateTagInput {
     name: String!
-    tagGroupId: String!
+    tagCategoryId: String!
   }
 
   input UpdateTagInput {
     name: String
-    tagGroupId: String
+    tagCategoryId: String
   }
 `

@@ -26,20 +26,20 @@ model Image {
   tagsOnImages  TagsOnImage[]
 }
 
-model TagGroup {
+model TagCategory {
   id            String        @id @default(uuid())
   name          String        @unique
   tags          Tag[]
 }
 
 model Tag {
-  id            String        @id @default(uuid())
-  name          String
-  tagGroupId    String
-  tagGroup      TagGroup      @relation(fields: [tagGroupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  tagsOnImages  TagsOnImage[]
+  id               String        @id @default(uuid())
+  name             String
+  tagCategoryId    String
+  tagCategory      TagCategory      @relation(fields: [tagCategoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tagsOnImages     TagsOnImage[]
 
-  @@unique([name, tagGroupId])
+  @@unique([name, tagCategoryId])
 }
 
 model TagsOnImage {

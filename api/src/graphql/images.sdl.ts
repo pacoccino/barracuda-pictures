@@ -50,7 +50,7 @@ export const schema = gql`
   }
 
   input FilterByTagList {
-    tagGroupId: String!
+    tagCategoryId: String!
     tagIds: [String]!
     condition: TagListCondition!
   }

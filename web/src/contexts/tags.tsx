@@ -1,23 +1,23 @@
-import type { Tag, TagGroup } from 'types/graphql'
+import type { Tag, TagCategory } from 'types/graphql'
 import { useContext, useState } from 'react'
-import { CreateTagGroupModal } from 'src/components/Tag/EditTags/CreateTagGroupModal'
+import { CreateTagCategoryModal } from 'src/components/Tag/EditTags/CreateTagCategoryModal'
 import { CreateTagModal } from 'src/components/Tag/EditTags/CreateTagModal'
 import { DeleteTagModal } from 'src/components/Tag/EditTags/DeleteTagModal'
-import { DeleteTagGroupModal } from 'src/components/Tag/EditTags/DeleteTagGroupModal'
+import { DeleteTagCategoryModal } from 'src/components/Tag/EditTags/DeleteTagCategoryModal'
 import { MoveTagModal } from 'src/components/Tag/EditTags/MoveTagModal'
 import { EditTagModal } from 'src/components/Tag/EditTags/EditTagModal'
-import { EditTagGroupModal } from 'src/components/Tag/EditTags/EditTagGroupModal'
+import { EditTagCategoryModal } from 'src/components/Tag/EditTags/EditTagCategoryModal'
 import { useQuery } from '@redwoodjs/web'
 
 export const QUERY = gql`
   query FindTags {
-    tagGroups {
+    tagCategorys {
       id
       name
       tags {
         id
         name
-        tagGroup {
+        tagCategory {
           id
           name
         }
@@ -29,21 +29,21 @@ export const QUERY = gql`
 export const QUERIES_TO_REFETCH = ['FindTags']
 
 interface TagContextType {
-  setTagGroupCreateOpen: (b: boolean) => void
-  setTagGroupForDelete: (tg: TagGroup) => void
-  setTagGroupForEdit: (tg: TagGroup) => void
-  setTagCreateTagGroup: (tg: TagGroup) => void
+  setTagCategoryCreateOpen: (b: boolean) => void
+  setTagCategoryForDelete: (tg: TagCategory) => void
+  setTagCategoryForEdit: (tg: TagCategory) => void
+  setTagCreateTagCategory: (tg: TagCategory) => void
   setTagForMove: (t: Tag) => void
   setTagForDelete: (t: Tag) => void
   setTagForEdit: (t: Tag) => void
-  tagsQuery: QueryOperationResult<{ tagGroups: TagGroup[] }>
+  tagsQuery: QueryOperationResult<{ tagCategorys: TagCategory[] }>
 }
 
 export const TagContext = React.createContext<TagContextType>({
-  setTagGroupCreateOpen: () => 0,
-  setTagGroupForDelete: () => 0,
-  setTagGroupForEdit: () => 0,
-  setTagCreateTagGroup: () => 0,
+  setTagCategoryCreateOpen: () => 0,
+  setTagCategoryForDelete: () => 0,
+  setTagCategoryForEdit: () => 0,
+  setTagCreateTagCategory: () => 0,
   setTagForMove: () => 0,
   setTagForDelete: () => 0,
   setTagForEdit: () => 0,
@@ -51,15 +51,14 @@ export const TagContext = React.createContext<TagContextType>({
 })
 
 export const TagContextProvider = ({ children }) => {
-  const [tagGroupCreateOpen, setTagGroupCreateOpen] = useState(false)
+  const [tagCategoryCreateOpen, setTagCategoryCreateOpen] = useState(false)
 
-  const [tagGroupForDelete, setTagGroupForDelete] = useState<TagGroup | null>(
-    null
-  )
-  const [tagGroupForEdit, setTagGroupForEdit] = useState<TagGroup | null>(null)
-  const [tagCreateTagGroup, setTagCreateTagGroup] = useState<TagGroup | null>(
-    null
-  )
+  const [tagCategoryForDelete, setTagCategoryForDelete] =
+    useState<TagCategory | null>(null)
+  const [tagCategoryForEdit, setTagCategoryForEdit] =
+    useState<TagCategory | null>(null)
+  const [tagCreateTagCategory, setTagCreateTagCategory] =
+    useState<TagCategory | null>(null)
   const [tagForMove, setTagForMove] = useState<Tag | null>(null)
   const [tagForDelete, setTagForDelete] = useState<Tag | null>(null)
   const [tagForEdit, setTagForEdit] = useState<Tag | null>(null)
@@ -72,10 +71,10 @@ export const TagContextProvider = ({ children }) => {
   return (
     <TagContext.Provider
       value={{
-        setTagGroupCreateOpen,
-        setTagGroupForDelete,
-        setTagGroupForEdit,
-        setTagCreateTagGroup,
+        setTagCategoryCreateOpen,
+        setTagCategoryForDelete,
+        setTagCategoryForEdit,
+        setTagCreateTagCategory,
         setTagForDelete,
         setTagForMove,
         setTagForEdit,
@@ -84,27 +83,27 @@ export const TagContextProvider = ({ children }) => {
     >
       {children}
 
-      <CreateTagGroupModal
-        isOpen={tagGroupCreateOpen}
-        onClose={() => setTagGroupCreateOpen(false)}
+      <CreateTagCategoryModal
+        isOpen={tagCategoryCreateOpen}
+        onClose={() => setTagCategoryCreateOpen(false)}
       />
       <CreateTagModal
-        tagGroup={tagCreateTagGroup}
-        onClose={() => setTagCreateTagGroup(null)}
+        tagCategory={tagCreateTagCategory}
+        onClose={() => setTagCreateTagCategory(null)}
       />
       <DeleteTagModal
         tag={tagForDelete}
         onClose={() => setTagForDelete(null)}
       />
-      <DeleteTagGroupModal
-        tagGroup={tagGroupForDelete}
-        onClose={() => setTagGroupForDelete(null)}
+      <DeleteTagCategoryModal
+        tagCategory={tagCategoryForDelete}
+        onClose={() => setTagCategoryForDelete(null)}
       />
       <MoveTagModal tag={tagForMove} onClose={() => setTagForMove(null)} />
       <EditTagModal tag={tagForEdit} onClose={() => setTagForEdit(null)} />
-      <EditTagGroupModal
-        tagGroup={tagGroupForEdit}
-        onClose={() => setTagGroupForEdit(null)}
+      <EditTagCategoryModal
+        tagCategory={tagCategoryForEdit}
+        onClose={() => setTagCategoryForEdit(null)}
       />
     </TagContext.Provider>
   )

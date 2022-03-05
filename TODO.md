@@ -29,7 +29,6 @@ scroll, when add tag it moves back to top
 - sync db to image metadata (and test reverse)
 
 - select range
-- rename tag group => category
 
 - tag colors
 - download zip of filter (hash filter)

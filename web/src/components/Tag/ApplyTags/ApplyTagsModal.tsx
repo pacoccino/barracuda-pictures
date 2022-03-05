@@ -10,7 +10,7 @@ import {
   Center,
 } from 'src/design-system'
 
-import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
+import { TagCategoryItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { DefaultSpinner } from 'src/design-system'
 import { useMutation } from '@redwoodjs/web'
 import { Tag } from 'types/graphql'
@@ -166,7 +166,7 @@ const ApplyTagsModal = ({
         <DefaultSpinner />
       </Center>
     )
-  } else if (tagsQuery.data.tagGroups.length === 0) {
+  } else if (tagsQuery.data.tagCategorys.length === 0) {
     content = (
       <Center py={2}>
         <Text>No tags</Text>
@@ -175,13 +175,13 @@ const ApplyTagsModal = ({
   } else {
     content = (
       <VStack align="start" py={2}>
-        {tagsQuery.data.tagGroups.map((tagGroup) => (
-          <Box key={tagGroup.id}>
+        {tagsQuery.data.tagCategorys.map((tagCategory) => (
+          <Box key={tagCategory.id}>
             <Flex mb={2} justify="start">
-              <TagGroupItem tagGroup={tagGroup} />
+              <TagCategoryItem tagCategory={tagCategory} />
             </Flex>
             <Wrap mb={1}>
-              {tagGroup.tags.map((tag) => (
+              {tagCategory.tags.map((tag) => (
                 <WrapItem key={tag.id}>
                   <TagItem
                     tag={tag}

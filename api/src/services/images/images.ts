@@ -64,13 +64,13 @@ export const images = (
     if (filter.tagLists && filter.tagLists.length > 0) {
       query.where = {
         ...query.where,
-        AND: filter.tagLists.map((tagGrouped) => ({
-          [tagGrouped.condition]: tagGrouped.tagIds.map((tagId) => ({
+        AND: filter.tagLists.map((tagCategoryed) => ({
+          [tagCategoryed.condition]: tagCategoryed.tagIds.map((tagId) => ({
             tagsOnImages: {
               some: {
                 tag: {
                   id: tagId,
-                  tagGroupId: tagGrouped.tagGroupId,
+                  tagCategoryId: tagCategoryed.tagCategoryId,
                 },
               },
             },

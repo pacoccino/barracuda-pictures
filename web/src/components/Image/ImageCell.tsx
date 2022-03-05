@@ -16,7 +16,7 @@ export const QUERY = gql`
         tag {
           id
           name
-          tagGroup {
+          tagCategory {
             id
             name
           }

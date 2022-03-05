@@ -9,21 +9,21 @@ export default async () => {
   try {
     /*
     await db.tag.deleteMany({})
-    await db.tagGroup.deleteMany({})
+    await db.tagCategory.deleteMany({})
 
-    const data_tagGroup: Prisma.TagGroupCreateInput = { name: 'Person' }
-    const data_tagGroup2: Prisma.TagGroupCreateInput = { name: 'Places' }
+    const data_tagCategory: Prisma.TagCategoryCreateInput = { name: 'Person' }
+    const data_tagCategory2: Prisma.TagCategoryCreateInput = { name: 'Places' }
 
-    const record_tagGroup = await db.tagGroup.create({ data: data_tagGroup })
-    const record_tagGroup2 = await db.tagGroup.create({
-      data: data_tagGroup2,
+    const record_tagCategory = await db.tagCategory.create({ data: data_tagCategory })
+    const record_tagCategory2 = await db.tagCategory.create({
+      data: data_tagCategory2,
     })
 
-    const data_tags: Prisma.TagGroupCreateInput[] = [
+    const data_tags: Prisma.TagCategoryCreateInput[] = [
       { name: 'Alice' },
       { name: 'Bob' },
     ]
-    const data_tags2: Prisma.TagGroupCreateInput[] = [
+    const data_tags2: Prisma.TagCategoryCreateInput[] = [
       { name: 'Paris' },
       { name: 'Bordeaux' },
     ]
@@ -33,7 +33,7 @@ export default async () => {
         const record_tag = await db.tag.create({
           data: {
             ...data_tag,
-            tagGroupId: record_tagGroup.id,
+            tagCategoryId: record_tagCategory.id,
           },
         })
         console.log(record_tag)
@@ -44,7 +44,7 @@ export default async () => {
         const record_tag = await db.tag.create({
           data: {
             ...data_tag,
-            tagGroupId: record_tagGroup2.id,
+            tagCategoryId: record_tagCategory2.id,
           },
         })
         console.log(record_tag)

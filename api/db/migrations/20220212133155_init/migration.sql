@@ -9,18 +9,18 @@ CREATE TABLE "Image" (
 );
 
 -- CreateTable
-CREATE TABLE "TagGroup" (
+CREATE TABLE "TagCategory" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
 
-    CONSTRAINT "TagGroup_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "TagCategory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Tag" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "tagGroupId" TEXT NOT NULL,
+    "tagCategoryId" TEXT NOT NULL,
 
     CONSTRAINT "Tag_pkey" PRIMARY KEY ("id")
 );
@@ -38,16 +38,16 @@ CREATE TABLE "TagsOnImage" (
 CREATE UNIQUE INDEX "Image_path_key" ON "Image"("path");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TagGroup_name_key" ON "TagGroup"("name");
+CREATE UNIQUE INDEX "TagCategory_name_key" ON "TagCategory"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Tag_name_tagGroupId_key" ON "Tag"("name", "tagGroupId");
+CREATE UNIQUE INDEX "Tag_name_tagCategoryId_key" ON "Tag"("name", "tagCategoryId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TagsOnImage_tagId_imageId_key" ON "TagsOnImage"("tagId", "imageId");
 
 -- AddForeignKey
-ALTER TABLE "Tag" ADD CONSTRAINT "Tag_tagGroupId_fkey" FOREIGN KEY ("tagGroupId") REFERENCES "TagGroup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Tag" ADD CONSTRAINT "Tag_tagCategoryId_fkey" FOREIGN KEY ("tagCategoryId") REFERENCES "TagCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TagsOnImage" ADD CONSTRAINT "TagsOnImage_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -13,7 +13,7 @@ describe('tags', () => {
     expect(result).toEqual(scenario.tag.g1t1)
   })
   scenario('create tag', async (scenario: StandardScenario) => {
-    const input = { name: 'a', tagGroupId: scenario.tagGroup.one.id }
+    const input = { name: 'a', tagCategoryId: scenario.tagCategory.one.id }
     const result = await createTag({ input })
 
     expect(result).toMatchObject(input)
@@ -25,7 +25,7 @@ describe('tags', () => {
     expect(result).toMatchObject({ ...scenario.tag.g1t1, ...input })
   })
   scenario('update tag category', async (scenario: StandardScenario) => {
-    const input = { tagGroupId: scenario.tagGroup.two.id }
+    const input = { tagCategoryId: scenario.tagCategory.two.id }
     const result = await updateTag({ id: scenario.tag.g1t1.id, input })
 
     expect(result).toMatchObject({ ...scenario.tag.g1t1, ...input })

@@ -1,6 +1,6 @@
 import type {
   Tag,
-  TagGroup,
+  TagCategory,
   FilterByTagList,
   TagListCondition,
   DateRange,
@@ -10,14 +10,14 @@ import type {
 import { useContext, useMemo, useState, useCallback } from 'react'
 
 interface FilterContextType {
-  addTagToFilter: (t: Tag, tg: TagGroup) => void
-  removeTagToFilter: (t: Tag, tg: TagGroup) => void
+  addTagToFilter: (t: Tag, tg: TagCategory) => void
+  removeTagToFilter: (t: Tag, tg: TagCategory) => void
   clearTags: () => void
   clearFilter: () => void
   filter: ImageFilters
   selectedTagIds: string[]
   tagListConditions: { [key: string]: TagListCondition }
-  setTagListCondition: (tg: TagGroup, c: TagListCondition) => void
+  setTagListCondition: (tg: TagCategory, c: TagListCondition) => void
   setDateRange: (d?: DateRange) => void
   setPath: (s?: string) => void
   setRating: (s?: FilterByRating) => void
@@ -68,7 +68,7 @@ export const FilterContextProvider = ({ children }) => {
       tagLists.reduce(
         (acc, tagList) => ({
           ...acc,
-          [tagList.tagGroupId]: tagList.condition,
+          [tagList.tagCategoryId]: tagList.condition,
         }),
         {}
       ),
@@ -76,9 +76,9 @@ export const FilterContextProvider = ({ children }) => {
   )
 
   const setTagListCondition = useCallback(
-    (tagGroup: TagGroup, condition: TagListCondition) => {
+    (tagCategory: TagCategory, condition: TagListCondition) => {
       const tagListIndex = tagLists.findIndex(
-        (tl) => tl.tagGroupId === tagGroup.id
+        (tl) => tl.tagCategoryId === tagCategory.id
       )
       if (tagListIndex !== -1) {
         const newTagLists = tagLists.slice()
@@ -90,7 +90,7 @@ export const FilterContextProvider = ({ children }) => {
       } else {
         setTagLists(
           tagLists.concat({
-            tagGroupId: tagGroup.id,
+            tagCategoryId: tagCategory.id,
             tagIds: [],
             condition,
           })
@@ -101,9 +101,9 @@ export const FilterContextProvider = ({ children }) => {
   )
 
   const addTagToFilter = useCallback(
-    (tag: Tag, tagGroup: TagGroup) => {
+    (tag: Tag, tagCategory: TagCategory) => {
       const tagListIndex = tagLists.findIndex(
-        (tl) => tl.tagGroupId === tagGroup.id
+        (tl) => tl.tagCategoryId === tagCategory.id
       )
       if (
         tagListIndex !== -1 &&
@@ -118,7 +118,7 @@ export const FilterContextProvider = ({ children }) => {
       } else {
         setTagLists(
           tagLists.concat({
-            tagGroupId: tagGroup.id,
+            tagCategoryId: tagCategory.id,
             tagIds: [tag.id],
             condition: 'OR',
           })
@@ -128,9 +128,9 @@ export const FilterContextProvider = ({ children }) => {
     [tagLists]
   )
   const removeTagToFilter = useCallback(
-    (tag: Tag, tagGroup: TagGroup) => {
+    (tag: Tag, tagCategory: TagCategory) => {
       const tagListIndex = tagLists.findIndex(
-        (tl) => tl.tagGroupId === tagGroup.id
+        (tl) => tl.tagCategoryId === tagCategory.id
       )
       if (tagListIndex !== -1) {
         const newTagLists = tagLists.slice()

@@ -15,12 +15,12 @@ import { useForm } from 'react-hook-form'
 import { useTagContext } from 'src/contexts/tags'
 
 const MOVE_TAG = gql`
-  mutation MoveTag($tagGroupId: String!, $tagId: String!) {
-    updateTag(id: $tagId, input: { tagGroupId: $tagGroupId }) {
+  mutation MoveTag($tagCategoryId: String!, $tagId: String!) {
+    updateTag(id: $tagId, input: { tagCategoryId: $tagCategoryId }) {
       id
       name
-      tagGroupId
-      tagGroup {
+      tagCategoryId
+      tagCategory {
         id
         name
       }
@@ -36,27 +36,27 @@ export const MoveTagModal = ({ tag, onClose }) => {
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {
-      tagGroupId: '',
+      tagCategoryId: '',
     },
   })
   useEffect(() => {
     if (tag) {
       reset({
-        tagGroupId: tag.tagGroup.id,
+        tagCategoryId: tag.tagCategory.id,
       })
     }
   }, [reset, tag])
 
   const [updateTag, { loading }] = updateTagMutation
-  const handleUpdateTag = ({ tagGroupId }) =>
+  const handleUpdateTag = ({ tagCategoryId }) =>
     updateTag({
-      variables: { tagGroupId: tagGroupId, tagId: tag.id },
+      variables: { tagCategoryId: tagCategoryId, tagId: tag.id },
       refetchQueries: QUERIES_TO_REFETCH,
     })
       .then((res) => {
         toast({
           title: 'Tag moved',
-          description: `${res.data.updateTag.tagGroup.name} / ${tag.name}`,
+          description: `${res.data.updateTag.tagCategory.name} / ${tag.name}`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -86,8 +86,8 @@ export const MoveTagModal = ({ tag, onClose }) => {
       {!tagsQuery.loading ? (
         <form onSubmit={handleSubmit(handleUpdateTag)}>
           <FormLabel>Category:</FormLabel>
-          <Select {...register('tagGroupId')}>
-            {tagsQuery.data?.tagGroups?.map((tg) => (
+          <Select {...register('tagCategoryId')}>
+            {tagsQuery.data?.tagCategorys?.map((tg) => (
               <option key={tg.id} value={tg.id}>
                 {tg.name}
               </option>

@@ -88,7 +88,7 @@ describe('tagsOnImages', () => {
     const filter: ImageFilters = {
       tagLists: [
         {
-          tagGroupId: scenario.tagGroup.one.id,
+          tagCategoryId: scenario.tagCategory.one.id,
           tagIds: [scenario.tag.g1t1.id],
           condition: 'OR',
         },
@@ -110,7 +110,7 @@ describe('tagsOnImages', () => {
     const filter: ImageFilters = {
       tagLists: [
         {
-          tagGroupId: scenario.tagGroup.one.id,
+          tagCategoryId: scenario.tagCategory.one.id,
           tagIds: [scenario.tag.g1t1.id],
           condition: 'OR',
         },

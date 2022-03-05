@@ -1,4 +1,4 @@
-import { Tag, TagGroup } from 'types/graphql'
+import { Tag, TagCategory } from 'types/graphql'
 
 import { TagComponent } from 'src/design-system'
 import { TagProps } from 'src/design-system/components/TagComponent'
@@ -45,27 +45,27 @@ export const TagItem = ({
       color="celadon"
       groupColor="fulvous"
       name={tag.name}
-      groupName={showGroup && tag.tagGroup?.name}
+      groupName={showGroup && tag.tagCategory?.name}
       {...args}
     />
   )
 }
 
-type TagGroupItemProps = {
-  tagGroup: TagGroup
+type TagCategoryItemProps = {
+  tagCategory: TagCategory
   showGroup?: boolean
   showMenu?: boolean
 }
-export const TagGroupItem = ({
-  tagGroup,
+export const TagCategoryItem = ({
+  tagCategory,
   showMenu,
   ...args
-}: OptionalMerge<TagGroupItemProps, TagProps>) => {
+}: OptionalMerge<TagCategoryItemProps, TagProps>) => {
   const {
-    setTagGroupCreateOpen,
-    setTagCreateTagGroup,
-    setTagGroupForDelete,
-    setTagGroupForEdit,
+    setTagCategoryCreateOpen,
+    setTagCreateTagCategory,
+    setTagCategoryForDelete,
+    setTagCategoryForEdit,
   } = useTagContext()
   return (
     <TagComponent
@@ -74,29 +74,29 @@ export const TagGroupItem = ({
           ? [
               {
                 icon: <AddIcon />,
-                onClick: () => setTagCreateTagGroup(tagGroup),
+                onClick: () => setTagCreateTagCategory(tagCategory),
                 label: 'Create tag in group',
               },
               {
                 icon: <PlusSquareIcon />,
-                onClick: () => setTagGroupCreateOpen(true),
+                onClick: () => setTagCategoryCreateOpen(true),
                 label: 'Create category',
               },
               {
                 icon: <EditIcon />,
-                onClick: () => setTagGroupForEdit(tagGroup),
+                onClick: () => setTagCategoryForEdit(tagCategory),
                 label: 'Edit category',
               },
               {
                 icon: <DeleteIcon />,
-                onClick: () => setTagGroupForDelete(tagGroup),
+                onClick: () => setTagCategoryForDelete(tagCategory),
                 label: 'Delete category',
               },
             ]
           : undefined
       }
       color="fulvous"
-      name={tagGroup.name}
+      name={tagCategory.name}
       {...args}
     />
   )

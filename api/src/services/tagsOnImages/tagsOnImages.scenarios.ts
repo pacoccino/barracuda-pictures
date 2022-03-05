@@ -1,5 +1,5 @@
 export const standard = defineScenario({
-  tagGroup: {
+  tagCategory: {
     one: {
       data: {
         name: 'TG1',
@@ -15,25 +15,25 @@ export const standard = defineScenario({
     g1t1: (scenario) => ({
       data: {
         name: 'g1t1',
-        tagGroupId: scenario.tagGroup.one.id,
+        tagCategoryId: scenario.tagCategory.one.id,
       },
     }),
     g1t2: (scenario) => ({
       data: {
         name: 'g1t2',
-        tagGroupId: scenario.tagGroup.one.id,
+        tagCategoryId: scenario.tagCategory.one.id,
       },
     }),
     g2t1: (scenario) => ({
       data: {
         name: 'g2t1',
-        tagGroupId: scenario.tagGroup.two.id,
+        tagCategoryId: scenario.tagCategory.two.id,
       },
     }),
     g2t2: (scenario) => ({
       data: {
         name: 'g2t2',
-        tagGroupId: scenario.tagGroup.two.id,
+        tagCategoryId: scenario.tagCategory.two.id,
       },
     }),
   },

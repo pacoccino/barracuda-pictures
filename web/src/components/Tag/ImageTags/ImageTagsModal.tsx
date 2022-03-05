@@ -1,7 +1,7 @@
 import { Box, Wrap, WrapItem, Flex, Heading, VStack } from '@chakra-ui/react'
 
 import { useMemo } from 'react'
-import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
+import { TagCategoryItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { useTagContext } from 'src/contexts/tags'
 import { DefaultSpinner } from 'src/design-system'
 import { useMutation } from '@redwoodjs/web'
@@ -43,10 +43,10 @@ const ImageTagsModal = ({ image }) => {
     })
   }
 
-  const availableTagGroups = useMemo(() => {
+  const availableTagCategorys = useMemo(() => {
     return tagsQuery.loading
       ? []
-      : tagsQuery.data.tagGroups.map((tg) => ({
+      : tagsQuery.data.tagCategorys.map((tg) => ({
           ...tg,
           tags: tg.tags.filter(
             (tag) => !image.tagsOnImages.find((t) => t.tag.id === tag.id)
@@ -84,13 +84,13 @@ const ImageTagsModal = ({ image }) => {
         {tagsQuery.loading ? (
           <DefaultSpinner />
         ) : (
-          availableTagGroups.map((tagGroup) => (
-            <Box key={tagGroup.id}>
+          availableTagCategorys.map((tagCategory) => (
+            <Box key={tagCategory.id}>
               <Flex mb={2} justify="start">
-                <TagGroupItem tagGroup={tagGroup} showMenu />
+                <TagCategoryItem tagCategory={tagCategory} showMenu />
               </Flex>
               <Wrap mb={1}>
-                {tagGroup.tags.map((tag) => (
+                {tagCategory.tags.map((tag) => (
                   <WrapItem key={tag.id}>
                     <TagItem
                       tag={tag}

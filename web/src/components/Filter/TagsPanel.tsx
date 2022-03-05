@@ -14,7 +14,7 @@ import { useFilterContext } from 'src/contexts/filter'
 import { useTagContext } from 'src/contexts/tags'
 import { useCallback, useMemo } from 'react'
 import { AddIcon } from '@chakra-ui/icons'
-import { TagGroupItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
+import { TagCategoryItem, TagItem } from 'src/components/Tag/TagItem/TagItem'
 import { TagStatus } from 'src/design-system/components/TagComponent'
 import {
   DefaultSpinner,
@@ -67,7 +67,7 @@ const AvailableTagsPanel = () => {
     },
   })
 
-  const { tagsQuery, setTagGroupCreateOpen, setTagCreateTagGroup } =
+  const { tagsQuery, setTagCategoryCreateOpen, setTagCreateTagCategory } =
     useTagContext()
 
   const isTagSelected = useCallback(
@@ -75,17 +75,17 @@ const AvailableTagsPanel = () => {
     [selectedTagIds]
   )
 
-  const filteredTagGroups = useMemo(() => {
+  const filteredTagCategorys = useMemo(() => {
     if (tagsQuery.loading) return []
-    if (allTagsDisclosure.isOpen) return tagsQuery.data.tagGroups
+    if (allTagsDisclosure.isOpen) return tagsQuery.data.tagCategorys
 
     if (filteredTagsQuery.loading) return []
 
-    return tagsQuery.data.tagGroups
-      .map((tagGroup) => {
+    return tagsQuery.data.tagCategorys
+      .map((tagCategory) => {
         return {
-          ...tagGroup,
-          tags: tagGroup.tags.filter((tag) => {
+          ...tagCategory,
+          tags: tagCategory.tags.filter((tag) => {
             return (
               filteredTagsQuery.data.tagsFromFilter.findIndex(
                 (t) => t.id === tag.id
@@ -94,7 +94,7 @@ const AvailableTagsPanel = () => {
           }),
         }
       })
-      .filter((tagGroup) => tagGroup.tags.length > 0)
+      .filter((tagCategory) => tagCategory.tags.length > 0)
   }, [filteredTagsQuery, tagsQuery])
 
   if (filteredTagsQuery.loading || tagsQuery.loading) {
@@ -114,7 +114,7 @@ const AvailableTagsPanel = () => {
           size="md"
         />
         <Button
-          onClick={() => setTagGroupCreateOpen(true)}
+          onClick={() => setTagCategoryCreateOpen(true)}
           leftIcon={<AddIcon />}
           size="xs"
           colorScheme="orchid"
@@ -125,11 +125,11 @@ const AvailableTagsPanel = () => {
       </Flex>
 
       <VStack flex={1} py={1} align="stretch">
-        {filteredTagGroups.map((tagGroup) => (
-          <Box key={tagGroup.id}>
+        {filteredTagCategorys.map((tagCategory) => (
+          <Box key={tagCategory.id}>
             <Flex>
               <Flex flex={1}>
-                <TagGroupItem tagGroup={tagGroup} showMenu />
+                <TagCategoryItem tagCategory={tagCategory} showMenu />
 
                 <TooltipIconButton
                   label="Create tag"
@@ -139,20 +139,20 @@ const AvailableTagsPanel = () => {
                   colorScheme="fulvous"
                   variant="solid"
                   icon={<AddIcon />}
-                  onClick={() => setTagCreateTagGroup(tagGroup)}
+                  onClick={() => setTagCreateTagCategory(tagCategory)}
                   ml={2}
                 />
               </Flex>
               <Flex align="center">
                 <Text fontSize="sm">
-                  {tagListConditions[tagGroup.id] || 'OR'}
+                  {tagListConditions[tagCategory.id] || 'OR'}
                 </Text>
                 <Switch
-                  isChecked={tagListConditions[tagGroup.id] === 'AND'}
+                  isChecked={tagListConditions[tagCategory.id] === 'AND'}
                   onChange={() =>
                     setTagListCondition(
-                      tagGroup,
-                      tagListConditions[tagGroup.id] === 'AND' ? 'OR' : 'AND'
+                      tagCategory,
+                      tagListConditions[tagCategory.id] === 'AND' ? 'OR' : 'AND'
                     )
                   }
                   ml={1}
@@ -161,14 +161,14 @@ const AvailableTagsPanel = () => {
               </Flex>
             </Flex>
             <Wrap my={2}>
-              {tagGroup.tags.map((tag) => (
+              {tagCategory.tags.map((tag) => (
                 <WrapItem key={tag.id}>
                   <TagItem
                     tag={tag}
                     onClick={
                       isTagSelected(tag)
-                        ? () => removeTagToFilter(tag, tagGroup)
-                        : () => addTagToFilter(tag, tagGroup)
+                        ? () => removeTagToFilter(tag, tagCategory)
+                        : () => addTagToFilter(tag, tagCategory)
                     }
                     leftAction={
                       <StatusIcon
@@ -205,11 +205,15 @@ const SelectedTagsPanel = () => {
   const { selectedTagIds, removeTagToFilter } = useFilterContext()
 
   const { tagsQuery } = useTagContext()
-  const tagGroups = tagsQuery.data?.tagGroups || []
+  const tagCategorys = tagsQuery.data?.tagCategorys || []
 
   const tags = useMemo(
-    () => tagGroups.reduce((acc, tagGroup) => acc.concat(tagGroup.tags), []),
-    [tagGroups]
+    () =>
+      tagCategorys.reduce(
+        (acc, tagCategory) => acc.concat(tagCategory.tags),
+        []
+      ),
+    [tagCategorys]
   )
   const selectedTags = useMemo(
     () => tags.filter((tag) => selectedTagIds.indexOf(tag.id) !== -1),
@@ -224,7 +228,7 @@ const SelectedTagsPanel = () => {
             tag={tag}
             showGroup
             actionLabel="Remove from filter"
-            onClick={() => removeTagToFilter(tag, tag.tagGroup)}
+            onClick={() => removeTagToFilter(tag, tag.tagCategory)}
           />
         </WrapItem>
       ))}

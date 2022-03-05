@@ -2,14 +2,14 @@ import { Box, Button, Input, useToast, BodyModal } from 'src/design-system'
 
 import { useEffect, useRef } from 'react'
 import { useMutation } from '@redwoodjs/web'
-import { TagGroupItem } from 'src/components/Tag/TagItem/TagItem'
+import { TagCategoryItem } from 'src/components/Tag/TagItem/TagItem'
 import { Flex, FormLabel } from '@chakra-ui/react'
 import { QUERIES_TO_REFETCH } from 'src/contexts/tags'
 import { useForm } from 'react-hook-form'
 
 const UPDATE_TAG_GROUP = gql`
-  mutation UpdateTagGroup($name: String!, $tagGroupId: String!) {
-    updateTagGroup(id: $tagGroupId, input: { name: $name }) {
+  mutation UpdateTagCategory($name: String!, $tagCategoryId: String!) {
+    updateTagCategory(id: $tagCategoryId, input: { name: $name }) {
       id
       name
       __typename
@@ -17,35 +17,35 @@ const UPDATE_TAG_GROUP = gql`
   }
 `
 
-export const EditTagGroupModal = ({ tagGroup, onClose }) => {
-  const updateTagGroupMutation = useMutation(UPDATE_TAG_GROUP)
+export const EditTagCategoryModal = ({ tagCategory, onClose }) => {
+  const updateTagCategoryMutation = useMutation(UPDATE_TAG_GROUP)
   const initialRef = useRef(null)
   const toast = useToast()
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {
-      tagGroupName: '',
+      tagCategoryName: '',
     },
   })
   useEffect(() => {
-    if (tagGroup) {
+    if (tagCategory) {
       reset({
-        tagGroupName: tagGroup.name,
+        tagCategoryName: tagCategory.name,
       })
     }
-  }, [tagGroup, reset])
-  const { ref: registerRef, ...registerRest } = register('tagGroupName')
+  }, [tagCategory, reset])
+  const { ref: registerRef, ...registerRest } = register('tagCategoryName')
 
-  const [updateTagGroup, { loading }] = updateTagGroupMutation
-  const handleUpdateTagGroup = ({ tagGroupName }) =>
-    updateTagGroup({
-      variables: { tagGroupId: tagGroup.id, name: tagGroupName },
+  const [updateTagCategory, { loading }] = updateTagCategoryMutation
+  const handleUpdateTagCategory = ({ tagCategoryName }) =>
+    updateTagCategory({
+      variables: { tagCategoryId: tagCategory.id, name: tagCategoryName },
       refetchQueries: QUERIES_TO_REFETCH,
     })
       .then(() => {
         toast({
           title: 'Category edited',
-          description: tagGroupName,
+          description: tagCategoryName,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -64,15 +64,15 @@ export const EditTagGroupModal = ({ tagGroup, onClose }) => {
 
   return (
     <BodyModal
-      isOpen={loading || !!tagGroup}
+      isOpen={loading || !!tagCategory}
       onClose={onClose}
       initialFocusRef={initialRef}
       title="Edit category"
     >
       <Box mb={2}>
-        <TagGroupItem tagGroup={tagGroup} />
+        <TagCategoryItem tagCategory={tagCategory} />
       </Box>
-      <form onSubmit={handleSubmit(handleUpdateTagGroup)}>
+      <form onSubmit={handleSubmit(handleUpdateTagCategory)}>
         <FormLabel>New name:</FormLabel>
         <Input
           type="text"
