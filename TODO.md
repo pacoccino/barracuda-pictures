@@ -1,3 +1,27 @@
+### TODO
+
+:: Important
+- logger logfile
+- auth S3/image function
+- search tags
+- photos/:id in modal and scroll back to position
+
+:: necessary but not urgent
+- detect people
+- download zip of filter (hash filter)
+
+:: optional
+- Create tag from metadata
+- duplicate category
+
+:: ??
+
+- Edit date
+- upload images
+- sync db to image metadata (and test reverse)
+- select range
+- tag colors
+
 ### BUGS
 
 add tag to filter > remove tag, tag still in filter so no images ?
@@ -9,26 +33,3 @@ image page => gallery >>> should go on image
 tags in selected filters and on image edit tags
 
 scroll, when add tag it moves back to top
-
-### TODO
-
-- Display tags not in filter for being able to filter OR tags
-- Create tag from metadata
-- duplicate category
-- logger logfile
-- search tags
-
-- Edit date
-
-- auth S3
-
-- detect people
-
-- upload images
-
-- sync db to image metadata (and test reverse)
-
-- select range
-
-- tag colors
-- download zip of filter (hash filter)
