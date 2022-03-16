@@ -44,11 +44,11 @@ export const Hud = ({
           break
         case 'ArrowLeft':
           if (imagesBefore && imagesBefore[0])
-            navigate(routes.photo({ id: imagesBefore[0].id }))
+            navigate(routes.photo({ photoId: imagesBefore[0].id }))
           break
         case 'ArrowRight':
           if (imagesAfter && imagesAfter[0])
-            navigate(routes.photo({ id: imagesAfter[0].id }))
+            navigate(routes.photo({ photoId: imagesAfter[0].id }))
           break
       }
     }
@@ -87,7 +87,7 @@ export const Hud = ({
 
         {imagesBefore && imagesBefore[0] && (
           <Link
-            to={routes.photo({ id: imagesBefore[0].id })}
+            to={routes.photo({ photoId: imagesBefore[0].id })}
             title={'Previous image'}
           >
             <Center
@@ -106,7 +106,7 @@ export const Hud = ({
 
         {imagesAfter && imagesAfter[0] && (
           <Link
-            to={routes.photo({ id: imagesAfter[0].id })}
+            to={routes.photo({ photoId: imagesAfter[0].id })}
             title={'Next image'}
           >
             <Center

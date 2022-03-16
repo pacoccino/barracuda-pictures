@@ -144,7 +144,7 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
     return (
       <Box position="relative">
         <Link
-          to={routes.photo({ id: image.id })}
+          to={routes.photo({ photoId: image.id })}
           title={'Show image ' + image.id + ' detail'}
         >
           {imageComponent}

@@ -6,6 +6,7 @@ import { FilterContextProvider } from 'src/contexts/filter'
 import { TagContextProvider } from 'src/contexts/tags'
 import { SelectContextProvider } from 'src/contexts/select'
 import { ApluContextProvider } from 'src/contexts/aplu'
+import PhotosPage from 'src/pages/PhotosPage/PhotosPage'
 
 const contexts = [FilterContextProvider, TagContextProvider, SelectContextProvider, ApluContextProvider]
 
@@ -34,11 +35,11 @@ const Routes = () => {
 
       <Private unauthenticated="login" wrap={contexts}>
         <Set wrap={[DashboardLayout]}>
+          <Route path="/photos/{photoId:String}" page={PhotosPage} name="photo" />
           <Route path="/photos" page={PhotosPage} name="photos" />
           <Route path="/admin" page={AdminPage} name="admin" />
           <Route path="/infos" page={InfoPage} name="infos" />
         </Set>
-        <Route path="/photos/{id:String}" page={PhotoPage} name="photo" />
         <Route path="/" page={RedirectPage} name="home" />
       </Private>
 

@@ -7,25 +7,34 @@ import { useMemo } from 'react'
 import { HorizontalCollapse } from 'src/design-system'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { SelectBar } from 'src/components/Images/SelectBar'
+import { useLocation, useParams } from '@redwoodjs/router'
 
-const PhotosPage = () => {
+const PhotosPage = ({ photoId }) => {
   const { filter } = useFilterContext()
   const variables = useMemo(() => ({ filter }), [filter])
   const filterPanelDisclosure = useDisclosure({ defaultIsOpen: true })
+
+  const a = useLocation()
+  const b = useParams()
+  console.log(a, b)
 
   return (
     <Flex h="100%">
       <MetaTags title="Photos" description="Photos page" />
 
-      <HorizontalCollapse
-        isOpen={filterPanelDisclosure.isOpen}
-        width={300}
-        borderRightWidth={1}
-        boxShadow="lg"
-        height="100%"
-      >
-        <FilterPanel />
-      </HorizontalCollapse>
+      {photoId ? (
+        <Box>p:{photoId}</Box>
+      ) : (
+        <HorizontalCollapse
+          isOpen={filterPanelDisclosure.isOpen}
+          width={300}
+          borderRightWidth={1}
+          boxShadow="lg"
+          height="100%"
+        >
+          <FilterPanel />
+        </HorizontalCollapse>
+      )}
 
       <Flex flex="1">
         <VStack flex="1" align="stretch" spacing={0}>
