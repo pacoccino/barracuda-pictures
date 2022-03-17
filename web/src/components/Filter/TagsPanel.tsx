@@ -76,6 +76,7 @@ const AvailableTagsPanel = () => {
           ...tagCategory,
           tags: tagCategory.tags.filter((tag) => {
             return (
+              isTagSelected(tag) ||
               apluQuery.data.attributesFromFilter.tags.findIndex(
                 (t) => t.id === tag.id
               ) !== -1
@@ -84,7 +85,7 @@ const AvailableTagsPanel = () => {
         }
       })
       .filter((tagCategory) => tagCategory.tags.length > 0)
-  }, [apluQuery, tagsQuery])
+  }, [apluQuery, tagsQuery, isTagSelected])
 
   if (tagsQuery.loading) {
     return <DefaultSpinner />
