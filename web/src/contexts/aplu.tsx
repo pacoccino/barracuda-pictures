@@ -5,7 +5,7 @@ import { useFilterContext } from 'src/contexts/filter'
 
 export const QUERY = gql`
   query APLU($filter: ImageFilters) {
-    arbo(filter: $filter)
+    attributesFromFilter(filter: $filter)
   }
 `
 

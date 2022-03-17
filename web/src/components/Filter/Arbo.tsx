@@ -39,7 +39,8 @@ export const ArboPath = () => {
   if (!apluQuery.previousData && !apluQuery.data) {
     return <DefaultSpinner />
   }
-  const arbo = (apluQuery.data || apluQuery.previousData).arbo.arboPath
+  const arbo = (apluQuery.data || apluQuery.previousData).attributesFromFilter
+    .arboPath
 
   return (
     <Box>
@@ -97,7 +98,8 @@ export const ArboDate = () => {
   if (!apluQuery.previousData && !apluQuery.data) {
     return <DefaultSpinner />
   }
-  const arbo = (apluQuery.data || apluQuery.previousData).arbo.arboDate
+  const arbo = (apluQuery.data || apluQuery.previousData).attributesFromFilter
+    .arboDate
 
   const selectDate = (paths, tree) => {
     if (paths.length === 1) {

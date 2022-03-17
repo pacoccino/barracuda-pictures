@@ -2,10 +2,8 @@ import {
   Box,
   Button,
   Flex,
-  IconButton,
   Switch,
   Text,
-  useDisclosure,
   VStack,
   Wrap,
   WrapItem,
@@ -22,7 +20,7 @@ import {
   TooltipIconButton,
 } from 'src/design-system'
 import { FilterSection } from 'src/components/Filter/FilterSection'
-import { useQuery } from '@redwoodjs/web'
+import { APLUMode, useApluContext } from 'src/contexts/aplu'
 
 export const TagsPanel = () => {
   const { selectedTagIds, clearTags } = useFilterContext()
@@ -49,7 +47,6 @@ export const QUERY_FILTERED_TAGS = gql`
 
 const AvailableTagsPanel = () => {
   const {
-    filter,
     selectedTagIds,
     addTagToFilter,
     removeTagToFilter,
@@ -57,15 +54,7 @@ const AvailableTagsPanel = () => {
     setTagListCondition,
   } = useFilterContext()
 
-  const allTagsDisclosure = useDisclosure()
-
-  const filteredTagsQuery = useQuery(QUERY_FILTERED_TAGS, {
-    fetchPolicy: 'cache-first',
-    notifyOnNetworkStatusChange: true,
-    variables: {
-      filter,
-    },
-  })
+  const { apluQuery, apluMode } = useApluContext()
 
   const { tagsQuery, setTagCategoryCreateOpen, setTagCreateTagCategory } =
     useTagContext()
@@ -77,9 +66,9 @@ const AvailableTagsPanel = () => {
 
   const filteredTagCategorys = useMemo(() => {
     if (tagsQuery.loading) return []
-    if (allTagsDisclosure.isOpen) return tagsQuery.data.tagCategorys
+    if (apluMode === APLUMode.ALL) return tagsQuery.data.tagCategorys
 
-    if (filteredTagsQuery.loading) return []
+    if (apluQuery.loading) return []
 
     return tagsQuery.data.tagCategorys
       .map((tagCategory) => {
@@ -87,7 +76,7 @@ const AvailableTagsPanel = () => {
           ...tagCategory,
           tags: tagCategory.tags.filter((tag) => {
             return (
-              filteredTagsQuery.data.tagsFromFilter.findIndex(
+              apluQuery.data.attributesFromFilter.tags.findIndex(
                 (t) => t.id === tag.id
               ) !== -1
             )
@@ -95,24 +84,15 @@ const AvailableTagsPanel = () => {
         }
       })
       .filter((tagCategory) => tagCategory.tags.length > 0)
-  }, [filteredTagsQuery, tagsQuery])
+  }, [apluQuery, tagsQuery])
 
-  if (filteredTagsQuery.loading || tagsQuery.loading) {
+  if (tagsQuery.loading) {
     return <DefaultSpinner />
   }
 
   return (
     <VStack align="stretch">
-      <Flex align="center">
-        <Text textStyle="h3" flex={1}>
-          {allTagsDisclosure.isOpen ? 'All tags' : 'Tags on filter'}
-        </Text>
-        <Switch
-          isChecked={allTagsDisclosure.isOpen}
-          onChange={allTagsDisclosure.onToggle}
-          mr={2}
-          size="md"
-        />
+      <Flex align="center" justify="end">
         <Button
           onClick={() => setTagCategoryCreateOpen(true)}
           leftIcon={<AddIcon />}

@@ -5,7 +5,6 @@ import type {
   QueryarboArgs,
   QuerytagsFromFilterArgs,
 } from 'types/graphql'
-import { images } from 'src/services/images'
 import _ from 'lodash'
 import S3Path from 'src/lib/files/S3Path'
 import moment from 'moment'
@@ -15,7 +14,7 @@ import { selectAllImages } from 'src/services/images/images'
 
 // Advanced Picture Look Up
 
-export const arbo = async ({
+export const attributesFromFilter = async ({
   filter,
 }: QueryarboArgs = {}): Promise<ArboResponse> => {
   const arboPath: ArboPath = {
@@ -33,8 +32,21 @@ export const arbo = async ({
   const allImages = await selectAllImages({
     filter,
     select: {
+      id: true,
       path: true,
       dateTaken: true,
+    },
+  })
+
+  const tags = await db.tag.findMany({
+    where: {
+      tagsOnImages: {
+        some: {
+          OR: allImages.map((image) => ({
+            imageId: image.id,
+          })),
+        },
+      },
     },
   })
 
@@ -107,26 +119,10 @@ export const arbo = async ({
       currArbo.count++
     })
   })
+
   return {
     arboPath,
     arboDate,
+    tags,
   }
-}
-
-export const tagsFromFilter = async ({
-  filter,
-}: QuerytagsFromFilterArgs = {}): Promise<Tag[]> => {
-  const allImages = await selectAllImages({ filter })
-
-  return db.tag.findMany({
-    where: {
-      tagsOnImages: {
-        some: {
-          OR: allImages.map((image) => ({
-            imageId: image.id,
-          })),
-        },
-      },
-    },
-  })
 }

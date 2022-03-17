@@ -6,6 +6,11 @@ import { TagsPanel } from './TagsPanel'
 import { useFilterContext } from 'src/contexts/filter'
 import { useApluContext, APLUMode } from 'src/contexts/aplu'
 
+const apluModeName = {
+  [APLUMode.ALL]: 'All',
+  [APLUMode.FILTER]: 'On images',
+}
+
 const FilterPanel = () => {
   const { apluMode, switchAPLUMode } = useApluContext()
   const { clearFilter, isFilterActive } = useFilterContext()
@@ -16,12 +21,12 @@ const FilterPanel = () => {
         <Text textStyle="h1" fontSize="md" ml={2} flex="1">
           Filters
         </Text>
-        <Flex align="center">
-          <Text fontSize="sm">{apluMode}</Text>
+        <Flex align="center" mr={2}>
+          <Text fontSize="sm">{apluModeName[apluMode]}</Text>
           <Switch
             isChecked={apluMode === APLUMode.FILTER}
             onChange={() => switchAPLUMode()}
-            ml={1}
+            ml={2}
             size="sm"
           />
         </Flex>
