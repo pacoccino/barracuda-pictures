@@ -1,7 +1,6 @@
 ### TODO
 
 :: Important
-- logger logfile
 - auth S3/image function
 
 :: necessary but not urgent
@@ -12,6 +11,7 @@
 :: optional
 - Create tag from metadata
 - duplicate category
+- Refacto ApplyTags like deleteManyImages
 
 :: ??
 
