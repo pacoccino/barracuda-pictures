@@ -1,6 +1,6 @@
 import { IconButton, Flex, Tooltip, Text, Center } from '@chakra-ui/react'
 import type { FlexProps } from '@chakra-ui/react'
-import { Menu, MenuButton, MenuItem, MenuList } from 'src/design-system'
+import { Menu, MenuButton, MenuList } from 'src/design-system'
 import { MdMoreVert } from 'react-icons/md'
 import * as React from 'react'
 
@@ -18,12 +18,7 @@ export type TagProps = FlexProps & {
   groupColor?: string
   leftAction?: React.ReactNode
   rightAction?: React.ReactNode
-  menuItems?:
-    | {
-        onClick: () => void
-        icon: React.ReactElement
-        label: string
-      }[]
+  menuItems?: React.ReactNode
 }
 
 const TagTooltip = ({ label, children }) => (
@@ -91,17 +86,7 @@ export const TagComponent = ({
             minWidth="initial"
             height="100%"
           />
-          <MenuList>
-            {menuItems.map((menuItem) => (
-              <MenuItem
-                key={menuItem.label}
-                icon={menuItem.icon}
-                onClick={menuItem.onClick}
-              >
-                {menuItem.label}
-              </MenuItem>
-            ))}
-          </MenuList>
+          <MenuList>{menuItems}</MenuList>
         </Menu>
       </Flex>
     )}

@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from 'react'
 import { useQuery } from '@redwoodjs/web'
-import { ArboDate, ArboPath } from 'api/types/graphql'
+import { ArboResponse } from 'types/graphql'
 import { useFilterContext } from 'src/contexts/filter'
 
 export const QUERY = gql`
@@ -17,9 +17,7 @@ export enum APLUMode {
 }
 
 interface ApluContextType {
-  apluQuery:
-    | QueryOperationResult<{ arboPath: ArboPath; arboDate: ArboDate }>
-    | { loading: false; data: null }
+  apluQuery: QueryOperationResult<ArboResponse> | { loading: false; data: null }
   apluMode: APLUMode
   switchAPLUMode: () => void
 }
