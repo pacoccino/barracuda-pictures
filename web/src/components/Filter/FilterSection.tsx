@@ -13,6 +13,7 @@ interface FilterSectionProps {
   children: React.ReactNode
   title: string
   active?: boolean
+  defaultIsOpen?: boolean
   onClear?: () => void
 }
 export const FilterSection = ({
@@ -20,8 +21,9 @@ export const FilterSection = ({
   title,
   active,
   onClear,
+  defaultIsOpen = false,
 }: FilterSectionProps) => {
-  const disclosure = useDisclosure()
+  const disclosure = useDisclosure({ defaultIsOpen })
   return (
     <Box>
       <Flex
