@@ -2,6 +2,7 @@ export const schema = gql`
   type TagCategory {
     id: String!
     name: String!
+    type: String!
     tags: [Tag]!
   }
 
