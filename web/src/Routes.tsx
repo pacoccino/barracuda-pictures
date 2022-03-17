@@ -6,7 +6,6 @@ import { FilterContextProvider } from 'src/contexts/filter'
 import { TagContextProvider } from 'src/contexts/tags'
 import { SelectContextProvider } from 'src/contexts/select'
 import { ApluContextProvider } from 'src/contexts/aplu'
-import PhotosPage from 'src/pages/PhotosPage/PhotosPage'
 
 const contexts = [FilterContextProvider, TagContextProvider, SelectContextProvider, ApluContextProvider]
 
