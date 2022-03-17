@@ -3,12 +3,11 @@
 :: Important
 - logger logfile
 - auth S3/image function
-- search tags
-- photos/:id in modal and scroll back to position
 
 :: necessary but not urgent
 - detect people
 - download zip of filter (hash filter)
+- load infinite scroll from /photos/{photoId} position
 
 :: optional
 - Create tag from metadata
