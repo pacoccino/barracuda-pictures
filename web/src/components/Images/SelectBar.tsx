@@ -116,8 +116,8 @@ export const SelectBar = () => {
 
         <Text fontSize="sm" ml={2}>
           {allSelected
-            ? 'All images selected'
-            : `${selectedImages.length} images selected`}
+            ? `All images from filter selected`
+            : `${selectedImages.length || 'No'} images selected`}
         </Text>
       </Flex>
       <EditBasePathModal
