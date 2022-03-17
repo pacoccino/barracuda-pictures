@@ -43,8 +43,8 @@ const RowSubTitle = ({ children }) => (
   </Text>
 )
 
-const RowContent = ({ children }) => (
-  <Box mb={3} ml={1}>
+const RowContent = ({ children, ...args }) => (
+  <Box mb={3} ml={1} {...args}>
     {children}
   </Box>
 )
@@ -60,7 +60,10 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
     [image]
   )
 
-  const gps = useMemo(() => `${image.takenAtLat}, ${image.takenAtLng}`, [image])
+  const gps = useMemo(
+    () => `${parsedMetadata.gps.lat}, ${parsedMetadata.gps.lng}`,
+    [parsedMetadata]
+  )
   const { hasCopied, onCopy } = useClipboard(gps)
 
   const handleEdit = ({ rating }) => {
@@ -105,13 +108,15 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
       >
         ID
       </RowTitle>
-      <RowContent>{image.id}</RowContent>
+      <RowContent className="enable-select-text">{image.id}</RowContent>
 
       <RowTitle>Path</RowTitle>
-      <RowContent>{image.path}</RowContent>
+      <RowContent className="enable-select-text">{image.path}</RowContent>
 
       <RowTitle>Date taken</RowTitle>
-      <RowContent>{formatDate(image.dateTaken)}</RowContent>
+      <RowContent className="enable-select-text">
+        {formatDate(image.dateTaken)}
+      </RowContent>
 
       <RowTitle
         rightItem={
