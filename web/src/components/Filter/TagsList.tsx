@@ -10,13 +10,17 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useFilterContext } from 'src/contexts/filter'
-import { useMemo, useCallback } from 'react'
+import * as React from 'react'
+import { useCallback, useMemo } from 'react'
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { Menu, MenuButton, MenuList } from 'src/design-system'
-import { TagMenuItems, TagCategoryMenuItems } from 'src/components/Tag/TagItem'
+import { TagCategoryMenuItems, TagMenuItems } from 'src/components/Tag/TagItem'
 import { FaTags } from 'react-icons/fa'
 import { MdGroup, MdMoreVert } from 'react-icons/md'
-import * as React from 'react'
+import ApplyTagMenuItem, {
+  ApplyTagMode,
+} from 'src/components/Tag/ApplyTags/ApplyTagMenuItem'
+import { useSelectContext } from 'src/contexts/select'
 
 const RowMenu = ({ children }) => (
   <Menu placement="right">
@@ -39,6 +43,7 @@ const RowMenu = ({ children }) => (
 const TagRow = ({ tag, tagCategory }) => {
   const { selectedTagIds, addTagToFilter, removeTagToFilter } =
     useFilterContext()
+  const { isSelectionActive } = useSelectContext()
 
   const isTagSelected = useMemo(
     () => selectedTagIds.indexOf(tag.id) !== -1,
@@ -85,6 +90,13 @@ const TagRow = ({ tag, tagCategory }) => {
         </Text>
       </Flex>
       <RowMenu>
+        {isSelectionActive && (
+          <>
+            <ApplyTagMenuItem tag={tag} applyMode={ApplyTagMode.ADD} />
+            <ApplyTagMenuItem tag={tag} applyMode={ApplyTagMode.REMOVE} />
+          </>
+        )}
+
         <TagMenuItems tag={tag} />
       </RowMenu>
     </Flex>

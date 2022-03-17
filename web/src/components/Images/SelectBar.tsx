@@ -6,8 +6,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useSelectContext } from 'src/contexts/select'
-import { MdPlayArrow, MdSelectAll } from 'react-icons/md'
-import { GrSelect } from 'react-icons/gr'
+import { MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
 import ApplyTagsModal from 'src/components/Tag/ApplyTags/ApplyTagsModal'
@@ -104,7 +103,7 @@ export const SelectBar = () => {
           onClick={clearSelection}
           size="xs"
           ml={2}
-          disabled={!allSelected && selectedImages.length === 0}
+          disabled={!isSelectionActive}
         />
         <TooltipIconButton
           label="Select all"

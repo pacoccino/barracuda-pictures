@@ -25,11 +25,12 @@ export const TagsPanel = () => {
       onClear={clearTags}
       defaultIsOpen={true}
     >
-      <AvailableTagsPanel />
+      <TagsPanelInternal />
     </FilterSection>
   )
 }
-const AvailableTagsPanel = () => {
+
+const TagsPanelInternal = () => {
   const { tagsQuery } = useTagContext()
   const { apluQuery, apluMode } = useApluContext()
   const { selectedTagIds } = useFilterContext()

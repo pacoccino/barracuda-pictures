@@ -25,6 +25,7 @@
 
 add tag to filter > remove tag, tag still in filter so no images ?
 
+Select 2 images, apply tag, filter with this tag, unapply tags to images => images still in selection (if I apply they will reappear)
 choose filter => select image => remove filter >>> image still into selectio n
 
 image page => gallery >>> should go on image
