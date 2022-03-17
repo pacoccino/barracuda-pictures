@@ -1,4 +1,4 @@
-import { Link, routes } from '@redwoodjs/router'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { getMiniatureUrl } from 'src/lib/static'
 import { Box, Center, Icon, IconButton, Image } from '@chakra-ui/react'
 
@@ -29,6 +29,7 @@ import {
 } from 'src/design-system'
 import { useFilterContext } from 'src/contexts/filter'
 import { formatDate } from 'src/lib/utils'
+import { useDoubleClick } from 'src/hooks/doubleClick'
 
 type ImagesItemProps = {
   image: FindImages['imagesInfinite'][number]
@@ -65,6 +66,7 @@ const ItemMenu = ({ image }) => {
     </Menu>
   )
 }
+
 const ItemDetails = ({ image }) => {
   return (
     <Popover trigger="hover">
@@ -85,15 +87,17 @@ const ItemDetails = ({ image }) => {
             <Tbody>
               <Tr>
                 <Th>Id</Th>
-                <Td>{image.id}</Td>
+                <Td className="enable-select-text">{image.id}</Td>
               </Tr>
               <Tr>
                 <Th>Path</Th>
-                <Td>{image.path}</Td>
+                <Td className="enable-select-text">{image.path}</Td>
               </Tr>
               <Tr>
                 <Th>Date</Th>
-                <Td>{formatDate(image.dateTaken)}</Td>
+                <Td className="enable-select-text">
+                  {formatDate(image.dateTaken)}
+                </Td>
               </Tr>
             </Tbody>
           </Table>
@@ -105,7 +109,6 @@ const ItemDetails = ({ image }) => {
 
 export const ImagesItem = ({ image }: ImagesItemProps) => {
   const {
-    selectMode,
     setSelectMode,
     addImageToSelection,
     removeImageFromSelection,
@@ -113,65 +116,95 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
     allSelected,
   } = useSelectContext()
 
-  const imageComponent = (
-    <Image src={getMiniatureUrl(image)} alt={image.path} h={250} />
-  )
   const imageSelected = useMemo(
     () => isImageSelected(image),
     [image, isImageSelected]
   )
 
-  const toggleSelection = () => {
+  const toggleSelection = useCallback(() => {
     if (allSelected) return
     setSelectMode(SelectMode.MULTI_SELECT)
     if (imageSelected) removeImageFromSelection(image)
     else addImageToSelection(image)
-  }
+  }, [
+    allSelected,
+    setSelectMode,
+    imageSelected,
+    addImageToSelection,
+    removeImageFromSelection,
+    image,
+  ])
 
-  const selectComponent = imageSelected ? (
-    <Icon
-      as={MdCheckCircle}
-      boxSize={6}
-      color="#157ff7"
-      bg="rgba(255,255,255,0.9)"
-      borderRadius="full"
-    />
-  ) : (
-    <Icon as={MdRadioButtonUnchecked} boxSize={6} color="#157ff7" />
-  )
+  const openImage = useCallback(() => {
+    navigate(routes.photo({ photoId: image.id }))
+  }, [image])
 
-  if (selectMode === SelectMode.VIEW) {
-    return (
-      <Box position="relative">
-        <Link
-          to={routes.photo({ photoId: image.id })}
-          title={'Show image ' + image.id + ' detail'}
-        >
-          {imageComponent}
-        </Link>
-        <Center
-          position="absolute"
-          top={0}
-          right={0}
-          opacity={0}
-          boxSize={14}
-          _hover={{
-            opacity: 1,
-          }}
-          cursor="pointer"
-          onClick={toggleSelection}
-        >
-          {selectComponent}
+  const { clickHandler } = useDoubleClick({
+    onSingleClick: toggleSelection,
+    onDoubleClick: openImage,
+  })
+
+  return (
+    <Box position="relative">
+      <Image src={getMiniatureUrl(image)} alt={image.path} h={250} />
+
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        borderColor={imageSelected ? '#157ff7' : 'transparent'}
+        borderWidth={5}
+        cursor="pointer"
+        onClick={clickHandler}
+        className="my-box"
+      >
+        <Center position="absolute" top={0} right={0} boxSize={12}>
+          {imageSelected ? (
+            <Icon
+              as={MdCheckCircle}
+              boxSize={6}
+              color="#157ff7"
+              bg="rgba(255,255,255,0.9)"
+              borderRadius="full"
+            />
+          ) : (
+            <Icon
+              as={MdRadioButtonUnchecked}
+              boxSize={6}
+              color="#157ff7"
+              opacity={0}
+              sx={{
+                '.my-box:hover &': {
+                  opacity: 1,
+                },
+              }}
+            />
+          )}
         </Center>
+
+        {imageSelected && (
+          <Box
+            position="absolute"
+            width="100%"
+            height="100%"
+            border="1px solid white"
+          />
+        )}
+
         <Center
           position="absolute"
           top={0}
           left={0}
-          opacity={0}
           boxSize={14}
-          _hover={{
-            opacity: 1,
+          opacity={0}
+          sx={{
+            '.my-box:hover &': {
+              opacity: 1,
+            },
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           <ItemMenu image={image} />
         </Center>
@@ -179,36 +212,18 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
           position="absolute"
           bottom={0}
           left={0}
-          opacity={0}
           boxSize={14}
-          _hover={{
-            opacity: 1,
+          opacity={0}
+          sx={{
+            '.my-box:hover &': {
+              opacity: 1,
+            },
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           <ItemDetails image={image} />
         </Center>
       </Box>
-    )
-  } else if (selectMode === SelectMode.MULTI_SELECT) {
-    return (
-      <Box position="relative">
-        {imageComponent}
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          bottom={0}
-          right={0}
-          borderColor={imageSelected ? '#157ff7' : 'transparent'}
-          borderWidth={5}
-          cursor="pointer"
-          onClick={toggleSelection}
-        >
-          <Center position="absolute" top={0} right={0} boxSize={12}>
-            {selectComponent}
-          </Center>
-        </Box>
-      </Box>
-    )
-  }
+    </Box>
+  )
 }
