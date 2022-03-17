@@ -1,11 +1,13 @@
-import { Button, Flex, Text, VStack } from '@chakra-ui/react'
+import { Button, Flex, Switch, Text, VStack } from '@chakra-ui/react'
 import { PathPanel } from './PathPanel'
 import { DatePanel } from './DatePanel'
 import { RatingPanel } from './RatingPanel'
 import { TagsPanel } from './TagsPanel'
 import { useFilterContext } from 'src/contexts/filter'
+import { useApluContext, APLUMode } from 'src/contexts/aplu'
 
 const FilterPanel = () => {
+  const { apluMode, switchAPLUMode } = useApluContext()
   const { clearFilter, isFilterActive } = useFilterContext()
 
   return (
@@ -14,6 +16,15 @@ const FilterPanel = () => {
         <Text textStyle="h1" fontSize="md" ml={2} flex="1">
           Filters
         </Text>
+        <Flex align="center">
+          <Text fontSize="sm">{apluMode}</Text>
+          <Switch
+            isChecked={apluMode === APLUMode.FILTER}
+            onChange={() => switchAPLUMode()}
+            ml={1}
+            size="sm"
+          />
+        </Flex>
         <Button
           onClick={clearFilter}
           size="xs"
