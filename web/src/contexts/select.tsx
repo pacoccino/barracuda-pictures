@@ -1,32 +1,24 @@
 import type { Image } from 'types/graphql'
 import { useContext, useState, useCallback, useMemo } from 'react'
 
-export enum SelectMode {
-  VIEW,
-  MULTI_SELECT,
-}
 interface SelectContextType {
   addImageToSelection: (i: { id: string }) => void
   removeImageFromSelection: (i: { id: string }) => void
   clearSelection: () => void
   isImageSelected: (i: { id: string }) => boolean
   selectedImages: Image[]
-  selectMode: SelectMode
-  setSelectMode: (sm: SelectMode) => void
   setAllSelected: (b: boolean) => void
   allSelected: boolean
   isSelectionActive: boolean
 }
 
 export const SelectContext = React.createContext<SelectContextType>({
-  addImageToSelection: (i: Image) => 0,
-  removeImageFromSelection: (i: Image) => 0,
+  addImageToSelection: (_i: Image) => 0,
+  removeImageFromSelection: (_i: Image) => 0,
   clearSelection: () => 0,
   isImageSelected: () => false,
   selectedImages: [],
-  selectMode: SelectMode.VIEW,
-  setSelectMode: (sm: SelectMode) => 0,
-  setAllSelected: (b: boolean) => 0,
+  setAllSelected: (_b: boolean) => 0,
   allSelected: false,
   isSelectionActive: false,
 })
@@ -34,7 +26,6 @@ export const SelectContext = React.createContext<SelectContextType>({
 export const SelectContextProvider = ({ children }) => {
   const [allSelected, setAllSelected] = useState<boolean>(false)
   const [selectedImages, setSelectedImages] = useState<Image[]>([])
-  const [selectMode, setSelectMode] = useState<SelectMode>(SelectMode.VIEW)
   const isSelectionActive = useMemo(
     () => allSelected || selectedImages.length > 0,
     [allSelected, selectedImages]
@@ -73,8 +64,6 @@ export const SelectContextProvider = ({ children }) => {
         removeImageFromSelection,
         clearSelection,
         selectedImages,
-        selectMode,
-        setSelectMode,
         isImageSelected,
         allSelected,
         setAllSelected,

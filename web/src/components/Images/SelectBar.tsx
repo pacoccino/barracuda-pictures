@@ -5,7 +5,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { SelectMode, useSelectContext } from 'src/contexts/select'
+import { useSelectContext } from 'src/contexts/select'
 import { MdPlayArrow, MdSelectAll } from 'react-icons/md'
 import { GrSelect } from 'react-icons/gr'
 import { MdDeselect } from 'src/design-system/icons'
@@ -19,8 +19,6 @@ import { EditBasePathModal } from 'src/components/Images/EditBasePathModal'
 export const SelectBar = () => {
   const {
     selectedImages,
-    selectMode,
-    setSelectMode,
     setAllSelected,
     clearSelection,
     allSelected,
@@ -37,9 +35,6 @@ export const SelectBar = () => {
     function handleKeyDown(e) {
       if (e.target.constructor === HTMLInputElement) return
       switch (e.code) {
-        case 'KeyV':
-          setSelectMode(SelectMode.VIEW)
-          break
         case 'KeyD':
           clearSelection()
           break
@@ -48,9 +43,6 @@ export const SelectBar = () => {
           break
         case 'KeyX':
           removeTagDisclosure.onToggle()
-          break
-        case 'KeyS':
-          setSelectMode(SelectMode.MULTI_SELECT)
           break
       }
     }
@@ -71,83 +63,64 @@ export const SelectBar = () => {
       justify="space-between"
       ref={ref}
     >
-      <ButtonGroup size="xs" isAttached variant="outline">
-        <Button
-          leftIcon={<MdPlayArrow />}
-          variant={selectMode === SelectMode.VIEW ? 'solid' : 'outline'}
-          onClick={() => setSelectMode(SelectMode.VIEW)}
-          colorScheme="green"
-        >
-          View Mode
-        </Button>
-        <Button
-          leftIcon={<GrSelect />}
-          variant={selectMode === SelectMode.MULTI_SELECT ? 'solid' : 'outline'}
-          onClick={() => setSelectMode(SelectMode.MULTI_SELECT)}
-          colorScheme="yellow"
-        >
-          Select Mode
-        </Button>
-      </ButtonGroup>
-      {selectMode !== SelectMode.VIEW && (
-        <Flex align="center">
-          <Text fontSize="sm" mr={2}>
-            {allSelected
-              ? 'All images selected'
-              : `${selectedImages.length} images selected`}
-          </Text>
-          <ButtonGroup size="xs" isAttached variant="outline">
-            <Button
-              variant="solid"
-              onClick={applyTagDisclosure.onOpen}
-              colorScheme="green"
-              disabled={!isSelectionActive}
-            >
-              Apply tag
-            </Button>
-            <Button
-              variant="solid"
-              onClick={removeTagDisclosure.onOpen}
-              colorScheme="yellow"
-              disabled={!isSelectionActive}
-            >
-              Remove tag
-            </Button>
-            <Button
-              variant="solid"
-              onClick={deleteImagesDisclosure.onOpen}
-              colorScheme="red"
-              disabled={!isSelectionActive}
-            >
-              Delete
-            </Button>
-            <Button
-              variant="solid"
-              onClick={editBasePathDisclosure.onOpen}
-              colorScheme="blue"
-              disabled={!isSelectionActive}
-            >
-              Path
-            </Button>
-          </ButtonGroup>
-          <TooltipIconButton
-            label="Deselect all"
-            icon={<MdDeselect />}
-            onClick={clearSelection}
-            size="xs"
-            ml={2}
-            disabled={!allSelected && selectedImages.length === 0}
-          />
-          <TooltipIconButton
-            label="Select all"
-            icon={<MdSelectAll />}
-            onClick={() => setAllSelected(true)}
-            disabled={allSelected}
-            size="xs"
-            ml={2}
-          />
-        </Flex>
-      )}
+      <Flex align="center">
+        <ButtonGroup size="xs" isAttached variant="outline">
+          <Button
+            variant="solid"
+            onClick={applyTagDisclosure.onOpen}
+            colorScheme="green"
+            disabled={!isSelectionActive}
+          >
+            Apply tag
+          </Button>
+          <Button
+            variant="solid"
+            onClick={removeTagDisclosure.onOpen}
+            colorScheme="yellow"
+            disabled={!isSelectionActive}
+          >
+            Remove tag
+          </Button>
+          <Button
+            variant="solid"
+            onClick={deleteImagesDisclosure.onOpen}
+            colorScheme="red"
+            disabled={!isSelectionActive}
+          >
+            Delete
+          </Button>
+          <Button
+            variant="solid"
+            onClick={editBasePathDisclosure.onOpen}
+            colorScheme="blue"
+            disabled={!isSelectionActive}
+          >
+            Path
+          </Button>
+        </ButtonGroup>
+        <TooltipIconButton
+          label="Deselect all"
+          icon={<MdDeselect />}
+          onClick={clearSelection}
+          size="xs"
+          ml={2}
+          disabled={!allSelected && selectedImages.length === 0}
+        />
+        <TooltipIconButton
+          label="Select all"
+          icon={<MdSelectAll />}
+          onClick={() => setAllSelected(true)}
+          disabled={allSelected}
+          size="xs"
+          ml={2}
+        />
+
+        <Text fontSize="sm" ml={2}>
+          {allSelected
+            ? 'All images selected'
+            : `${selectedImages.length} images selected`}
+        </Text>
+      </Flex>
       <EditBasePathModal
         isOpen={editBasePathDisclosure.isOpen}
         onClose={editBasePathDisclosure.onClose}

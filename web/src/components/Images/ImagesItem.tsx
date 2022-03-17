@@ -1,9 +1,9 @@
-import { Link, navigate, routes } from '@redwoodjs/router'
+import { navigate, routes } from '@redwoodjs/router'
 import { getMiniatureUrl } from 'src/lib/static'
 import { Box, Center, Icon, IconButton, Image } from '@chakra-ui/react'
 
 import { FindImages } from 'types/graphql'
-import { SelectMode, useSelectContext } from 'src/contexts/select'
+import { useSelectContext } from 'src/contexts/select'
 import { useCallback, useMemo } from 'react'
 import {
   MdCheckCircle,
@@ -109,7 +109,6 @@ const ItemDetails = ({ image }) => {
 
 export const ImagesItem = ({ image }: ImagesItemProps) => {
   const {
-    setSelectMode,
     addImageToSelection,
     removeImageFromSelection,
     isImageSelected,
@@ -123,12 +122,10 @@ export const ImagesItem = ({ image }: ImagesItemProps) => {
 
   const toggleSelection = useCallback(() => {
     if (allSelected) return
-    setSelectMode(SelectMode.MULTI_SELECT)
     if (imageSelected) removeImageFromSelection(image)
     else addImageToSelection(image)
   }, [
     allSelected,
-    setSelectMode,
     imageSelected,
     addImageToSelection,
     removeImageFromSelection,

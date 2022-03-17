@@ -22,12 +22,6 @@ const InfoPage = () => {
             <Text as="kbd">I</Text> View image info
           </Text>
           <Text>
-            <Text as="kbd">V</Text> View mode
-          </Text>
-          <Text>
-            <Text as="kbd">S</Text> Select Mode
-          </Text>
-          <Text>
             <Text as="kbd">D</Text> Deselect
           </Text>
           <Text>
