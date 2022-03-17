@@ -71,7 +71,7 @@ const LABELS = {
     [ApplyTagMode.REMOVE]: 'Removing tag on selection...',
   },
 }
-const ApplyTagsModal = ({
+const ApplyTagModal = ({
   applyMode,
   isOpen,
   onClose,
@@ -207,4 +207,4 @@ const ApplyTagsModal = ({
   )
 }
 
-export default ApplyTagsModal
+export default ApplyTagModal

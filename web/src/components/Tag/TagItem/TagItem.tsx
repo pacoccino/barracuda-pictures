@@ -5,6 +5,7 @@ import { TagProps } from 'src/design-system/components/TagComponent'
 import { useTagContext } from 'src/contexts/tags'
 import { AddIcon, EditIcon, DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons'
 import * as React from 'react'
+import { MdDriveFileMoveOutline } from 'react-icons/md'
 
 type TagItemProps = {
   tag: Tag
@@ -22,7 +23,7 @@ export const TagMenuItems = ({ tag }) => {
       label: 'Edit tag',
     },
     {
-      icon: <EditIcon />,
+      icon: <MdDriveFileMoveOutline />,
       onClick: () => setTagForMove(tag),
       label: 'Move to other group',
     },
@@ -80,7 +81,7 @@ export const TagCategoryMenuItems = ({ tagCategory }) => {
     {
       icon: <AddIcon />,
       onClick: () => setTagCreateTagCategory(tagCategory),
-      label: 'Create tag in group',
+      label: 'Create tag in this category',
     },
     {
       icon: <PlusSquareIcon />,

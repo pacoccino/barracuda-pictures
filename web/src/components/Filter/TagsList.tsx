@@ -19,7 +19,7 @@ import { FaTags } from 'react-icons/fa'
 import { MdGroup, MdMoreVert } from 'react-icons/md'
 import ApplyTagMenuItem, {
   ApplyTagMode,
-} from 'src/components/Tag/ApplyTags/ApplyTagMenuItem'
+} from 'src/components/Tag/ApplyTag/ApplyTagMenuItem'
 import { useSelectContext } from 'src/contexts/select'
 
 const RowMenu = ({ children }) => (

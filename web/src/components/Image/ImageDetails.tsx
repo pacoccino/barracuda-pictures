@@ -61,7 +61,9 @@ export const ImageDetails = ({ image, switchRightPanel }) => {
   )
 
   const gps = useMemo(
-    () => `${parsedMetadata.gps.lat}, ${parsedMetadata.gps.lng}`,
+    () =>
+      parsedMetadata.gps &&
+      `${parsedMetadata.gps.lat}, ${parsedMetadata.gps.lng}`,
     [parsedMetadata]
   )
   const { hasCopied, onCopy } = useClipboard(gps)

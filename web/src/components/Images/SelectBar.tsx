@@ -9,8 +9,8 @@ import { useSelectContext } from 'src/contexts/select'
 import { MdSelectAll } from 'react-icons/md'
 import { MdDeselect } from 'src/design-system/icons'
 import { TooltipIconButton } from 'src/design-system'
-import ApplyTagsModal from 'src/components/Tag/ApplyTags/ApplyTagsModal'
-import { ApplyTagMode } from 'src/components/Tag/ApplyTags/ApplyTagsModal'
+import ApplyTagModal from 'src/components/Tag/ApplyTag/ApplyTagModal'
+import { ApplyTagMode } from 'src/components/Tag/ApplyTag/ApplyTagModal'
 import { useEffect, useRef } from 'react'
 import { DeleteImagesModal } from 'src/components/Images/DeleteImagesModal'
 import { EditBasePathModal } from 'src/components/Images/EditBasePathModal'
@@ -124,12 +124,12 @@ export const SelectBar = () => {
         isOpen={editBasePathDisclosure.isOpen}
         onClose={editBasePathDisclosure.onClose}
       />
-      <ApplyTagsModal
+      <ApplyTagModal
         isOpen={applyTagDisclosure.isOpen}
         onClose={applyTagDisclosure.onClose}
         applyMode={ApplyTagMode.ADD}
       />
-      <ApplyTagsModal
+      <ApplyTagModal
         isOpen={removeTagDisclosure.isOpen}
         onClose={removeTagDisclosure.onClose}
         applyMode={ApplyTagMode.REMOVE}
