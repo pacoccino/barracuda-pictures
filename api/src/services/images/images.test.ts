@@ -5,6 +5,7 @@ import {
   image,
   images,
   moreImages,
+  selectAllImages,
 } from './images'
 import type { StandardScenario } from './images.scenarios'
 import { ImageFilters } from 'types/graphql'
@@ -314,6 +315,29 @@ describe('images', () => {
 
   scenario('images = moreImages', async () => {
     expect(images).toBe(moreImages)
+  })
+
+  scenario('selectAllImages', async (scenario) => {
+    const all = await selectAllImages()
+    expect(all.length).toBe(Object.keys(scenario.image).length)
+
+    const allSelect = await selectAllImages({
+      select: {
+        path: true,
+      },
+    })
+    expect(allSelect[0].id).toBeUndefined()
+    expect(allSelect[0].path).toBeDefined()
+
+    const filtered = await selectAllImages({
+      filter: {
+        rating: {
+          value: 2,
+          condition: 'lte',
+        },
+      },
+    })
+    expect(filtered.length).toBe(3)
   })
 
   describe('delete', () => {

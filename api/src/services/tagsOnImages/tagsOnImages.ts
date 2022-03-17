@@ -9,7 +9,7 @@ import type {
   MutationapplyManyTagsOnImageArgs,
 } from 'types/graphql'
 import { db } from 'src/lib/db'
-import { images } from 'src/services/images/images'
+import { selectAllImages } from 'src/services/images/images'
 
 export const tagsOnImages = () => {
   return db.tagsOnImage.findMany()
@@ -68,10 +68,7 @@ export const applyManyTagsOnImage = async ({
 export const applyTagOnFilter = async ({
   input: { filter, applyMode, tagId },
 }: MutationapplyTagOnFilterArgs): Promise<UpdateManyResult> => {
-  const imagesToApply = await images({
-    filter: filter,
-    take: 0,
-  })
+  const imagesToApply = await selectAllImages({ filter })
 
   const tagsOnImages = imagesToApply.map((i) => ({
     imageId: i.id,

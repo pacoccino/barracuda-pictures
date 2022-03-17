@@ -13,6 +13,7 @@ import { Buckets } from 'src/lib/files/s3'
 import S3Path from 'src/lib/files/S3Path'
 import { parallel } from 'src/lib/async'
 import { logger } from 'src/lib/logger'
+import { ImageFilters } from 'types/graphql'
 
 export const image = ({
   id,
@@ -115,10 +116,7 @@ export const deleteManyImages = async ({
     throw new Error('need only one of imagesIds or filter')
 
   if (filter) {
-    const imagesToApply = await images({
-      filter: filter,
-      take: 0,
-    })
+    const imagesToApply = await selectAllImages({ filter })
     imageIds = imagesToApply.map((i) => i.id)
   }
 
@@ -164,10 +162,7 @@ export const editImagesBasePath = async ({
     throw new Error('need only one of imagesIds or filter')
 
   if (filter) {
-    const imagesToApply = await images({
-      filter: filter,
-      take: 0,
-    })
+    const imagesToApply = await selectAllImages({ filter })
     imageIds = imagesToApply.map((i) => i.id)
   }
 
@@ -217,10 +212,7 @@ export const editImages = async ({
     throw new Error('need only one of imagesIds or filter')
 
   if (filter) {
-    const imagesToApply = await images({
-      filter: filter,
-      take: 0,
-    })
+    const imagesToApply = await selectAllImages({ filter })
     imageIds = imagesToApply.map((i) => i.id)
   }
 
@@ -237,4 +229,23 @@ export const editImages = async ({
   return {
     count,
   }
+}
+
+interface SelectImagesProps {
+  filter?: ImageFilters
+  select?: Prisma.ImageSelect
+}
+export async function selectAllImages({
+  filter,
+  select = { id: true },
+}: SelectImagesProps = {}) {
+  return images(
+    {
+      filter,
+      take: 0,
+    },
+    {
+      select,
+    }
+  )
 }

@@ -11,6 +11,7 @@ import S3Path from 'src/lib/files/S3Path'
 import moment from 'moment'
 import { Tag } from '@prisma/client'
 import { db } from 'src/lib/db'
+import { selectAllImages } from 'src/services/images/images'
 
 // Advanced Picture Look Up
 
@@ -29,18 +30,14 @@ export const arbo = async ({
     children: [],
   }
 
-  const allImages = await images(
-    {
-      filter,
-      take: 0,
+  const allImages = await selectAllImages({
+    filter,
+    select: {
+      path: true,
+      dateTaken: true,
     },
-    {
-      select: {
-        path: true,
-        dateTaken: true,
-      },
-    }
-  )
+  })
+
   arboPath.count = allImages.length
   arboDate.count = allImages.length
 
@@ -119,17 +116,7 @@ export const arbo = async ({
 export const tagsFromFilter = async ({
   filter,
 }: QuerytagsFromFilterArgs = {}): Promise<Tag[]> => {
-  const allImages = await images(
-    {
-      filter,
-      take: 0,
-    },
-    {
-      select: {
-        id: true,
-      },
-    }
-  )
+  const allImages = await selectAllImages({ filter })
 
   return db.tag.findMany({
     where: {
