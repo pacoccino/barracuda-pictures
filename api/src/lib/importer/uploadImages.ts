@@ -8,14 +8,14 @@ export async function uploadImage(
   mime: string,
   reupload = false
 ) {
-  // TODO parallel
-
   const headPhoto = await Buckets.photos.head(path)
   if (reupload || !headPhoto)
     await Buckets.photos.put(path, imageBuffer, metadata, mime)
+}
 
+export async function uploadImageMiniatures(path, imageBuffer: Buffer) {
   const headMiniature = await Buckets.miniatures.head(path)
-  if (reupload || !headMiniature) {
+  if (!headMiniature) {
     const miniature = await getMiniature(imageBuffer)
     await Buckets.miniatures.put(path, miniature.buffer, null, miniature.mime)
   }

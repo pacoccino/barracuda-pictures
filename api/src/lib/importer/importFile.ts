@@ -7,11 +7,16 @@ import {
   isFileTypeExcluded,
   isPathExcluded,
 } from 'src/lib/importer/supportedFiles'
-import { isImageUploaded, uploadImage } from 'src/lib/importer/uploadImages'
+import {
+  uploadImage,
+  uploadImageMiniatures,
+} from 'src/lib/importer/uploadImages'
 import { getMetadata } from 'src/lib/images/metadata'
 import { createImageTags } from 'src/lib/importer/tagger'
 import { ImportOptions } from 'src/lib/importer/importer'
 import { Logger } from '@redwoodjs/api/logger'
+import { Buckets } from 'src/lib/files/s3'
+import s3Path from 'src/lib/files/S3Path'
 
 export type Task = {
   path: string
@@ -32,25 +37,43 @@ export const getImportWorker = ({
   logger: Logger
 }) =>
   async function importFile({ path }: Task) {
+    if (
+      (importOptions.fromS3 && importOptions.filesDir) ||
+      (!importOptions.fromS3 && !importOptions.filesDir)
+    )
+      throw new Error('invalid import options')
+
     let fd
+
     try {
-      const fullPath = fpath.resolve(importOptions.filesDir, path)
-      logger.debug(`Importing image ${fullPath} ...`)
+      let s3path, fileSystemPath, buffer
 
-      if (isPathExcluded(fullPath)) return TaskResult.EXCLUDED
+      if (importOptions.filesDir) {
+        fileSystemPath = fpath.resolve(importOptions.filesDir, path)
+        s3path = S3Path.getPath(importOptions.s3Prefix, path)
+      } else {
+        s3path = path
+      }
 
-      const s3path = S3Path.getPath(importOptions.s3Prefix, path)
+      logger.debug(`Importing image ${s3path} ...`)
+
+      if (importOptions.filesDir && isPathExcluded(fileSystemPath))
+        return TaskResult.EXCLUDED
 
       const imageExistingInDb = await db.image.findUnique({
         where: {
           path: s3path,
         },
       })
-      if (imageExistingInDb) return TaskResult.EXISTING
+      if (imageExistingInDb) return TaskResult.EXISTING // TODO check S3 ?
 
-      fd = await open(fullPath, 'r')
+      if (importOptions.filesDir) {
+        fd = await open(fileSystemPath, 'r')
+        buffer = await fd.readFile()
+      } else {
+        buffer = await Buckets.photos.get(s3path)
+      }
 
-      const buffer = await fd.readFile()
       const fileType = await ft.fromBuffer(buffer)
 
       if (!fileType || isFileTypeExcluded(fileType.ext))
@@ -61,19 +84,22 @@ export const getImportWorker = ({
         return TaskResult.NO_DATE
       }
 
-      const stat = await fd.stat()
-      const s3Metadata = {
-        created_at: stat.birthtime.toISOString(),
-        modified_at: stat.mtime.toISOString(),
-      }
+      if (importOptions.filesDir) {
+        const stat = await fd.stat()
+        const s3Metadata = {
+          created_at: stat.birthtime.toISOString(),
+          modified_at: stat.mtime.toISOString(),
+        }
 
-      await uploadImage(
-        s3path,
-        buffer,
-        s3Metadata,
-        fileType.mime,
-        importOptions.s3Reupload
-      )
+        await uploadImage(
+          s3path,
+          buffer,
+          s3Metadata,
+          fileType.mime,
+          importOptions.s3Reupload
+        )
+      }
+      await uploadImageMiniatures(s3path, buffer)
 
       const image = await db.image.create({
         data: {
@@ -86,7 +112,7 @@ export const getImportWorker = ({
 
       await createImageTags(image, imageMetadata)
 
-      logger.debug(`Imported image ${fullPath}`)
+      logger.debug(`Imported image ${s3path}`)
 
       return TaskResult.UPLOADED
     } finally {
