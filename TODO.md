@@ -1,7 +1,11 @@
+https://github.com/awesome-selfhosted/awesome-selfhosted/blob/master/README.md#photo-and-video-galleries
+
 ### TODO
 
 :: Important
 - auth S3/image function
+- hidden
+- public
 
 :: necessary but not urgent
 - detect people

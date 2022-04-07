@@ -25,11 +25,6 @@
   "scripts": {
     "start": "yarn rw dev",
     "test": "yarn rw test api",
-    "dc:dev": "docker-compose --env-file .env -f docker-compose.yml -f docker-compose.dev.yml",
-    "dc:dev:tasks": "yarn dc:dev -f docker-compose.tasks.yml ",
-    "dc:dev:clean": "yarn dc:dev down -v --remove-orphans",
-    "dc:prod": "docker-compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml",
-    "dc:prod:tasks": "yarn dc:prod -f docker-compose.tasks.yml ",
     "s:worker": "yarn rw exec worker",
     "s:import": "yarn rw exec import",
     "format": "yarn rw-log-formatter",
