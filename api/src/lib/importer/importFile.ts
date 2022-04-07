@@ -7,9 +7,11 @@ import {
   isFileTypeExcluded,
   isPathExcluded,
 } from 'src/lib/importer/supportedFiles'
-import { uploadImage } from 'src/lib/importer/uploadImages'
+import { isImageUploaded, uploadImage } from 'src/lib/importer/uploadImages'
 import { getMetadata } from 'src/lib/images/metadata'
 import { createImageTags } from 'src/lib/importer/tagger'
+import { ImportOptions } from 'src/lib/importer/importer'
+import { Logger } from '@redwoodjs/api/logger'
 
 export type Task = {
   path: string
@@ -22,23 +24,29 @@ export enum TaskResult {
   UPLOADED = 'UPLOADED',
 }
 
-export const getImportWorker = ({ logger, prefix, rootDir }) =>
+export const getImportWorker = ({
+  importOptions,
+  logger,
+}: {
+  importOptions: ImportOptions
+  logger: Logger
+}) =>
   async function importFile({ path }: Task) {
     let fd
     try {
-      const fullPath = fpath.resolve(rootDir, path)
+      const fullPath = fpath.resolve(importOptions.filesDir, path)
       logger.debug(`Importing image ${fullPath} ...`)
 
       if (isPathExcluded(fullPath)) return TaskResult.EXCLUDED
 
-      const s3path = S3Path.getPath(prefix, path)
+      const s3path = S3Path.getPath(importOptions.s3Prefix, path)
 
-      const imageExisting = await db.image.findUnique({
+      const imageExistingInDb = await db.image.findUnique({
         where: {
           path: s3path,
         },
       })
-      if (imageExisting) return TaskResult.EXISTING
+      if (imageExistingInDb) return TaskResult.EXISTING
 
       fd = await open(fullPath, 'r')
 
@@ -54,12 +62,18 @@ export const getImportWorker = ({ logger, prefix, rootDir }) =>
       }
 
       const stat = await fd.stat()
-      const metadata = {
+      const s3Metadata = {
         created_at: stat.birthtime.toISOString(),
         modified_at: stat.mtime.toISOString(),
       }
 
-      await uploadImage(s3path, buffer, metadata, fileType.mime)
+      await uploadImage(
+        s3path,
+        buffer,
+        s3Metadata,
+        fileType.mime,
+        importOptions.s3Reupload
+      )
 
       const image = await db.image.create({
         data: {
