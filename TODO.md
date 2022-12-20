@@ -25,6 +25,8 @@ https://github.com/awesome-selfhosted/awesome-selfhosted/blob/master/README.md#p
 - select range
 - tag colors
 
+- md5 hash of image file /metadata/image content for updating from storage
+
 ### BUGS
 
 add tag to filter > remove tag, tag still in filter so no images ?

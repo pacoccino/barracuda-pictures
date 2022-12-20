@@ -33,11 +33,11 @@ Adjust .env as you like
 
 Start docker containers
 ```terminal
-yarn dc:dev up -d
+./dcs.sh -e dev up -d
 ```
 Start worker
 ```terminal
-yarn worker
+yarn s:worker
 ```
 
 -- Only on fresh setup:
@@ -49,7 +49,7 @@ yarn rw prisma migrate deploy
 ```
 Prepare S3
 ```terminal
-yarn dc:dev:tasks up createbuckets
+./dcs.sh -e dev -t up createbuckets
 ```
 
 #### Fire it up
